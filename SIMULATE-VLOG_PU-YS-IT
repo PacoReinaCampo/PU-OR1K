@@ -1,0 +1,3 @@
+#synthesis
+rm -rf mor1kx.blif
+yosys -s system.ys

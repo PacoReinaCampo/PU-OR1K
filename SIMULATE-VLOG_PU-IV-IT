@@ -1,0 +1,4 @@
+rm -rf riscv64.vvp
+iverilog -g2012 -o system.vvp -c system.vtor -s mor1kx \
+-I rtl/verilog
+vvp system.vvp
