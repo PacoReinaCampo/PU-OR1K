@@ -25,5 +25,5 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 Author(s):
-  Julius Baxter <juliusbaxter@gmail.com>
-  Francisco Javier Reina Campo <frareicam@gmail.com>
+  - Julius Baxter <juliusbaxter@gmail.com>
+  - Francisco Javier Reina Campo <frareicam@gmail.com>
