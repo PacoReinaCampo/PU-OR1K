@@ -109,7 +109,8 @@ module mor1kx_pcu #(
           pcu_pccr[pcu_num] <= 32'd0;
           pcu_pcmr[pcu_num] <= 32'd0 | 1 << `OR1K_PCMR_CP;
           // we could write pcu registers only in system mode
-        end else if (spr_we_i && spr_sys_mode_i) begin
+        end
+        else if (spr_we_i && spr_sys_mode_i) begin
           if (pcu_pccr_access & (spr_addr_i[2:0] == pcu_num))
             pcu_pccr[pcu_num] <= spr_dat_i;
           // WPE are not implemented, hence we do not update WPE part
@@ -117,7 +118,8 @@ module mor1kx_pcu #(
             pcu_pcmr[pcu_num][`OR1K_PCMR_DDS:`OR1K_PCMR_CISM] <=
             spr_dat_i[`OR1K_PCMR_DDS:`OR1K_PCMR_CISM];
           end
-        end else if (((pcu_pcmr[pcu_num][`OR1K_PCMR_CISM] & spr_sys_mode_i) |
+        end
+        else if (((pcu_pcmr[pcu_num][`OR1K_PCMR_CISM] & spr_sys_mode_i) |
                       (pcu_pcmr[pcu_num][`OR1K_PCMR_CIUM] & ~spr_sys_mode_i))) begin
           pcu_pccr[pcu_num] <= pcu_pccr[pcu_num] +
           pcu_events_hit[`OR1K_PCMR_LA] +

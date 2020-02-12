@@ -188,7 +188,8 @@ module mor1kx_execute_alu #(
       assign b = immediate_sel_i ? immediate_i :
         op_jbr_i ? {{4{immjbr_upper_i[9]}},immjbr_upper_i,imm16_i,2'b00} :
         rfb_i;
-    end else begin
+    end
+    else begin
       assign a = rfa_i;
       assign b = immediate_sel_i ? immediate_i : rfb_i;
 
@@ -427,10 +428,12 @@ module mor1kx_execute_alu #(
         if (rst) begin
           div_done <= 0;
           div_count <= 0;
-        end else if (decode_valid_i & op_div_i) begin
+        end
+        else if (decode_valid_i & op_div_i) begin
           div_done <= 0;
           div_count <= OPTION_OPERAND_WIDTH[5:0];
-        end else if (div_count == 1)
+        end
+        else if (div_count == 1)
           div_done <= 1;
       else if (!div_done)
         div_count <= div_count - 1'd1;
@@ -459,11 +462,13 @@ module mor1kx_execute_alu #(
             if (rfb_i[OPTION_OPERAND_WIDTH-1])
               div_d <= ~rfb_i + 1;
           end
-        end else if (!div_done) begin
+        end
+        else if (!div_done) begin
           if (!div_sub[OPTION_OPERAND_WIDTH]) begin // div_sub >= 0
             div_r <= div_sub[OPTION_OPERAND_WIDTH-1:0];
             div_n <= {div_n[OPTION_OPERAND_WIDTH-2:0], 1'b1};
-          end else begin // div_sub < 0
+          end
+          else begin // div_sub < 0
             div_r <= {div_r[OPTION_OPERAND_WIDTH-2:0],
                       div_n[OPTION_OPERAND_WIDTH-1]};
             div_n <= {div_n[OPTION_OPERAND_WIDTH-2:0], 1'b0};
@@ -594,7 +599,8 @@ module mor1kx_execute_alu #(
         always @(posedge clk)
           if (decode_valid_i)
             ffl1_result_r = ffl1_result_wire;
-      end else begin
+      end
+      else begin
         assign ffl1_result = ffl1_result_wire;
         assign ffl1_valid = 1'b1;
       end
@@ -654,7 +660,8 @@ module mor1kx_execute_alu #(
 
       assign shift_valid = 1;
 
-    end else if (OPTION_SHIFTER=="SERIAL") begin : serial_shifter
+    end
+    else if (OPTION_SHIFTER=="SERIAL") begin : serial_shifter
       // Serial shifter
       reg [4:0] shift_cnt;
       reg       shift_go;

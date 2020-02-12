@@ -56,7 +56,8 @@ module mor1kx_simple_dpram_sclk #(
           bypass <= 1;
       else if (re)
         bypass <= 0;
-    end else begin
+    end
+    else begin
       assign dout = rdata;
     end
   endgenerate

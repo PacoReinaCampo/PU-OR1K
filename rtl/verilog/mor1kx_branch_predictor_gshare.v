@@ -68,7 +68,8 @@ module mor1kx_branch_predictor_gshare #(
       for(i = 0; i < FSM_NUM; i = i + 1) begin
         state[i] <= STATE_WEAKLY_TAKEN;
       end
-    end else begin
+    end
+    else begin
       if (op_bf_i || op_bnf_i) begin
         // store prev index
         prev_idx <= state_index;
@@ -92,7 +93,8 @@ module mor1kx_branch_predictor_gshare #(
             STATE_STRONGLY_NOT_TAKEN:
               state[prev_idx] <= STATE_STRONGLY_NOT_TAKEN;
           endcase
-        end else begin
+        end
+        else begin
           // change fsm state:
           //   STATE_STRONGLY_NOT_TAKEN -> STATE_WEAKLY_NOT_TAKEN
           //   STATE_WEAKLY_NOT_TAKEN -> STATE_WEAKLY_TAKEN

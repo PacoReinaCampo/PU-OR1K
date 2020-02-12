@@ -315,7 +315,8 @@ module mor1kx #(
         .wbm_dat_i			(dwbm_dat_i),		 // Templated
         .wbm_rty_i			(dwbm_rty_i));		 // Templated
 
-    end else begin
+    end
+    else begin
       initial begin
         $display("Error: BUS_IF_TYPE not correct");
         $finish();

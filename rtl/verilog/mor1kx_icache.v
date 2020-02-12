@@ -270,7 +270,8 @@ module mor1kx_icache #(
         if (ic_access_i) begin
           if (hit) begin
             state <= READ;
-          end else if (cpu_req_i) begin
+          end
+          else if (cpu_req_i) begin
             refill_valid <= 0;
             refill_valid_r <= 0;
 

@@ -658,147 +658,141 @@ module mor1kx_ctrl_cappuccino #(
   always @(posedge clk)
     if (rst)
       spr_sr <= SPR_SR_RESET_VALUE;
-  else if (exception_re)
-    begin
-      // Go into supervisor mode, disable interrupts, MMUs
-      spr_sr[`OR1K_SPR_SR_SM  ] <= 1'b1;
-      if (FEATURE_TIMER!="NONE")
-        spr_sr[`OR1K_SPR_SR_TEE ] <= 1'b0;
-      if (FEATURE_PIC!="NONE")
-        spr_sr[`OR1K_SPR_SR_IEE ] <= 1'b0;
-      if (FEATURE_DMMU!="NONE")
-        spr_sr[`OR1K_SPR_SR_DME ] <= 1'b0;
-      if (FEATURE_IMMU!="NONE")
-        spr_sr[`OR1K_SPR_SR_IME ] <= 1'b0;
-      if (FEATURE_DSX!="NONE")
-        spr_sr[`OR1K_SPR_SR_DSX ] <= ctrl_delay_slot;
-      if (FEATURE_OVERFLOW!="NONE")
-        spr_sr[`OR1K_SPR_SR_OVE ] <= 1'b0;
-    end
+  else if (exception_re) begin
+    // Go into supervisor mode, disable interrupts, MMUs
+    spr_sr[`OR1K_SPR_SR_SM  ] <= 1'b1;
+    if (FEATURE_TIMER!="NONE")
+      spr_sr[`OR1K_SPR_SR_TEE ] <= 1'b0;
+    if (FEATURE_PIC!="NONE")
+      spr_sr[`OR1K_SPR_SR_IEE ] <= 1'b0;
+    if (FEATURE_DMMU!="NONE")
+      spr_sr[`OR1K_SPR_SR_DME ] <= 1'b0;
+    if (FEATURE_IMMU!="NONE")
+      spr_sr[`OR1K_SPR_SR_IME ] <= 1'b0;
+    if (FEATURE_DSX!="NONE")
+      spr_sr[`OR1K_SPR_SR_DSX ] <= ctrl_delay_slot;
+    if (FEATURE_OVERFLOW!="NONE")
+      spr_sr[`OR1K_SPR_SR_OVE ] <= 1'b0;
+  end
   else if ((spr_we & spr_access[`OR1K_SPR_SYS_BASE] &
             (spr_sr[`OR1K_SPR_SR_SM] & padv_ctrl | du_access)) &&
-           `SPR_OFFSET(spr_addr)==`SPR_OFFSET(`OR1K_SPR_SR_ADDR))
-    begin
-      spr_sr[`OR1K_SPR_SR_SM  ] <= spr_write_dat[`OR1K_SPR_SR_SM  ];
+           `SPR_OFFSET(spr_addr)==`SPR_OFFSET(`OR1K_SPR_SR_ADDR)) begin
+    spr_sr[`OR1K_SPR_SR_SM  ] <= spr_write_dat[`OR1K_SPR_SR_SM  ];
 
-      spr_sr[`OR1K_SPR_SR_F  ] <= spr_write_dat[`OR1K_SPR_SR_F  ];
+    spr_sr[`OR1K_SPR_SR_F  ] <= spr_write_dat[`OR1K_SPR_SR_F  ];
 
-      if (FEATURE_TIMER!="NONE")
-        spr_sr[`OR1K_SPR_SR_TEE ] <= spr_write_dat[`OR1K_SPR_SR_TEE ];
+    if (FEATURE_TIMER!="NONE")
+      spr_sr[`OR1K_SPR_SR_TEE ] <= spr_write_dat[`OR1K_SPR_SR_TEE ];
 
-      if (FEATURE_PIC!="NONE")
-        spr_sr[`OR1K_SPR_SR_IEE ] <= spr_write_dat[`OR1K_SPR_SR_IEE ];
+    if (FEATURE_PIC!="NONE")
+      spr_sr[`OR1K_SPR_SR_IEE ] <= spr_write_dat[`OR1K_SPR_SR_IEE ];
 
-      if (FEATURE_DATACACHE!="NONE")
-        spr_sr[`OR1K_SPR_SR_DCE ] <= spr_write_dat[`OR1K_SPR_SR_DCE ];
+    if (FEATURE_DATACACHE!="NONE")
+      spr_sr[`OR1K_SPR_SR_DCE ] <= spr_write_dat[`OR1K_SPR_SR_DCE ];
 
-      if (FEATURE_INSTRUCTIONCACHE!="NONE")
-        spr_sr[`OR1K_SPR_SR_ICE ] <= spr_write_dat[`OR1K_SPR_SR_ICE ];
+    if (FEATURE_INSTRUCTIONCACHE!="NONE")
+      spr_sr[`OR1K_SPR_SR_ICE ] <= spr_write_dat[`OR1K_SPR_SR_ICE ];
 
-      if (FEATURE_DMMU!="NONE")
-        spr_sr[`OR1K_SPR_SR_DME ] <= spr_write_dat[`OR1K_SPR_SR_DME ];
+    if (FEATURE_DMMU!="NONE")
+      spr_sr[`OR1K_SPR_SR_DME ] <= spr_write_dat[`OR1K_SPR_SR_DME ];
 
-      if (FEATURE_IMMU!="NONE")
-        spr_sr[`OR1K_SPR_SR_IME ] <= spr_write_dat[`OR1K_SPR_SR_IME ];
+    if (FEATURE_IMMU!="NONE")
+      spr_sr[`OR1K_SPR_SR_IME ] <= spr_write_dat[`OR1K_SPR_SR_IME ];
 
-      if (FEATURE_FASTCONTEXTS!="NONE")
-        spr_sr[`OR1K_SPR_SR_CE  ] <= spr_write_dat[`OR1K_SPR_SR_CE  ];
+    if (FEATURE_FASTCONTEXTS!="NONE")
+      spr_sr[`OR1K_SPR_SR_CE  ] <= spr_write_dat[`OR1K_SPR_SR_CE  ];
 
-      if (FEATURE_CARRY_FLAG!="NONE")
-        spr_sr[`OR1K_SPR_SR_CY] <= spr_write_dat[`OR1K_SPR_SR_CY];
+    if (FEATURE_CARRY_FLAG!="NONE")
+      spr_sr[`OR1K_SPR_SR_CY] <= spr_write_dat[`OR1K_SPR_SR_CY];
 
-      if (FEATURE_OVERFLOW!="NONE") begin
-        spr_sr[`OR1K_SPR_SR_OV  ] <= spr_write_dat[`OR1K_SPR_SR_OV  ];
-        spr_sr[`OR1K_SPR_SR_OVE ] <= spr_write_dat[`OR1K_SPR_SR_OVE ];
-      end
-
-      if (FEATURE_DSX!="NONE")
-        spr_sr[`OR1K_SPR_SR_DSX ] <= spr_write_dat[`OR1K_SPR_SR_DSX ];
-
-      spr_sr[`OR1K_SPR_SR_EPH ] <= spr_write_dat[`OR1K_SPR_SR_EPH ];
+    if (FEATURE_OVERFLOW!="NONE") begin
+      spr_sr[`OR1K_SPR_SR_OV  ] <= spr_write_dat[`OR1K_SPR_SR_OV  ];
+      spr_sr[`OR1K_SPR_SR_OVE ] <= spr_write_dat[`OR1K_SPR_SR_OVE ];
     end
-  else if (padv_ctrl)
-    begin
-      spr_sr[`OR1K_SPR_SR_F   ] <= ctrl_flag_set ? 1 :
-      ctrl_flag_clear ? 0 :
-      spr_sr[`OR1K_SPR_SR_F   ];
 
-      if (FEATURE_CARRY_FLAG!="NONE")
-        spr_sr[`OR1K_SPR_SR_CY] <= ctrl_carry_set_i ? 1 :
-        ctrl_carry_clear_i ? 0 :
-        spr_sr[`OR1K_SPR_SR_CY];
-      if (FEATURE_OVERFLOW!="NONE")
-        spr_sr[`OR1K_SPR_SR_OV   ] <= ctrl_overflow_set_i ? 1 :
-        ctrl_overflow_clear_i ? 0 :
-        spr_sr[`OR1K_SPR_SR_OV   ];
-      // Skip FO. TODO: make this even more selective.
-      if (ctrl_op_rfe_i)
-        spr_sr[14:0] <= spr_esr[14:0];
-    end
+    if (FEATURE_DSX!="NONE")
+      spr_sr[`OR1K_SPR_SR_DSX ] <= spr_write_dat[`OR1K_SPR_SR_DSX ];
+
+    spr_sr[`OR1K_SPR_SR_EPH ] <= spr_write_dat[`OR1K_SPR_SR_EPH ];
+  end
+  else if (padv_ctrl) begin
+    spr_sr[`OR1K_SPR_SR_F   ] <= ctrl_flag_set ? 1 :
+    ctrl_flag_clear ? 0 :
+    spr_sr[`OR1K_SPR_SR_F   ];
+
+    if (FEATURE_CARRY_FLAG!="NONE")
+      spr_sr[`OR1K_SPR_SR_CY] <= ctrl_carry_set_i ? 1 :
+      ctrl_carry_clear_i ? 0 :
+      spr_sr[`OR1K_SPR_SR_CY];
+    if (FEATURE_OVERFLOW!="NONE")
+      spr_sr[`OR1K_SPR_SR_OV   ] <= ctrl_overflow_set_i ? 1 :
+      ctrl_overflow_clear_i ? 0 :
+      spr_sr[`OR1K_SPR_SR_OV   ];
+    // Skip FO. TODO: make this even more selective.
+    if (ctrl_op_rfe_i)
+      spr_sr[14:0] <= spr_esr[14:0];
+  end
 
 
   // Exception SR
   always @(posedge clk)
     if (rst)
       spr_esr <= SPR_SR_RESET_VALUE;
-  else if (exception_re)
-    begin
-      spr_esr <= spr_sr;
-      if (FEATURE_OVERFLOW!="NONE")
-        begin
-          if (ctrl_overflow_set_i)
-            spr_esr[`OR1K_SPR_SR_OV] <= 1'b1;
-          else if (ctrl_overflow_clear_i)
-            spr_esr[`OR1K_SPR_SR_OV] <= 1'b0;
-        end
-      if (FEATURE_CARRY_FLAG!="NONE") begin
-        if (ctrl_carry_set_i)
-          spr_esr[`OR1K_SPR_SR_CY] <= 1'b1;
-        else if (ctrl_carry_clear_i)
-          spr_esr[`OR1K_SPR_SR_CY] <= 1'b0;
-      end
+  else if (exception_re) begin
+    spr_esr <= spr_sr;
+    if (FEATURE_OVERFLOW!="NONE") begin
+      if (ctrl_overflow_set_i)
+        spr_esr[`OR1K_SPR_SR_OV] <= 1'b1;
+      else if (ctrl_overflow_clear_i)
+        spr_esr[`OR1K_SPR_SR_OV] <= 1'b0;
     end
+    if (FEATURE_CARRY_FLAG!="NONE") begin
+      if (ctrl_carry_set_i)
+        spr_esr[`OR1K_SPR_SR_CY] <= 1'b1;
+      else if (ctrl_carry_clear_i)
+        spr_esr[`OR1K_SPR_SR_CY] <= 1'b0;
+    end
+  end
   else if (spr_we && spr_access[`OR1K_SPR_SYS_BASE] &&
-           `SPR_OFFSET(spr_addr)==`SPR_OFFSET(`OR1K_SPR_ESR0_ADDR))
-    begin
-      spr_esr[`OR1K_SPR_SR_SM  ] <= spr_write_dat[`OR1K_SPR_SR_SM  ];
+           `SPR_OFFSET(spr_addr)==`SPR_OFFSET(`OR1K_SPR_ESR0_ADDR)) begin
+    spr_esr[`OR1K_SPR_SR_SM  ] <= spr_write_dat[`OR1K_SPR_SR_SM  ];
 
-      spr_esr[`OR1K_SPR_SR_F  ] <= spr_write_dat[`OR1K_SPR_SR_F  ];
+    spr_esr[`OR1K_SPR_SR_F  ] <= spr_write_dat[`OR1K_SPR_SR_F  ];
 
-      if (FEATURE_TIMER!="NONE")
-        spr_esr[`OR1K_SPR_SR_TEE ] <= spr_write_dat[`OR1K_SPR_SR_TEE ];
+    if (FEATURE_TIMER!="NONE")
+      spr_esr[`OR1K_SPR_SR_TEE ] <= spr_write_dat[`OR1K_SPR_SR_TEE ];
 
-      if (FEATURE_PIC!="NONE")
-        spr_esr[`OR1K_SPR_SR_IEE ] <= spr_write_dat[`OR1K_SPR_SR_IEE ];
+    if (FEATURE_PIC!="NONE")
+      spr_esr[`OR1K_SPR_SR_IEE ] <= spr_write_dat[`OR1K_SPR_SR_IEE ];
 
-      if (FEATURE_DATACACHE!="NONE")
-        spr_esr[`OR1K_SPR_SR_DCE ] <= spr_write_dat[`OR1K_SPR_SR_DCE ];
+    if (FEATURE_DATACACHE!="NONE")
+      spr_esr[`OR1K_SPR_SR_DCE ] <= spr_write_dat[`OR1K_SPR_SR_DCE ];
 
-      if (FEATURE_INSTRUCTIONCACHE!="NONE")
-        spr_esr[`OR1K_SPR_SR_ICE ] <= spr_write_dat[`OR1K_SPR_SR_ICE ];
+    if (FEATURE_INSTRUCTIONCACHE!="NONE")
+      spr_esr[`OR1K_SPR_SR_ICE ] <= spr_write_dat[`OR1K_SPR_SR_ICE ];
 
-      if (FEATURE_DMMU!="NONE")
-        spr_esr[`OR1K_SPR_SR_DME ] <= spr_write_dat[`OR1K_SPR_SR_DME ];
+    if (FEATURE_DMMU!="NONE")
+      spr_esr[`OR1K_SPR_SR_DME ] <= spr_write_dat[`OR1K_SPR_SR_DME ];
 
-      if (FEATURE_IMMU!="NONE")
-        spr_esr[`OR1K_SPR_SR_IME ] <= spr_write_dat[`OR1K_SPR_SR_IME ];
+    if (FEATURE_IMMU!="NONE")
+      spr_esr[`OR1K_SPR_SR_IME ] <= spr_write_dat[`OR1K_SPR_SR_IME ];
 
-      if (FEATURE_FASTCONTEXTS!="NONE")
-        spr_esr[`OR1K_SPR_SR_CE  ] <= spr_write_dat[`OR1K_SPR_SR_CE  ];
+    if (FEATURE_FASTCONTEXTS!="NONE")
+      spr_esr[`OR1K_SPR_SR_CE  ] <= spr_write_dat[`OR1K_SPR_SR_CE  ];
 
-      if (FEATURE_CARRY_FLAG!="NONE")
-        spr_esr[`OR1K_SPR_SR_CY] <= spr_write_dat[`OR1K_SPR_SR_CY];
+    if (FEATURE_CARRY_FLAG!="NONE")
+      spr_esr[`OR1K_SPR_SR_CY] <= spr_write_dat[`OR1K_SPR_SR_CY];
 
-      if (FEATURE_OVERFLOW!="NONE") begin
-        spr_esr[`OR1K_SPR_SR_OV  ] <= spr_write_dat[`OR1K_SPR_SR_OV  ];
-        spr_esr[`OR1K_SPR_SR_OVE ] <= spr_write_dat[`OR1K_SPR_SR_OVE ];
-      end
-
-      if (FEATURE_DSX!="NONE")
-        spr_esr[`OR1K_SPR_SR_DSX ] <= spr_write_dat[`OR1K_SPR_SR_DSX ];
-
-      spr_esr[`OR1K_SPR_SR_EPH ] <= spr_write_dat[`OR1K_SPR_SR_EPH ];
+    if (FEATURE_OVERFLOW!="NONE") begin
+      spr_esr[`OR1K_SPR_SR_OV  ] <= spr_write_dat[`OR1K_SPR_SR_OV  ];
+      spr_esr[`OR1K_SPR_SR_OVE ] <= spr_write_dat[`OR1K_SPR_SR_OVE ];
     end
+
+    if (FEATURE_DSX!="NONE")
+      spr_esr[`OR1K_SPR_SR_DSX ] <= spr_write_dat[`OR1K_SPR_SR_DSX ];
+
+    spr_esr[`OR1K_SPR_SR_EPH ] <= spr_write_dat[`OR1K_SPR_SR_EPH ];
+  end
 
   always @(posedge clk)
     if (rst)
@@ -821,22 +815,22 @@ module mor1kx_ctrl_cappuccino #(
       // i.e. single stepping.
       else if (!(except_trap_i & stall_on_trap))
         spr_epcr <= ctrl_epcr_o;
-    end else if (spr_we && spr_access[`OR1K_SPR_SYS_BASE] &&
-                 `SPR_OFFSET(spr_addr)==`SPR_OFFSET(`OR1K_SPR_EPCR0_ADDR)) begin
-      spr_epcr <= spr_write_dat;
     end
+  else if (spr_we && spr_access[`OR1K_SPR_SYS_BASE] &&
+           `SPR_OFFSET(spr_addr)==`SPR_OFFSET(`OR1K_SPR_EPCR0_ADDR)) begin
+    spr_epcr <= spr_write_dat;
+  end
 
   // Exception Effective Address
   always @(posedge clk)
     if (rst)
       spr_eear <= {OPTION_OPERAND_WIDTH{1'b0}};
-  else if (/*padv_ctrl & exception*/ exception_re)
-    begin
-      if (except_ibus_err_i | except_itlb_miss_i | except_ipagefault_i)
-        spr_eear <= pc_ctrl_i;
-      else
-        spr_eear <= ctrl_lsu_adr_i;
-    end
+  else if (/*padv_ctrl & exception*/ exception_re) begin
+    if (except_ibus_err_i | except_itlb_miss_i | except_ipagefault_i)
+      spr_eear <= pc_ctrl_i;
+    else
+      spr_eear <= ctrl_lsu_adr_i;
+  end
 
   // Track the PC
   always @(posedge clk)
@@ -846,28 +840,30 @@ module mor1kx_ctrl_cappuccino #(
     spr_ppc <= pc_ctrl_i;
 
   // Generate the NPC for SPR accesses
-  always @(posedge clk)
+  always @(posedge clk) begin
     if (rst)
       spr_npc <= OPTION_RESET_PC;
-  else if (du_npc_write)
-    spr_npc <= du_dat_i;
-  else if (du_npc_written)
-    spr_npc <= spr_npc;
-  else if (stepping) begin
-    if (stepped_into_rfe)
-      spr_npc <= spr_epcr;
-    else if (stepped_into_delay_slot)
-      spr_npc <= last_branch_target_pc;
-    else if (stepped_into_exception)
-      spr_npc <= exception_pc_addr;
-    else
-      spr_npc <= pc_ctrl_i + 4;
-  end else if (stall_on_trap & padv_ctrl & except_trap_i)
-    spr_npc <= pc_ctrl_i;
-  else if (cpu_stall & padv_ctrl)
-    spr_npc <= ctrl_delay_slot ? pc_ctrl_i - 4 : pc_ctrl_i;
-  else if (!cpu_stall)
-    spr_npc <= pc_execute_i;
+    else if (du_npc_write)
+      spr_npc <= du_dat_i;
+    else if (du_npc_written)
+      spr_npc <= spr_npc;
+    else if (stepping) begin
+      if (stepped_into_rfe)
+        spr_npc <= spr_epcr;
+      else if (stepped_into_delay_slot)
+        spr_npc <= last_branch_target_pc;
+      else if (stepped_into_exception)
+        spr_npc <= exception_pc_addr;
+      else
+        spr_npc <= pc_ctrl_i + 4;
+    end
+    else if (stall_on_trap & padv_ctrl & except_trap_i)
+      spr_npc <= pc_ctrl_i;
+    else if (cpu_stall & padv_ctrl)
+      spr_npc <= ctrl_delay_slot ? pc_ctrl_i - 4 : pc_ctrl_i;
+    else if (!cpu_stall)
+      spr_npc <= pc_execute_i;
+  end
 
   // Exception Vector Address
   always @(posedge clk)
@@ -890,8 +886,8 @@ module mor1kx_ctrl_cappuccino #(
   else if (padv_execute_o)
     ctrl_delay_slot <= execute_delay_slot;
 
-  mor1kx_cfgrs
-  #(.FEATURE_PIC			(FEATURE_PIC),
+  mor1kx_cfgrs #(
+    .FEATURE_PIC			(FEATURE_PIC),
     .FEATURE_TIMER			(FEATURE_TIMER),
     .OPTION_PIC_TRIGGER		(OPTION_PIC_TRIGGER),
     .FEATURE_DSX			(FEATURE_DSX),
@@ -922,9 +918,8 @@ module mor1kx_ctrl_cappuccino #(
     .FEATURE_RANGE			(FEATURE_RANGE),
     .FEATURE_DELAYSLOT               ("ENABLED"),
     .FEATURE_EVBAR                   ("ENABLED")
-   )
-  mor1kx_cfgrs
-  (/*AUTOINST*/
+  )
+  mor1kx_cfgrs (/*AUTOINST*/
     // Outputs
     .spr_vr				(spr_vr[31:0]),
     .spr_vr2				(spr_vr2[31:0]),
@@ -1079,8 +1074,7 @@ module mor1kx_ctrl_cappuccino #(
           .spr_addr_i           (spr_addr),
           .spr_dat_i            (spr_write_dat),
           );*/
-      mor1kx_pic
-      #(
+      mor1kx_pic #(
         .OPTION_PIC_TRIGGER(OPTION_PIC_TRIGGER),
         .OPTION_PIC_NMI_WIDTH(OPTION_PIC_NMI_WIDTH)
       )
@@ -1128,8 +1122,7 @@ module mor1kx_ctrl_cappuccino #(
           .spr_addr_i           (spr_addr),
           .spr_dat_i            (spr_write_dat),
           );*/
-      mor1kx_pcu
-      #(
+      mor1kx_pcu #(
         .OPTION_PERFCOUNTERS_NUM(OPTION_PERFCOUNTERS_NUM)
       )
       mor1kx_pcu
@@ -1474,31 +1467,29 @@ module mor1kx_ctrl_cappuccino #(
         spr_drr[`OR1K_SPR_DRR_TE] <= 1;
 
     end // block: du
-    else
-      begin : no_du
-        assign du_access = 0;
-        assign du_stall_o = 0;
-        assign du_ack_o = 0;
-        assign du_restart_o = 0;
-        assign du_restart_pc_o = 0;
-        assign stepping = 0;
-        assign du_npc_write = 0;
-        assign stepped_into_delay_slot = 0;
-        assign du_dat_o = 0;
-        assign du_restart_from_stall = 0;
-        assign spr_access_ack[`OR1K_SPR_DU_BASE] = 0;
-        assign spr_internal_read_dat[`OR1K_SPR_DU_BASE] = 0;
-        assign stall_on_trap = 0;
-        always @(posedge clk)
-          begin
-            spr_dmr1 <= 0;
-            spr_dmr2 <= 0;
-            spr_dsr <= 0;
-            spr_drr <= 0;
-            du_npc_written <= 0;
-            cpu_stall <= 0;
-          end
+    else begin : no_du
+      assign du_access = 0;
+      assign du_stall_o = 0;
+      assign du_ack_o = 0;
+      assign du_restart_o = 0;
+      assign du_restart_pc_o = 0;
+      assign stepping = 0;
+      assign du_npc_write = 0;
+      assign stepped_into_delay_slot = 0;
+      assign du_dat_o = 0;
+      assign du_restart_from_stall = 0;
+      assign spr_access_ack[`OR1K_SPR_DU_BASE] = 0;
+      assign spr_internal_read_dat[`OR1K_SPR_DU_BASE] = 0;
+      assign stall_on_trap = 0;
+      always @(posedge clk) begin
+        spr_dmr1 <= 0;
+        spr_dmr2 <= 0;
+        spr_dsr <= 0;
+        spr_drr <= 0;
+        du_npc_written <= 0;
+        cpu_stall <= 0;
       end
+    end
   endgenerate
 
   // Controls to generate ACKs from units that are external to this module
@@ -1509,7 +1500,8 @@ module mor1kx_ctrl_cappuccino #(
       assign spr_internal_read_dat[`OR1K_SPR_DMMU_BASE] =
         spr_bus_dat_dmmu_i &
       {OPTION_OPERAND_WIDTH{spr_access[`OR1K_SPR_DMMU_BASE]}};
-    end else begin
+    end
+    else begin
       assign spr_access_ack[`OR1K_SPR_DMMU_BASE] = 0;
       assign spr_internal_read_dat[`OR1K_SPR_DMMU_BASE] = 0;
     end
@@ -1522,7 +1514,8 @@ module mor1kx_ctrl_cappuccino #(
       assign spr_internal_read_dat[`OR1K_SPR_IMMU_BASE] =
         spr_bus_dat_immu_i &
       {OPTION_OPERAND_WIDTH{spr_access[`OR1K_SPR_IMMU_BASE]}};
-    end else begin
+    end
+    else begin
       assign spr_access_ack[`OR1K_SPR_IMMU_BASE] = 0;
       assign spr_internal_read_dat[`OR1K_SPR_IMMU_BASE] = 0;
     end
@@ -1534,7 +1527,8 @@ module mor1kx_ctrl_cappuccino #(
         spr_access[`OR1K_SPR_DC_BASE];
       assign spr_internal_read_dat[`OR1K_SPR_DC_BASE] =
         spr_bus_dat_dc_i & {OPTION_OPERAND_WIDTH{spr_access[`OR1K_SPR_DC_BASE]}};
-    end else begin
+    end
+    else begin
       assign spr_access_ack[`OR1K_SPR_DC_BASE] = 0;
       assign spr_internal_read_dat[`OR1K_SPR_DC_BASE] = 0;
     end
@@ -1546,7 +1540,8 @@ module mor1kx_ctrl_cappuccino #(
         spr_access[`OR1K_SPR_IC_BASE];
       assign spr_internal_read_dat[`OR1K_SPR_IC_BASE] =
         spr_bus_dat_ic_i & {OPTION_OPERAND_WIDTH{spr_access[`OR1K_SPR_IC_BASE]}};
-    end else begin
+    end
+    else begin
       assign spr_access_ack[`OR1K_SPR_IC_BASE] = 0;
       assign spr_internal_read_dat[`OR1K_SPR_IC_BASE] = 0;
     end
@@ -1559,7 +1554,8 @@ module mor1kx_ctrl_cappuccino #(
       assign spr_internal_read_dat[`OR1K_SPR_MAC_BASE] =
         spr_bus_dat_mac_i &
       {OPTION_OPERAND_WIDTH{spr_access[`OR1K_SPR_MAC_BASE]}};
-    end else begin
+    end
+    else begin
       assign spr_access_ack[`OR1K_SPR_MAC_BASE] = 0;
       assign spr_internal_read_dat[`OR1K_SPR_MAC_BASE] = 0;
     end
@@ -1571,7 +1567,8 @@ module mor1kx_ctrl_cappuccino #(
         spr_access[`OR1K_SPR_PM_BASE];
       assign spr_internal_read_dat[`OR1K_SPR_PM_BASE] =
         spr_bus_dat_pmu_i & {OPTION_OPERAND_WIDTH{spr_access[`OR1K_SPR_PM_BASE]}};
-    end else begin
+    end
+    else begin
       assign spr_access_ack[`OR1K_SPR_PM_BASE] = 0;
       assign spr_internal_read_dat[`OR1K_SPR_PM_BASE] = 0;
     end

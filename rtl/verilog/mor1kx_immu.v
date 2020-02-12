@@ -162,7 +162,8 @@ module mor1kx_immu #(
         sxe = itlb_trans_huge_dout[j][6];
         uxe = itlb_trans_huge_dout[j][7];
         cache_inhibit_o = itlb_trans_huge_dout[j][1];
-      end else if (!way_huge[j] & way_hit[j])begin
+      end
+      else if (!way_huge[j] & way_hit[j])begin
         phys_addr_o = {itlb_trans_dout[j][31:13], virt_addr_match_i[12:0]};
         sxe = itlb_trans_dout[j][6];
         uxe = itlb_trans_dout[j][7];
@@ -199,7 +200,8 @@ module mor1kx_immu #(
       itlb_trans_spr_cs_r <= 0;
       immucr_spr_cs_r <= 0;
       spr_way_idx_r <= 0;
-    end else begin
+    end
+    else begin
       itlb_match_spr_cs_r <= itlb_match_spr_cs;
       itlb_trans_spr_cs_r <= itlb_trans_spr_cs;
       immucr_spr_cs_r <= immucr_spr_cs;
@@ -218,7 +220,8 @@ module mor1kx_immu #(
       else if (immucr_spr_cs & spr_bus_we_i)
         immucr <= spr_bus_dat_i;
 
-    end else begin
+    end
+    else begin
       assign immucr_spr_cs = 0;
       always @(posedge clk)
         immucr <= 0;
@@ -329,11 +332,13 @@ module mor1kx_immu #(
                 tlb_reload_pagefault <= 1;
                 tlb_reload_req_o <= 0;
                 tlb_reload_state <= TLB_IDLE;
-              end else if (tlb_reload_data_i[9]) begin
+              end
+              else if (tlb_reload_data_i[9]) begin
                 tlb_reload_huge <= 1;
                 tlb_reload_req_o <= 0;
                 tlb_reload_state <= TLB_GET_PTE;
-              end else begin
+              end
+              else begin
                 tlb_reload_addr_o <= {tlb_reload_data_i[31:13],
                                       virt_addr_match_i[23:13], 2'b00};
                 tlb_reload_state <= TLB_GET_PTE;
@@ -352,7 +357,8 @@ module mor1kx_immu #(
               if (!tlb_reload_data_i[10]) begin
                 tlb_reload_pagefault <= 1;
                 tlb_reload_state <= TLB_IDLE;
-              end else begin
+              end
+              else begin
                 // Translate register generation.
                 // PPN
                 itlb_trans_reload_din[31:13] <= tlb_reload_data_i[31:13];
@@ -390,7 +396,8 @@ module mor1kx_immu #(
 
         endcase
       end
-    end else begin // if (FEATURE_IMMU_HW_TLB_RELOAD == "ENABLED")
+    end
+    else begin // if (FEATURE_IMMU_HW_TLB_RELOAD == "ENABLED")
       assign tlb_reload_pagefault_o = 0;
       assign tlb_reload_busy_o = 0;
       always @(posedge clk) begin

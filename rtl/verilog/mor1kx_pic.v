@@ -95,7 +95,8 @@ module mor1kx_pic (/*AUTOARG*/
         else if (spr_we_i & spr_picsr_access & spr_dat_i[irqline])
           spr_picsr[irqline] <= 0;
       end
-    end else if (OPTION_PIC_TRIGGER=="LEVEL") begin : level_triggered
+    end
+    else if (OPTION_PIC_TRIGGER=="LEVEL") begin : level_triggered
       for(irqline=0;irqline<32;irqline=irqline+1)
         begin: picsrlevelgenerate
           // PIC status register

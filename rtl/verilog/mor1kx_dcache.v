@@ -344,10 +344,12 @@ module mor1kx_dcache #(
     if (rst) begin
       state <= IDLE;
       write_pending <= 0;
-    end else if(dc_dbus_err_i) begin
+    end
+    else if(dc_dbus_err_i) begin
       state <= IDLE;
       write_pending <= 0;
-    end else begin
+    end
+    else begin
       if (cpu_we_i)
         write_pending <= 1;
       else if (!cpu_req_i)
@@ -364,7 +366,8 @@ module mor1kx_dcache #(
         snoop_check <= 1;
         snoop_windex <= snoop_index;
         snoop_tag <= snoop_adr_i[OPTION_DCACHE_LIMIT_WIDTH-1:WAY_WIDTH];
-      end else begin
+      end
+      else begin
         snoop_check <= 0;
       end
 
@@ -380,7 +383,8 @@ module mor1kx_dcache #(
             // Change to invalidate state that actually accesses
             // the tag memory
             state <= INVALIDATE;
-          end else if (cpu_we_i | write_pending)
+          end
+          else if (cpu_we_i | write_pending)
             state <= WRITE;
           else if (cpu_req_i)
             state <= READ;
@@ -401,12 +405,15 @@ module mor1kx_dcache #(
               end
 
               state <= REFILL;
-            end else if (cpu_we_i | write_pending) begin
+            end
+            else if (cpu_we_i | write_pending) begin
               state <= WRITE;
-            end else if (invalidate) begin
+            end
+            else if (invalidate) begin
               state <= IDLE;
             end
-          end else if (!dc_enable_i | invalidate) begin
+          end
+          else if (!dc_enable_i | invalidate) begin
             state <= IDLE;
           end
         end
@@ -441,7 +448,8 @@ module mor1kx_dcache #(
             invalidate_adr <= spr_bus_dat_i[WAY_WIDTH-1:OPTION_DCACHE_BLOCK_WIDTH];
 
             state <= INVALIDATE;
-          end else begin
+          end
+          else begin
             state <= IDLE;
           end
         end
@@ -481,11 +489,13 @@ module mor1kx_dcache #(
       for (w2 = 0; w2 < OPTION_DCACHE_WAYS; w2 = w2 + 1) begin
         if (snoop_way_hit[w2]) begin
           tag_way_in[w2] = 0;
-        end else begin
+        end
+        else begin
           tag_way_in[w2] = snoop_way_out[w2];
         end
       end
-    end else begin
+    end
+    else begin
       //
       // The tag mem is written during reads and writes to write
       // the lru info and  during refill and invalidate.

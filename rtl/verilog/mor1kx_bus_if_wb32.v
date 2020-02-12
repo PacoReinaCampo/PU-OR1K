@@ -130,7 +130,8 @@ module mor1kx_bus_if_wb32 #(
       assign cpu_dat_o = wbm_err_i ? 0 :  wbm_dat_i;
 
       /* verilator lint_off WIDTH */
-    end else if (BUS_IF_TYPE=="B3_REGISTERED_FEEDBACK") begin : b3_registered_feedback
+    end
+    else if (BUS_IF_TYPE=="B3_REGISTERED_FEEDBACK") begin : b3_registered_feedback
       /* verilator lint_on WIDTH */
 
       assign wbm_adr_o = cpu_adr_i;
@@ -149,7 +150,8 @@ module mor1kx_bus_if_wb32 #(
       assign cpu_ack_o = wbm_ack_i;
       assign cpu_dat_o = wbm_dat_i;
 
-    end else begin : classic // CLASSIC only
+    end
+    else begin : classic // CLASSIC only
 
       // Only classic, single cycle accesses
 

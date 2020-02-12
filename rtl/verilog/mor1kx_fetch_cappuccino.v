@@ -385,18 +385,21 @@ module mor1kx_fetch_cappuccino #(
             ibus_adr <= tlb_reload_addr;
             ibus_req <= 1;
             state <= TLB_RELOAD;
-          end else if (immu_enable_i) begin
+          end
+          else if (immu_enable_i) begin
             ibus_adr <= immu_phys_addr;
             if (!tlb_miss & !pagefault & !immu_busy) begin
               ibus_req <= 1;
               state <= READ;
             end
-          end else if (!ctrl_branch_exception_i | doing_rfe_i) begin
+          end
+          else if (!ctrl_branch_exception_i | doing_rfe_i) begin
             ibus_adr <= pc_fetch;
             ibus_req <= 1;
             state <= READ;
           end
-        end else if (ic_refill_req) begin
+        end
+        else if (ic_refill_req) begin
           ibus_adr <= ic_addr_match;
           ibus_req <= 1;
           state <= IC_REFILL;
@@ -480,12 +483,14 @@ module mor1kx_fetch_cappuccino #(
       if (OPTION_ICACHE_LIMIT_WIDTH == OPTION_OPERAND_WIDTH) begin
         assign ic_access = ic_enabled &
           !(immu_cache_inhibit & immu_enable_i);
-      end else if (OPTION_ICACHE_LIMIT_WIDTH < OPTION_OPERAND_WIDTH) begin
+      end
+      else if (OPTION_ICACHE_LIMIT_WIDTH < OPTION_OPERAND_WIDTH) begin
         assign ic_access = ic_enabled &
           ic_addr_match[OPTION_OPERAND_WIDTH-1:
                         OPTION_ICACHE_LIMIT_WIDTH] == 0 &
           !(immu_cache_inhibit & immu_enable_i);
-      end else begin
+      end
+      else begin
         initial begin
           $display("ERROR: OPTION_ICACHE_LIMIT_WIDTH > OPTION_OPERAND_WIDTH");
           $finish();
@@ -548,7 +553,8 @@ module mor1kx_fetch_cappuccino #(
         .spr_bus_we_i			(spr_bus_we_i),
         .spr_bus_stb_i			(spr_bus_stb_i),
         .spr_bus_dat_i			(spr_bus_dat_i[OPTION_OPERAND_WIDTH-1:0]));
-    end else begin // block: icache_gen
+    end
+    else begin // block: icache_gen
       assign ic_access = 0;
       assign ic_refill = 0;
       assign ic_refill_req = 1'b0;
@@ -630,7 +636,8 @@ module mor1kx_fetch_cappuccino #(
         .spr_bus_we_i			(spr_bus_we_i),
         .spr_bus_stb_i			(immu_spr_bus_stb),	 // Templated
         .spr_bus_dat_i			(spr_bus_dat_i[OPTION_OPERAND_WIDTH-1:0]));
-    end else begin
+    end
+    else begin
       assign immu_cache_inhibit = 0;
       assign immu_busy = 0;
       assign tlb_miss = 0;

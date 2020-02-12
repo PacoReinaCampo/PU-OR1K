@@ -163,61 +163,51 @@ module mor1kx_fetch_tcm_prontoespresso (/*AUTOARG*/
   assign buffered_insn_is_jump = insn_buffered & next_insn_will_branch;
 
   always @(posedge clk)
-    if (rst)
-      begin
-        current_bus_pc		<= OPTION_RESET_PC;
-        just_took_branch_addr         <= 0;
-      end
-  else if (du_restart_i)
-    begin
-      current_bus_pc <= du_restart_pc_i;
+    if (rst) begin
+      current_bus_pc		<= OPTION_RESET_PC;
       just_took_branch_addr         <= 0;
     end
-  else if (fetch_take_exception_branch_i)
-    begin
-      current_bus_pc <= branch_dest_i;
-      just_took_branch_addr         <= 1;
-    end
-  else if (branch_occur_i & padv_i)
-    begin
-      current_bus_pc <= branch_dest_i;
-      just_took_branch_addr         <= 1;
-    end
+  else if (du_restart_i) begin
+    current_bus_pc <= du_restart_pc_i;
+    just_took_branch_addr         <= 0;
+  end
+  else if (fetch_take_exception_branch_i) begin
+    current_bus_pc <= branch_dest_i;
+    just_took_branch_addr         <= 1;
+  end
+  else if (branch_occur_i & padv_i) begin
+    current_bus_pc <= branch_dest_i;
+    just_took_branch_addr         <= 1;
+  end
   else if (ibus_ack_i & (padv_i | (just_waited_single_cycle_r &&
     !({padv_r[0],padv_i}==2'b00))) &
-           !execute_waited_single_cycle & !stepping_i)
-    begin
-      current_bus_pc <= next_bus_pc;
-      just_took_branch_addr         <= 0;
-    end
-  else if (execute_waiting_asserted & ibus_ack_i & !just_took_branch_addr)
-    begin
-      current_bus_pc <= next_bus_pc;
-    end
-  else if (just_took_branch_addr)
-    begin
-      just_took_branch_addr <= 0;
-    end
+           !execute_waited_single_cycle & !stepping_i) begin
+    current_bus_pc <= next_bus_pc;
+    just_took_branch_addr         <= 0;
+  end
+  else if (execute_waiting_asserted & ibus_ack_i & !just_took_branch_addr) begin
+    current_bus_pc <= next_bus_pc;
+  end
+  else if (just_took_branch_addr) begin
+    just_took_branch_addr <= 0;
+  end
 
-  else if (long_stall)
-    begin
-      // Long wait - this is a work around for an annoying bug which
-      // I can't solve any other way!
-      current_bus_pc <= fetched_pc_o + 4;
-    end
+  else if (long_stall) begin
+    // Long wait - this is a work around for an annoying bug which
+    // I can't solve any other way!
+    current_bus_pc <= fetched_pc_o + 4;
+  end
 
   // BIG assumptions here - that the read only takes a single cycle!!
   always @(posedge clk)
-    if (rst)
-      begin
-        insn_from_branch_on_input <= 0;
-        insn_from_branch_in_pipeline <= 0;
-      end
-  else
-    begin
-      insn_from_branch_on_input <= just_took_branch_addr;
-      insn_from_branch_in_pipeline <= insn_from_branch_on_input;
+    if (rst) begin
+      insn_from_branch_on_input <= 0;
+      insn_from_branch_in_pipeline <= 0;
     end
+  else begin
+    insn_from_branch_on_input <= just_took_branch_addr;
+    insn_from_branch_in_pipeline <= insn_from_branch_on_input;
+  end
 
 
   always @(posedge clk)
@@ -263,37 +253,31 @@ module mor1kx_fetch_tcm_prontoespresso (/*AUTOARG*/
     addr_pipelined <= 0;
 
   always @(posedge clk)
-    if (rst)
-      begin
-        decode_insn_o <= {`OR1K_OPCODE_NOP,26'd0};
-        fetched_pc_o  <= 0;
-      end
-  else if (sleep | (du_stall_i & !execute_waiting_i))
-    begin
+    if (rst) begin
       decode_insn_o <= {`OR1K_OPCODE_NOP,26'd0};
+      fetched_pc_o  <= 0;
     end
-  else if (fetch_take_exception_branch_i & !du_stall_i)
-    begin
-      decode_insn_o <= {`OR1K_OPCODE_NOP,26'd0};
-    end
+  else if (sleep | (du_stall_i & !execute_waiting_i)) begin
+    decode_insn_o <= {`OR1K_OPCODE_NOP,26'd0};
+  end
+  else if (fetch_take_exception_branch_i & !du_stall_i) begin
+    decode_insn_o <= {`OR1K_OPCODE_NOP,26'd0};
+  end
   else if ((padv_i | stepping_i) & ibus_ack_i & (ibus_req_o | stepping_i) &
            ((!jump_insn_in_decode & !just_took_branch_addr) |
             (insn_from_branch_on_input))
-           & !(execute_waited_single_cycle | just_waited_single_cycle))
-    begin
-      decode_insn_o <= ibus_dat_i;
-      fetched_pc_o  <= current_bus_pc;
-    end
-  else if (just_waited_single_cycle_r & !execute_waiting_i)
-    begin
-      decode_insn_o <= ibus_dat_i;
-      fetched_pc_o  <= current_bus_pc;
-    end
-  else if (execute_waiting_deasserted & insn_buffered)
-    begin
-      decode_insn_o <= insn_buffer;
-      fetched_pc_o  <= fetched_pc_o + 4;
-    end
+           & !(execute_waited_single_cycle | just_waited_single_cycle)) begin
+    decode_insn_o <= ibus_dat_i;
+    fetched_pc_o  <= current_bus_pc;
+  end
+  else if (just_waited_single_cycle_r & !execute_waiting_i) begin
+    decode_insn_o <= ibus_dat_i;
+    fetched_pc_o  <= current_bus_pc;
+  end
+  else if (execute_waiting_deasserted & insn_buffered) begin
+    decode_insn_o <= insn_buffer;
+    fetched_pc_o  <= fetched_pc_o + 4;
+  end
   else if ((jump_insn_in_decode | branch_occur_i) & padv_i)
     // About to jump - remove this instruction from the pipeline
     decode_insn_o <= {`OR1K_OPCODE_NOP,26'd0};
@@ -375,10 +359,9 @@ module mor1kx_fetch_tcm_prontoespresso (/*AUTOARG*/
           next_insn_will_branch	= 0;
         end
       endcase // case (next_insn_opcode)
-  else
-    begin
-      next_insn_will_branch		= 0;
-    end
+  else begin
+    next_insn_will_branch		= 0;
+  end
 
   always @(posedge clk)
     if (rst)
@@ -444,16 +427,14 @@ module mor1kx_fetch_tcm_prontoespresso (/*AUTOARG*/
     !execute_waiting_i;
 
   always @(posedge clk)
-    if (rst)
-      begin
-        just_waited_single_cycle <= 0;
-        just_waited_single_cycle_r <= 0;
-      end
-  else
-    begin
-      just_waited_single_cycle <= execute_waited_single_cycle;
-      just_waited_single_cycle_r <= just_waited_single_cycle;
+    if (rst) begin
+      just_waited_single_cycle <= 0;
+      just_waited_single_cycle_r <= 0;
     end
+  else begin
+    just_waited_single_cycle <= execute_waited_single_cycle;
+    just_waited_single_cycle_r <= just_waited_single_cycle;
+  end
 
   always @(posedge clk)
     if (rst)

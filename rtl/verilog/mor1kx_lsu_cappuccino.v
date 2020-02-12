@@ -409,14 +409,16 @@ module mor1kx_lsu_cappuccino #(
         last_write <= 0;
         if (store_buffer_write | !store_buffer_empty) begin
           state <= WRITE;
-        end else if (ctrl_op_lsu & dbus_access & !dc_refill & !dbus_ack &
+        end
+        else if (ctrl_op_lsu & dbus_access & !dc_refill & !dbus_ack &
           !dbus_err & !except_dbus & !access_done &
           !pipeline_flush_i) begin
           if (tlb_reload_req) begin
             dbus_adr <= tlb_reload_addr;
             dbus_req_o <= 1;
             state <= TLB_RELOAD;
-          end else if (dmmu_enable_i) begin
+          end
+          else if (dmmu_enable_i) begin
             dbus_adr <= dmmu_phys_addr;
             if (!tlb_miss & !pagefault & !except_align) begin
               if (ctrl_op_lsu_load_i) begin
@@ -425,7 +427,8 @@ module mor1kx_lsu_cappuccino #(
                 state <= READ;
               end
             end
-          end else if (!except_align) begin
+          end
+          else if (!except_align) begin
             dbus_adr <= ctrl_lsu_adr_i;
             if (ctrl_op_lsu_load_i) begin
               dbus_req_o <= 1;
@@ -433,7 +436,8 @@ module mor1kx_lsu_cappuccino #(
               state <= READ;
             end
           end
-        end else if (dc_refill_req) begin
+        end
+        else if (dc_refill_req) begin
           dbus_req_o <= 1;
           dbus_adr <= dc_adr_match;
           state <= DC_REFILL;
@@ -563,7 +567,8 @@ module mor1kx_lsu_cappuccino #(
       assign atomic_flag_set_o = atomic_flag_set;
       assign atomic_flag_clear_o = atomic_flag_clear;
 
-    end else begin
+    end
+    else begin
       assign atomic_flag_set_o = 0;
       assign atomic_flag_clear_o = 0;
       assign swa_success = 0;
@@ -627,7 +632,8 @@ module mor1kx_lsu_cappuccino #(
         .full_o	(store_buffer_full),
         .empty_o	(store_buffer_empty)
       );
-    end else begin
+    end
+    else begin
       assign store_buffer_epcr_o = ctrl_epcr_i;
       assign store_buffer_radr = store_buffer_wadr;
       assign store_buffer_dat = lsu_sdat;
@@ -674,12 +680,14 @@ module mor1kx_lsu_cappuccino #(
       if (OPTION_DCACHE_LIMIT_WIDTH == OPTION_OPERAND_WIDTH) begin
         assign dc_access =  ctrl_op_lsu_store_i | dc_enabled &
           !(dmmu_cache_inhibit & dmmu_enable_i);
-      end else if (OPTION_DCACHE_LIMIT_WIDTH < OPTION_OPERAND_WIDTH) begin
+      end
+      else if (OPTION_DCACHE_LIMIT_WIDTH < OPTION_OPERAND_WIDTH) begin
         assign dc_access = ctrl_op_lsu_store_i | dc_enabled &
           dc_adr_match[OPTION_OPERAND_WIDTH-1:
                        OPTION_DCACHE_LIMIT_WIDTH] == 0 &
           !(dmmu_cache_inhibit & dmmu_enable_i);
-      end else begin
+      end
+      else begin
         initial begin
           $display("ERROR: OPTION_DCACHE_LIMIT_WIDTH > OPTION_OPERAND_WIDTH");
           $finish();
@@ -765,7 +773,8 @@ module mor1kx_lsu_cappuccino #(
         .spr_bus_we_i		(spr_bus_we_i),
         .spr_bus_stb_i		(spr_bus_stb_i),
         .spr_bus_dat_i		(spr_bus_dat_i[OPTION_OPERAND_WIDTH-1:0]));
-    end else begin
+    end
+    else begin
       assign dc_access = 0;
       assign dc_refill = 0;
       assign dc_refill_done = 0;
@@ -856,7 +865,8 @@ module mor1kx_lsu_cappuccino #(
         .spr_bus_we_i			(spr_bus_we_i),
         .spr_bus_stb_i			(dmmu_spr_bus_stb),	 // Templated
         .spr_bus_dat_i			(spr_bus_dat_i[OPTION_OPERAND_WIDTH-1:0]));
-    end else begin
+    end
+    else begin
       assign dmmu_cache_inhibit = 0;
       assign tlb_miss = 0;
       assign pagefault = 0;

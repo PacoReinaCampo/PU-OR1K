@@ -68,13 +68,12 @@ module mor1kx_branch_prediction #(
         .padv_decode_i                    (padv_decode_i),
         .branch_mispredict_i              (branch_mispredict_o));
 
-    end else if (FEATURE_BRANCH_PREDICTOR=="GSHARE") begin : branch_predictor_gshare
-      mor1kx_branch_predictor_gshare
-      #(
+    end
+    else if (FEATURE_BRANCH_PREDICTOR=="GSHARE") begin : branch_predictor_gshare
+      mor1kx_branch_predictor_gshare #(
         .OPTION_OPERAND_WIDTH(OPTION_OPERAND_WIDTH)
       )
-      mor1kx_branch_predictor_gshare
-      (
+      mor1kx_branch_predictor_gshare (
         // Outputs
         .predicted_flag_o                 (predicted_flag_o),
         // Inputs
@@ -90,10 +89,10 @@ module mor1kx_branch_prediction #(
         .padv_decode_i                    (padv_decode_i),
         .branch_mispredict_i              (branch_mispredict_o));
 
-    end else if (FEATURE_BRANCH_PREDICTOR=="SIMPLE") begin : branch_predictor_simple
+    end
+    else if (FEATURE_BRANCH_PREDICTOR=="SIMPLE") begin : branch_predictor_simple
       mor1kx_branch_predictor_simple
-      mor1kx_branch_predictor_simple
-      (
+      mor1kx_branch_predictor_simple (
         // Outputs
         .predicted_flag_o                 (predicted_flag_o),
         // Inputs
@@ -101,7 +100,8 @@ module mor1kx_branch_prediction #(
         .op_bnf_i                         (op_bnf_i),
         .immjbr_upper_i                   (immjbr_upper_i));
 
-    end else begin
+    end
+    else begin
       initial begin
         $display("Error: FEATURE_PREDICTOR_TYPE, %s, not valid", FEATURE_BRANCH_PREDICTOR);
         $finish();

@@ -1527,7 +1527,8 @@ module mor1kx_cpu_cappuccino #(
     if (FEATURE_TRACEPORT_EXEC != "NONE") begin
       if (rst) begin
         traceport_waitexec <= 0;
-      end else begin
+      end
+      else begin
         if (padv_decode_o) begin
           traceport_stage_decode_insn <= insn_fetch_to_decode;
           traceport_jbtarget_decode_to_execute <= decode_branch_target_o;
@@ -1553,25 +1554,31 @@ module mor1kx_cpu_cappuccino #(
           if (padv_ctrl_o & !ctrl_bubble_o) begin
             if (execute_valid_o) begin
               traceport_exec_valid_o <= 1'b1;
-            end else begin
+            end
+            else begin
               traceport_exec_valid_o <= 1'b0;
               traceport_waitexec <= 1'b1;
             end
-          end else if (ctrl_op_rfe_o) begin
+          end
+          else if (ctrl_op_rfe_o) begin
             traceport_exec_valid_o <= 1'b1;
-          end else begin
+          end
+          else begin
             traceport_exec_valid_o <= 1'b0;
           end
-        end else begin
+        end
+        else begin
           if (execute_valid_o) begin
             traceport_exec_valid_o <= 1'b1;
             traceport_waitexec <= 1'b0;
-          end else begin
+          end
+          else begin
             traceport_exec_valid_o <= 1'b0;
           end
         end // else: !if(!traceport_waitexec)
       end // else: !if(rst)
-    end else begin // if (FEATURE_TRACEPORT_EXEC != "NONE")
+    end
+    else begin // if (FEATURE_TRACEPORT_EXEC != "NONE")
       traceport_stage_decode_insn <= {`OR1K_INSN_WIDTH{1'b0}};
       traceport_stage_exec_insn <= {`OR1K_INSN_WIDTH{1'b0}};
       traceport_exec_insn_o <= {`OR1K_INSN_WIDTH{1'b0}};
@@ -1585,7 +1592,8 @@ module mor1kx_cpu_cappuccino #(
       assign traceport_exec_wbreg_o = wb_rfd_adr_o;
       assign traceport_exec_wben_o = wb_rf_wb_o;
       assign traceport_exec_wbdata_o = rf_result_o;
-    end else begin
+    end
+    else begin
       assign traceport_exec_wbreg_o = {OPTION_RF_ADDR_WIDTH{1'b0}};
       assign traceport_exec_wben_o = 1'b0;
       assign traceport_exec_wbdata_o = {OPTION_OPERAND_WIDTH{1'b0}};

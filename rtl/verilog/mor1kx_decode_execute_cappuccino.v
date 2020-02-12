@@ -247,7 +247,8 @@ module mor1kx_decode_execute_cappuccino #(
       execute_op_jal_o <= 1'b0;
       execute_op_brcond_o <= 1'b0;
       execute_op_branch_o <= 0;
-    end else if (pipeline_flush_i) begin
+    end
+    else if (pipeline_flush_i) begin
       execute_op_bf_o <= 1'b0;
       execute_op_bnf_o <= 1'b0;
       execute_op_alu_o <= 1'b0;
@@ -272,7 +273,8 @@ module mor1kx_decode_execute_cappuccino #(
       execute_op_jal_o <= 1'b0;
       execute_op_brcond_o <= 1'b0;
       execute_op_branch_o <= 1'b0;
-    end else if (padv_i) begin
+    end
+    else if (padv_i) begin
       execute_op_bf_o <= decode_op_bf_i;
       execute_op_bnf_o <= decode_op_bnf_i;
       execute_op_alu_o <= decode_op_alu_i;
@@ -368,9 +370,11 @@ module mor1kx_decode_execute_cappuccino #(
   always @(posedge clk)
     if (rst) begin
       execute_rf_wb_o <= 0;
-    end else if (pipeline_flush_i) begin
+    end
+    else if (pipeline_flush_i) begin
       execute_rf_wb_o <= 0;
-    end else if (padv_i) begin
+    end
+    else if (padv_i) begin
       execute_rf_wb_o <= decode_rf_wb_i;
       if (decode_bubble_o)
         execute_rf_wb_o <= 0;
@@ -406,9 +410,11 @@ module mor1kx_decode_execute_cappuccino #(
   always @(posedge clk)
     if (rst) begin
       execute_opc_insn_o <= `OR1K_OPCODE_NOP;
-    end else if (pipeline_flush_i) begin
+    end
+    else if (pipeline_flush_i) begin
       execute_opc_insn_o <= `OR1K_OPCODE_NOP;
-    end else if (padv_i) begin
+    end
+    else if (padv_i) begin
       execute_opc_insn_o <= decode_opc_insn_i;
       if (decode_bubble_o)
         execute_opc_insn_o <= `OR1K_OPCODE_NOP;
@@ -418,10 +424,12 @@ module mor1kx_decode_execute_cappuccino #(
     if (rst) begin
       execute_adder_do_sub_o <= 1'b0;
       execute_adder_do_carry_o <= 1'b0;
-    end else if (pipeline_flush_i) begin
+    end
+    else if (pipeline_flush_i) begin
       execute_adder_do_sub_o <= 1'b0;
       execute_adder_do_carry_o <= 1'b0;
-    end else if (padv_i) begin
+    end
+    else if (padv_i) begin
       execute_adder_do_sub_o <= decode_adder_do_sub_i;
       execute_adder_do_carry_o <= decode_adder_do_carry_i;
       if (decode_bubble_o) begin

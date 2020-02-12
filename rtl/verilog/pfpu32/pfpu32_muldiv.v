@@ -299,10 +299,12 @@ module pfpu32_muldiv (
     if (rst) begin
       s1o_mul_ready <= 1'b0;
       s1o_div_ready <= 1'b0;
-    end else if(flush_i) begin
+    end
+    else if(flush_i) begin
       s1o_mul_ready <= 1'b0;
       s1o_div_ready <= 1'b0;
-    end else if(adv_i) begin
+    end
+    else if(adv_i) begin
       s1o_mul_ready <= s1t_is_mul;
       s1o_div_ready <= itr_rndQ;
     end
@@ -466,10 +468,12 @@ module pfpu32_muldiv (
     if (rst) begin
       s2o_mul_ready <= 1'b0;
       s2o_div_ready <= 1'b0;
-    end else if(flush_i) begin
+    end
+    else if(flush_i) begin
       s2o_mul_ready <= 1'b0;
       s2o_div_ready <= 1'b0;
-    end else if(adv_i) begin
+    end
+    else if(adv_i) begin
       s2o_mul_ready <= s1o_mul_ready;
       s2o_div_ready <= s1o_div_ready;
     end

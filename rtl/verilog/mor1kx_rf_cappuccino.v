@@ -115,7 +115,8 @@ module mor1kx_rf_cappuccino #(
     if (pipeline_flush_i) begin
       execute_hazard_a <= 0;
       execute_hazard_b <= 0;
-    end else if (padv_decode_i & !flushing) begin
+    end
+    else if (padv_decode_i & !flushing) begin
       execute_hazard_a <= execute_rf_wb_i &
       (execute_rfd_adr_i == decode_rfa_adr_i);
       execute_hazard_b <= execute_rf_wb_i &
@@ -153,7 +154,8 @@ module mor1kx_rf_cappuccino #(
     if (rst) begin
       wb_hazard_a <= 0;
       wb_hazard_b <= 0;
-    end else if (padv_decode_i) begin
+    end
+    else if (padv_decode_i) begin
       wb_hazard_a <= wb_rf_wb_i & (wb_rfd_adr_i == decode_rfa_adr_i);
       wb_hazard_b <= wb_rf_wb_i & (wb_rfd_adr_i == decode_rfb_adr_i);
     end
@@ -179,7 +181,8 @@ module mor1kx_rf_cappuccino #(
       wb_to_decode_result_a <= result_i;
       wb_to_decode_bypass_a <= wb_rf_wb_i & (wb_rfd_adr_i == fetch_rfa_adr_i);
       use_last_wb_a <= 0;
-    end else if (wb_rf_wb_i) begin
+    end
+    else if (wb_rf_wb_i) begin
       if (decode_rfa_adr_i == wb_rfd_adr_i) begin
         wb_to_decode_result_a <= result_i;
         use_last_wb_a <= 1;
@@ -207,7 +210,8 @@ module mor1kx_rf_cappuccino #(
       wb_to_decode_result_b <= result_i;
       wb_to_decode_bypass_b <= wb_rf_wb_i & (wb_rfd_adr_i == fetch_rfb_adr_i);
       use_last_wb_b <= 0;
-    end else if (wb_rf_wb_i) begin
+    end
+    else if (wb_rf_wb_i) begin
       if (decode_rfb_adr_i == wb_rfd_adr_i) begin
         wb_to_decode_result_b <= result_i;
         use_last_wb_b <= 1;
@@ -287,7 +291,8 @@ module mor1kx_rf_cappuccino #(
         {(RF_ADDR_WIDTH-OPTION_RF_ADDR_WIDTH){1'b0}};
       end
 
-    end else begin
+    end
+    else begin
       assign spr_gpr_ack_o = 1;
 
       assign rf_wren =  wb_rf_wb_i;
@@ -324,8 +329,7 @@ module mor1kx_rf_cappuccino #(
     .CLEAR_ON_INIT   (OPTION_RF_CLEAR_ON_INIT),
     .ENABLE_BYPASS	(0)
   )
-  rfb
-  (
+  rfb (
     .clk		(clk),
     .dout		(rfb_ram_o),
     .raddr		(rfb_rdad),
@@ -354,7 +358,8 @@ module mor1kx_rf_cappuccino #(
         .we		(rf_wren),
         .din		(rf_wrdat)
       );
-    end else begin
+    end
+    else begin
       assign spr_gpr_dat_o = 0;
     end
   endgenerate

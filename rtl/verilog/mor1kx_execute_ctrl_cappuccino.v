@@ -259,7 +259,8 @@ module mor1kx_execute_ctrl_cappuccino #(
         ctrl_op_mul_o <= op_mul_i;
       else if (pipeline_flush_i)
         ctrl_op_mul_o <= 0;
-    end else begin
+    end
+    else begin
       always @(posedge clk)
         ctrl_op_mul_o <= 0;
     end
@@ -274,10 +275,12 @@ module mor1kx_execute_ctrl_cappuccino #(
         if (rst) begin
           ctrl_fpcsr_o <= {`OR1K_FPCSR_WIDTH{1'b0}};
           ctrl_fpcsr_set_o <= 0;
-        end else if (pipeline_flush_i) begin
+        end
+        else if (pipeline_flush_i) begin
           ctrl_fpcsr_o <= {`OR1K_FPCSR_WIDTH{1'b0}};
           ctrl_fpcsr_set_o <= 0;
-        end else if (padv_i) begin
+        end
+        else if (padv_i) begin
           ctrl_fpcsr_o <= fpcsr_i;
           ctrl_fpcsr_set_o <= fpcsr_set_i;
         end
@@ -297,10 +300,12 @@ module mor1kx_execute_ctrl_cappuccino #(
     if (rst) begin
       ctrl_op_mfspr_o <= 0;
       ctrl_op_mtspr_o <= 0;
-    end else if (padv_i) begin
+    end
+    else if (padv_i) begin
       ctrl_op_mfspr_o <= op_mfspr_i;
       ctrl_op_mtspr_o <= op_mtspr_i;
-    end else if (pipeline_flush_i) begin
+    end
+    else if (pipeline_flush_i) begin
       ctrl_op_mfspr_o <= 0;
       ctrl_op_mtspr_o <= 0;
     end
@@ -326,16 +331,19 @@ module mor1kx_execute_ctrl_cappuccino #(
       ctrl_op_lsu_load_o <= 0;
       ctrl_op_lsu_store_o <= 0;
       ctrl_op_lsu_atomic_o <= 0;
-    end else if (ctrl_except_align_o | ctrl_except_dbus_o |
+    end
+    else if (ctrl_except_align_o | ctrl_except_dbus_o |
       ctrl_except_dtlb_miss_o | ctrl_except_dpagefault_o) begin
       ctrl_op_lsu_load_o <= 0;
       ctrl_op_lsu_store_o <= 0;
       ctrl_op_lsu_atomic_o <= 0;
-    end else if (padv_i) begin
+    end
+    else if (padv_i) begin
       ctrl_op_lsu_load_o <= op_lsu_load_i;
       ctrl_op_lsu_store_o <= op_lsu_store_i;
       ctrl_op_lsu_atomic_o <= op_lsu_atomic_i;
-    end else if (pipeline_flush_i) begin
+    end
+    else if (pipeline_flush_i) begin
       ctrl_op_lsu_load_o <= 0;
       ctrl_op_lsu_store_o <= 0;
       ctrl_op_lsu_atomic_o <= 0;
