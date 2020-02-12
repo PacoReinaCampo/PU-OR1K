@@ -34,25 +34,24 @@
 
 `include "mor1kx-defines.v"
 
-module pfpu32_f2i
-(
-   input             clk,
-   input             rst,
-   input             flush_i,  // flush pipe
-   input             adv_i,    // advance pipe
-   input             start_i,  // start conversion
-   input             signa_i,  // input 'a' related values
-   input       [9:0] exp10a_i,
-   input      [23:0] fract24a_i,
-   input             snan_i,   // 'a'/'b' related
-   input             qnan_i,
-   output reg        f2i_rdy_o,       // f2i is ready
-   output reg        f2i_sign_o,      // f2i signum
-   output reg [23:0] f2i_int24_o,     // f2i fractional
-   output reg  [4:0] f2i_shr_o,       // f2i required shift right value
-   output reg  [3:0] f2i_shl_o,       // f2i required shift left value   
-   output reg        f2i_ovf_o,       // f2i overflow flag
-   output reg        f2i_snan_o       // f2i signaling NaN output reg
+module pfpu32_f2i (
+  input             clk,
+  input             rst,
+  input             flush_i,  // flush pipe
+  input             adv_i,    // advance pipe
+  input             start_i,  // start conversion
+  input             signa_i,  // input 'a' related values
+  input       [9:0] exp10a_i,
+  input      [23:0] fract24a_i,
+  input             snan_i,   // 'a'/'b' related
+  input             qnan_i,
+  output reg        f2i_rdy_o,       // f2i is ready
+  output reg        f2i_sign_o,      // f2i signum
+  output reg [23:0] f2i_int24_o,     // f2i fractional
+  output reg  [4:0] f2i_shr_o,       // f2i required shift right value
+  output reg  [3:0] f2i_shl_o,       // f2i required shift left value   
+  output reg        f2i_ovf_o,       // f2i overflow flag
+  output reg        f2i_snan_o       // f2i signaling NaN output reg
 );
 
   /*
@@ -78,17 +77,17 @@ module pfpu32_f2i
   wire s1t_is_shl_gt8 = s1t_shl[3] & (|s1t_shl[2:0]);
   wire s1t_is_shl_eq8 = s1t_shl[3] & (~(|s1t_shl[2:0]));
   wire s1t_is_shl_ovf =
-     s1t_is_shl_gt8 |
-    (s1t_is_shl_eq8 & (~signa_i)) |
-    (s1t_is_shl_eq8 &   signa_i & (|fract24a_i[22:0]));
+  s1t_is_shl_gt8 |
+  (s1t_is_shl_eq8 & (~signa_i)) |
+  (s1t_is_shl_eq8 &   signa_i & (|fract24a_i[22:0]));
 
 
   // registering output
   always @(posedge clk) begin
     if(adv_i) begin
-        // input related
+      // input related
       f2i_snan_o  <= snan_i;
-        // computation related
+      // computation related
       f2i_sign_o  <= signa_i & (!(qnan_i | snan_i)); // if 'a' is a NaN than ouput is max. positive
       f2i_int24_o <= fract24a_i;
       f2i_shr_o   <= s1t_shr;
@@ -106,5 +105,5 @@ module pfpu32_f2i
     else if(adv_i)
       f2i_rdy_o <= start_i;
   end // posedge clock
- 
+
 endmodule // pfpu32_f2i

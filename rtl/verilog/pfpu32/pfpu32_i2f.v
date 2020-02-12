@@ -34,22 +34,21 @@
 
 `include "mor1kx-defines.v"
 
-module pfpu32_i2f
-(
-   input             clk,
-   input             rst,
-   input             flush_i,  // flush pipe
-   input             adv_i,    // advance pipe
-   input             start_i,  // start conversion
-   input      [31:0] opa_i,
-   output reg        i2f_rdy_o,       // i2f is ready
-   output reg        i2f_sign_o,      // i2f signum
-   output reg  [3:0] i2f_shr_o,
-   output reg  [7:0] i2f_exp8shr_o,
-   output reg  [4:0] i2f_shl_o,
-   output reg  [7:0] i2f_exp8shl_o,
-   output reg  [7:0] i2f_exp8sh0_o,
-   output reg [31:0] i2f_fract32_o
+module pfpu32_i2f (
+  input             clk,
+  input             rst,
+  input             flush_i,  // flush pipe
+  input             adv_i,    // advance pipe
+  input             start_i,  // start conversion
+  input      [31:0] opa_i,
+  output reg        i2f_rdy_o,       // i2f is ready
+  output reg        i2f_sign_o,      // i2f signum
+  output reg  [3:0] i2f_shr_o,
+  output reg  [7:0] i2f_exp8shr_o,
+  output reg  [4:0] i2f_shl_o,
+  output reg  [7:0] i2f_exp8shl_o,
+  output reg  [7:0] i2f_exp8sh0_o,
+  output reg [31:0] i2f_fract32_o
 );
 
   /*
@@ -63,7 +62,7 @@ module pfpu32_i2f
   wire s1t_signa = opa_i[31];
   // magnitude (tow's complement for negative input)
   wire [31:0] s1t_fract32 =
-      (opa_i ^ {32{s1t_signa}}) + {31'd0,s1t_signa};
+  (opa_i ^ {32{s1t_signa}}) + {31'd0,s1t_signa};
   // normalization shifts
   reg [3:0] s1t_shrx;
   reg [4:0] s1t_shlx;
@@ -120,7 +119,7 @@ module pfpu32_i2f
   // registering output
   always @(posedge clk) begin
     if(adv_i) begin
-        // computation related
+      // computation related
       i2f_sign_o    <= s1t_signa;
       i2f_shr_o     <= s1t_shrx;
       i2f_exp8shr_o <= 8'd150 + {4'd0,s1t_shrx};      // 150=127+23

@@ -41,13 +41,13 @@ read_verilog rtl/verilog/mor1kx_execute_ctrl_cappuccino.v
 read_verilog rtl/verilog/mor1kx_fetch_tcm_prontoespresso.v
 read_verilog rtl/verilog/mor1kx_decode_execute_cappuccino.v
 read_verilog rtl/verilog/mor1kx_branch_predictor_saturation_counter.v
-read_verilog rtl/verilog/pfpu32/pfpu32_cmp.v
-read_verilog rtl/verilog/pfpu32/pfpu32_f2i.v
-read_verilog rtl/verilog/pfpu32/pfpu32_i2f.v
-read_verilog rtl/verilog/pfpu32/pfpu32_rnd.v
-read_verilog rtl/verilog/pfpu32/pfpu32_top.v
-read_verilog rtl/verilog/pfpu32/pfpu32_addsub.v
-read_verilog rtl/verilog/pfpu32/pfpu32_muldiv.v
+read_verilog -I rtl/verilog rtl/verilog/pfpu32/pfpu32_cmp.v
+read_verilog -I rtl/verilog rtl/verilog/pfpu32/pfpu32_f2i.v
+read_verilog -I rtl/verilog rtl/verilog/pfpu32/pfpu32_i2f.v
+read_verilog -I rtl/verilog rtl/verilog/pfpu32/pfpu32_rnd.v
+read_verilog -I rtl/verilog rtl/verilog/pfpu32/pfpu32_top.v
+read_verilog -I rtl/verilog rtl/verilog/pfpu32/pfpu32_addsub.v
+read_verilog -I rtl/verilog rtl/verilog/pfpu32/pfpu32_muldiv.v
 
 # elaborate design hierarchy
 hierarchy -check -top mor1kx
