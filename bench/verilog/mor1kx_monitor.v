@@ -72,12 +72,11 @@ module mor1kx_monitor #(parameter LOG_DIR= "../out") ();
   reg [63:0] cycle_counter = 0 ;
 
   /* Log file management code */
-  initial
-    begin
-      $timeformat (-9, 2, " ns", 12);
-      fgeneral = $fopen({LOG_DIR,"/",`TEST_NAME_STRING,"-general.log"});
-      ftrace = $fopen({LOG_DIR,"/",`TEST_NAME_STRING,"-trace.log"});
-    end
+  initial begin
+    $timeformat (-9, 2, " ns", 12);
+    fgeneral = $fopen({LOG_DIR,"/",`TEST_NAME_STRING,"-general.log"});
+    ftrace = $fopen({LOG_DIR,"/",`TEST_NAME_STRING,"-trace.log"});
+  end
 
   /* Simulation support code */
 
@@ -98,53 +97,46 @@ module mor1kx_monitor #(parameter LOG_DIR= "../out") ();
 
     cycle_counter = cycle_counter + 1;
 
-    if (`EXECUTE_STAGE_ADV)
-      begin
-        insns = insns + 1;
-        execute_insn = `EXECUTE_STAGE_INSN;
+    if (`EXECUTE_STAGE_ADV) begin
+      insns = insns + 1;
+      execute_insn = `EXECUTE_STAGE_INSN;
 
-        if(TRACE_ENABLE)
-          mor1k_trace_print(execute_insn, `CPU_SR, `EXECUTE_PC, `CPU_FLAG);
+      if(TRACE_ENABLE)
+        mor1k_trace_print(execute_insn, `CPU_SR, `EXECUTE_PC, `CPU_FLAG);
 
-        // Check instructions for simulation controls
-        if (execute_insn == 32'h15_00_00_01)
-          begin
-            $fdisplay(fgeneral,"%0t:exit(0x%08h);",$time,`GPR_GET(3));
-            $fdisplay(ftrace,"exit(0x%08h);",`GPR_GET(3));
-            $display("exit(0x%08h);",`GPR_GET(3));
-            $finish;
-          end
-        if (execute_insn == 32'h15_00_00_02)
-          begin
-            $fdisplay(fgeneral,"%0t:report(0x%08h);",$time,`GPR_GET(3));
-            $fdisplay(ftrace,"report(0x%08h);",`GPR_GET(3));
-            $display("report(0x%08h);",`GPR_GET(3));
-          end
-        if (execute_insn == 32'h15_00_00_04)
-          begin
-            $write("%c",`GPR_GET(3));
-            $fdisplay(fgeneral, "%0t: l.nop putc (%c)", $time,`GPR_GET(3));
-          end
-        if (execute_insn == 32'h15_00_00_05)
-          begin
-            cycle_counter = 0;
-            $fdisplay(fgeneral, "%0t: l.nop reset counter", $time);
-          end
-        if (execute_insn == 32'h15_00_00_06)
-          begin
-            $fdisplay(fgeneral, "%0t: l.nop report cycle counter: %d", $time, cycle_counter);
-            `GPR_SET(11,cycle_counter[31:0]);
-            `GPR_SET(12,cycle_counter[63:32]);
-          end	   
+      // Check instructions for simulation controls
+      if (execute_insn == 32'h15_00_00_01) begin
+        $fdisplay(fgeneral,"%0t:exit(0x%08h);",$time,`GPR_GET(3));
+        $fdisplay(ftrace,"exit(0x%08h);",`GPR_GET(3));
+        $display("exit(0x%08h);",`GPR_GET(3));
+        $finish;
+      end
+      if (execute_insn == 32'h15_00_00_02) begin
+        $fdisplay(fgeneral,"%0t:report(0x%08h);",$time,`GPR_GET(3));
+        $fdisplay(ftrace,"report(0x%08h);",`GPR_GET(3));
+        $display("report(0x%08h);",`GPR_GET(3));
+      end
+      if (execute_insn == 32'h15_00_00_04) begin
+        $write("%c",`GPR_GET(3));
+        $fdisplay(fgeneral, "%0t: l.nop putc (%c)", $time,`GPR_GET(3));
+      end
+      if (execute_insn == 32'h15_00_00_05) begin
+        cycle_counter = 0;
+        $fdisplay(fgeneral, "%0t: l.nop reset counter", $time);
+      end
+      if (execute_insn == 32'h15_00_00_06) begin
+        $fdisplay(fgeneral, "%0t: l.nop report cycle counter: %d", $time, cycle_counter);
+        `GPR_SET(11,cycle_counter[31:0]);
+        `GPR_SET(12,cycle_counter[63:32]);
+      end	   
 
-        if (execute_insn == 32'h15_00_00_0c)
-          begin
-            // Silent exit
-            $finish;
+      if (execute_insn == 32'h15_00_00_0c) begin
+        // Silent exit
+        $finish;
 
-          end
+      end
 
-      end // if (`EXECUTE_STAGE_ADV)
+    end // if (`EXECUTE_STAGE_ADV)
   end
 
   task mor1k_trace_print;
@@ -175,18 +167,16 @@ module mor1kx_monitor #(parameter LOG_DIR= "../out") ();
       signext_imm_16bit = {{16{imm_16bit[15]}},imm_16bit};
 
       // Display useful line of stuff, like or1ksim trace
-      if (sr[`OR1K_SPR_SR_SM] === 1'b0)
-        begin
-          $fwrite(ftrace,"U ");
-          if(TRACE_TO_SCREEN)
-            $write("U ");
-        end
-      else
-        begin
-          $fwrite(ftrace,"S ");
-          if(TRACE_TO_SCREEN)
-            $write("S ");
-        end
+      if (sr[`OR1K_SPR_SR_SM] === 1'b0) begin
+        $fwrite(ftrace,"U ");
+        if(TRACE_TO_SCREEN)
+          $write("U ");
+      end
+      else begin
+        $fwrite(ftrace,"S ");
+        if(TRACE_TO_SCREEN)
+          $write("S ");
+      end
 
       // PC next
       $fwrite(ftrace,"%08h: ", pc);
@@ -206,73 +196,66 @@ module mor1kx_monitor #(parameter LOG_DIR= "../out") ();
         $write("%0s", insn_disas);
 
       for (regimm_chars=regimm_chars;
-           regimm_chars < 16; regimm_chars = regimm_chars + 1)
-        begin
-          $fwrite(ftrace," ");
+           regimm_chars < 16; regimm_chars = regimm_chars + 1) begin
+        $fwrite(ftrace," ");
+        if(TRACE_TO_SCREEN)
+          $write(" ");
+      end
+
+      if (rD_used) begin
+        if (insn[`OR1K_OPCODE_SELECT]===`OR1K_OPCODE_MFSPR) begin
+          // Wait 1 cycle for MFSPR result
+          @(posedge `CPU_clk);
+          $fwrite(ftrace,"r%0d",rD_num);
           if(TRACE_TO_SCREEN)
-            $write(" ");
+            $write("r%0d",rD_num);
+        end
+        else begin
+          $fwrite(ftrace,"r%0d",rD_num);
+          if(TRACE_TO_SCREEN)
+            $write("r%0d",rD_num);
+        end // else: !if(insn[`OR1K_OPCODE_SELECT]===`OR1K_OPCODE_MFSPR)
+
+        // Tab 1 more if we're a single-number register 
+        if (rD_num < 10) begin
+          $fwrite(ftrace,"\t\t");
+          if(TRACE_TO_SCREEN)
+            $write("\t\t");
+        end
+        else begin
+          $fwrite(ftrace,"\t");
+          if(TRACE_TO_SCREEN)
+            $write("\t");
         end
 
-      if (rD_used)
-        begin
-          if (insn[`OR1K_OPCODE_SELECT]===`OR1K_OPCODE_MFSPR)
-            begin
-              // Wait 1 cycle for MFSPR result
-              @(posedge `CPU_clk);
-              $fwrite(ftrace,"r%0d",rD_num);
-              if(TRACE_TO_SCREEN)
-                $write("r%0d",rD_num);
-            end
-          else
-            begin
-              $fwrite(ftrace,"r%0d",rD_num);
-              if(TRACE_TO_SCREEN)
-                $write("r%0d",rD_num);
-            end // else: !if(insn[`OR1K_OPCODE_SELECT]===`OR1K_OPCODE_MFSPR)
+        // Finally write what ended up in the in rD
+        $fwrite(ftrace,"= %08h  ",`GPR_GET(rD_num));
+        if(TRACE_TO_SCREEN)
+          $write("= %08h  ",`GPR_GET(rD_num));
+      end
+      else if (insn[`OR1K_OPCODE_SELECT]===`OR1K_OPCODE_MTSPR) begin
+        // Clobber imm_16bit here to calculate MTSPR
+        imm_16bit = imm_16bit | `GPR_GET(rA_num);
+        $fwrite(ftrace,"SPR[%04x]  = %08h  ", imm_16bit, `GPR_GET(rB_num));
+        if(TRACE_TO_SCREEN)
+          $write("SPR[%04x]  = %08h  ", imm_16bit, `GPR_GET(rB_num));
 
-          // Tab 1 more if we're a single-number register 
-          if (rD_num < 10) begin
-            $fwrite(ftrace,"\t\t");
-            if(TRACE_TO_SCREEN)
-              $write("\t\t");
-          end
-          else begin
-            $fwrite(ftrace,"\t");
-            if(TRACE_TO_SCREEN)
-              $write("\t");
-          end
-
-          // Finally write what ended up in the in rD
-          $fwrite(ftrace,"= %08h  ",`GPR_GET(rD_num));
-          if(TRACE_TO_SCREEN)
-            $write("= %08h  ",`GPR_GET(rD_num));
-        end
-      else if (insn[`OR1K_OPCODE_SELECT]===`OR1K_OPCODE_MTSPR)
-        begin
-          // Clobber imm_16bit here to calculate MTSPR
-          imm_16bit = imm_16bit | `GPR_GET(rA_num);
-          $fwrite(ftrace,"SPR[%04x]  = %08h  ", imm_16bit, `GPR_GET(rB_num));
-          if(TRACE_TO_SCREEN)
-            $write("SPR[%04x]  = %08h  ", imm_16bit, `GPR_GET(rB_num));
-
-        end // if (insn[`OR1K_OPCODE_SELECT]===`OR1K_OPCODE_MTSPR)
+      end // if (insn[`OR1K_OPCODE_SELECT]===`OR1K_OPCODE_MTSPR)
       else if (insn[`OR1K_OPCODE_SELECT]>=`OR1K_OPCODE_SD &&
-               insn[`OR1K_OPCODE_SELECT]<=`OR1K_OPCODE_SH)
-        begin
-          addr_result = signext_imm_16bit + `GPR_GET(rA_num);
-          $fwrite(ftrace,"[%08h] = %08h  ",addr_result[31:0],
-                  `GPR_GET(rB_num));
-          if(TRACE_TO_SCREEN)
-            $write("[%08h] = %08h  ",addr_result[31:0],
-                   `GPR_GET(rB_num));
-        end
-      else
-        begin
-          // Skip destination field
-          $fwrite(ftrace,"\t\t\t    ");
-          if(TRACE_TO_SCREEN)
-            $write("\t\t\t    ");
-        end
+               insn[`OR1K_OPCODE_SELECT]<=`OR1K_OPCODE_SH) begin
+        addr_result = signext_imm_16bit + `GPR_GET(rA_num);
+        $fwrite(ftrace,"[%08h] = %08h  ",addr_result[31:0],
+                `GPR_GET(rB_num));
+        if(TRACE_TO_SCREEN)
+          $write("[%08h] = %08h  ",addr_result[31:0],
+                 `GPR_GET(rB_num));
+      end
+      else begin
+        // Skip destination field
+        $fwrite(ftrace,"\t\t\t    ");
+        if(TRACE_TO_SCREEN)
+          $write("\t\t\t    ");
+      end
 
       /* Write flag */
       $fwrite(ftrace,"flag: %0d", flag);
@@ -635,317 +618,282 @@ module mor1kx_monitor #(parameter LOG_DIR= "../out") ();
       xsync_op = insn[`OR1K_XSYNC_OP_POS];
 
       case (opcode)
-        `OR1K_OPCODE_J:
-          begin	      
-            $sformat(insnstring, "l.j     0x%07h", j_imm);	      
+        `OR1K_OPCODE_J: begin	      
+          $sformat(insnstring, "l.j     0x%07h", j_imm);	      
+        end
+
+        `OR1K_OPCODE_JAL: begin
+          $sformat(insnstring, "l.jal   0x%07h", j_imm);
+        end
+
+        `OR1K_OPCODE_BNF: begin
+          $sformat(insnstring, "l.bnf   0x%07h", br_imm);
+        end
+
+        `OR1K_OPCODE_BF: begin
+          $sformat(insnstring, "l.bf    0x%07h", br_imm);
+        end
+
+        `OR1K_OPCODE_RFE: begin
+          $sformat(insnstring, "l.rfe   ");	      
+        end
+
+        `OR1K_OPCODE_JR: begin
+          $sformat(insnstring, "l.jr    r%0d",rB_num);
+        end
+
+        `OR1K_OPCODE_JALR: begin
+          $sformat(insnstring, "l.jalr  r%0d",rB_num);
+        end
+
+        `OR1K_OPCODE_LWZ: begin
+          $sformat(insnstring, "l.lwz   r%0d,0x%04h(r%0d)",rD_num,imm_16bit,rA_num);
+        end
+
+        `OR1K_OPCODE_LBZ: begin
+          $sformat(insnstring, "l.lbz   r%0d,0x%04h(r%0d)",rD_num,imm_16bit,rA_num);
+        end
+
+        `OR1K_OPCODE_LBS: begin
+          $sformat(insnstring, "l.lbs   r%0d,0x%04h(r%0d)",rD_num,imm_16bit,rA_num);
+        end
+
+        `OR1K_OPCODE_LHZ: begin
+          $sformat(insnstring, "l.lhz   r%0d,0x%04h(r%0d)",rD_num,imm_16bit,rA_num);
+        end
+
+        `OR1K_OPCODE_LHS: begin
+          $sformat(insnstring, "l.lhs   r%0d,0x%04h(r%0d)",rD_num,imm_16bit,rA_num);
+        end
+
+        `OR1K_OPCODE_SW: begin
+          $sformat(insnstring, "l.sw    0x%04h(r%0d),r%0d",imm_split16bit,rA_num,rB_num);
+        end
+
+        `OR1K_OPCODE_SB: begin
+          $sformat(insnstring, "l.sb    0x%04h(r%0d),r%0d",imm_split16bit,rA_num,rB_num);
+        end
+
+        `OR1K_OPCODE_SH: begin
+          $sformat(insnstring, "l.sh    0x%04h(r%0d),r%0d",imm_split16bit,rA_num,rB_num);	      
+        end
+
+        `OR1K_OPCODE_MFSPR: begin
+          $sformat(insnstring, "l.mfspr r%0d,r%0d,0x%04h",rD_num,rA_num,imm_16bit);
+        end	      
+
+        `OR1K_OPCODE_MTSPR: begin
+          $sformat(insnstring, "l.mtspr r%0d,r%0d,0x%04h",rA_num,rB_num,imm_split16bit);	
+        end
+
+        `OR1K_OPCODE_MOVHI: begin
+          if (!insn[16])begin
+            $sformat(insnstring, "l.movhi r%0d,0x%04h",rD_num,imm_16bit);
           end
+          else
+            $sformat(insnstring, "l.macrc r%0d",rD_num);
+        end
 
-        `OR1K_OPCODE_JAL:
-          begin
-            $sformat(insnstring, "l.jal   0x%07h", j_imm);
-          end
+        `OR1K_OPCODE_ADDI: begin
+          $sformat(insnstring, "l.addi  r%0d,r%0d,0x%04h",rD_num,rA_num,imm_16bit);
+        end
 
-        `OR1K_OPCODE_BNF:
-          begin
-            $sformat(insnstring, "l.bnf   0x%07h", br_imm);
-          end
+        `OR1K_OPCODE_ADDIC: begin
+          $sformat(insnstring, "l.addic r%0d,r%0d,0x%04h",rD_num,rA_num,imm_16bit);
+        end
 
-        `OR1K_OPCODE_BF:
-          begin
-            $sformat(insnstring, "l.bf    0x%07h", br_imm);
-          end
+        `OR1K_OPCODE_ANDI: begin
+          $sformat(insnstring, "l.andi  r%0d,r%0d,0x%04h",rD_num,rA_num,imm_16bit);
+        end	     
 
-        `OR1K_OPCODE_RFE:
-          begin
-            $sformat(insnstring, "l.rfe   ");	      
-          end
+        `OR1K_OPCODE_ORI: begin
+          $sformat(insnstring, "l.ori   r%0d,r%0d,0x%04h",rD_num,rA_num,imm_16bit);
+        end	     
 
-        `OR1K_OPCODE_JR:
-          begin
-            $sformat(insnstring, "l.jr    r%0d",rB_num);
-          end
+        `OR1K_OPCODE_XORI: begin
+          $sformat(insnstring, "l.xori  r%0d,r%0d,0x%04h",rD_num,rA_num,imm_16bit);
+        end	     
 
-        `OR1K_OPCODE_JALR:
-          begin
-            $sformat(insnstring, "l.jalr  r%0d",rB_num);
-          end
+        `OR1K_OPCODE_MULI: begin
+          $sformat(insnstring, "l.muli  r%0d,r%0d,0x%04h",rD_num,rA_num,imm_16bit);
+        end
 
-        `OR1K_OPCODE_LWZ:
-          begin
-            $sformat(insnstring, "l.lwz   r%0d,0x%04h(r%0d)",rD_num,imm_16bit,rA_num);
-          end
-
-        `OR1K_OPCODE_LBZ:
-          begin
-            $sformat(insnstring, "l.lbz   r%0d,0x%04h(r%0d)",rD_num,imm_16bit,rA_num);
-          end
-
-        `OR1K_OPCODE_LBS:
-          begin
-            $sformat(insnstring, "l.lbs   r%0d,0x%04h(r%0d)",rD_num,imm_16bit,rA_num);
-          end
-
-        `OR1K_OPCODE_LHZ:
-          begin
-            $sformat(insnstring, "l.lhz   r%0d,0x%04h(r%0d)",rD_num,imm_16bit,rA_num);
-          end
-
-        `OR1K_OPCODE_LHS:
-          begin
-            $sformat(insnstring, "l.lhs   r%0d,0x%04h(r%0d)",rD_num,imm_16bit,rA_num);
-          end
-
-        `OR1K_OPCODE_SW:
-          begin
-            $sformat(insnstring, "l.sw    0x%04h(r%0d),r%0d",imm_split16bit,rA_num,rB_num);
-          end
-
-        `OR1K_OPCODE_SB:
-          begin
-            $sformat(insnstring, "l.sb    0x%04h(r%0d),r%0d",imm_split16bit,rA_num,rB_num);
-          end
-
-        `OR1K_OPCODE_SH:
-          begin
-            $sformat(insnstring, "l.sh    0x%04h(r%0d),r%0d",imm_split16bit,rA_num,rB_num);	      
-          end
-
-        `OR1K_OPCODE_MFSPR:
-          begin
-            $sformat(insnstring, "l.mfspr r%0d,r%0d,0x%04h",rD_num,rA_num,imm_16bit);
-          end	      
-
-        `OR1K_OPCODE_MTSPR:
-          begin
-            $sformat(insnstring, "l.mtspr r%0d,r%0d,0x%04h",rA_num,rB_num,imm_split16bit);	
-          end
-
-        `OR1K_OPCODE_MOVHI:
-          begin
-            if (!insn[16])begin
-              $sformat(insnstring, "l.movhi r%0d,0x%04h",rD_num,imm_16bit);
+        `OR1K_OPCODE_ALU: begin
+          case(insn[`OR1K_ALU_OPC_SELECT])
+            `OR1K_ALU_OPC_ADD:
+              $sformat(insnstring, "l.add   r%0d,r%0d,r%0d",rD_num,rA_num,rB_num); 
+            `OR1K_ALU_OPC_ADDC:
+              $sformat(insnstring, "l.addc  r%0d,r%0d,r%0d",rD_num,rA_num,rB_num); 
+            `OR1K_ALU_OPC_SUB:
+              $sformat(insnstring, "l.sub   r%0d,r%0d,r%0d",rD_num,rA_num,rB_num);
+            `OR1K_ALU_OPC_AND:
+              $sformat(insnstring, "l.and   r%0d,r%0d,r%0d",rD_num,rA_num,rB_num); 
+            `OR1K_ALU_OPC_OR:
+              $sformat(insnstring, "l.or    r%0d,r%0d,r%0d",rD_num,rA_num,rB_num); 
+            `OR1K_ALU_OPC_XOR:
+              $sformat(insnstring, "l.xor   r%0d,r%0d,r%0d",rD_num,rA_num,rB_num); 
+            `OR1K_ALU_OPC_MUL:
+              $sformat(insnstring, "l.mul   r%0d,r%0d,r%0d",rD_num,rA_num,rB_num); 
+            `OR1K_ALU_OPC_SHRT: begin
+              case(insn[`OR1K_ALU_OPC_SECONDARY_SELECT])
+                `OR1K_ALU_OPC_SECONDARY_SHRT_SLL:
+                  $sformat(insnstring, "l.sll   r%0d,r%0d,r%0d",rD_num,rA_num,rB_num);
+                `OR1K_ALU_OPC_SECONDARY_SHRT_SRL:
+                  $sformat(insnstring, "l.srl   r%0d,r%0d,r%0d",rD_num,rA_num,rB_num);
+                `OR1K_ALU_OPC_SECONDARY_SHRT_SRA:
+                  $sformat(insnstring, "l.sra   r%0d,r%0d,r%0d",rD_num,rA_num,rB_num);
+                `OR1K_ALU_OPC_SECONDARY_SHRT_ROR:
+                  $sformat(insnstring, "l.ror   r%0d,r%0d,r%0d",rD_num,rA_num,rB_num);
+              endcase // case (insn[`OR1K_ALU_OPC_SECONDARY_SELECT])
             end
-            else
-              $sformat(insnstring, "l.macrc r%0d",rD_num);
-          end
+            `OR1K_ALU_OPC_DIV:
+              $sformat(insnstring, "l.div   r%0d,r%0d,r%0d",rD_num,rA_num,rB_num); 
+            `OR1K_ALU_OPC_DIVU:
+              $sformat(insnstring, "l.divu  r%0d,r%0d,r%0d",rD_num,rA_num,rB_num);
+            `OR1K_ALU_OPC_MULU:
+              $sformat(insnstring, "l.mulu  r%0d,r%0d,r%0d",rD_num,rA_num,rB_num);		  
+            `OR1K_ALU_OPC_CMOV:
+              $sformat(insnstring, "l.cmov  r%0d,r%0d,r%0d",rD_num,rA_num,rB_num);
+            `OR1K_ALU_OPC_FFL1: begin
+              case(insn[8])
+                0:
+                  $sformat(insnstring, "l.ff1   r%0d,r%0d",rD_num,rA_num);
+                1:
+                  $sformat(insnstring, "l.fl1   r%0d,r%0d",rD_num,rA_num);
+              endcase // case (insn[8])
+            end
 
-        `OR1K_OPCODE_ADDI:
-          begin
-            $sformat(insnstring, "l.addi  r%0d,r%0d,0x%04h",rD_num,rA_num,imm_16bit);
-          end
+          endcase // case (alu_op)
+          //$sformat(insnstring, "r%0d,r%0d,r%0d",rD_num,rA_num,rB_num);
+        end
 
-        `OR1K_OPCODE_ADDIC:
-          begin
-            $sformat(insnstring, "l.addic r%0d,r%0d,0x%04h",rD_num,rA_num,imm_16bit);
-          end
+        `OR1K_OPCODE_SHRTI: begin
+          case(insn[`OR1K_ALU_OPC_SECONDARY_SELECT])
+            `OR1K_ALU_OPC_SECONDARY_SHRT_SLL:
+              $sformat(insnstring, "l.slli  r%0d,r%0d,0x%01h",rD_num,rA_num,insn[5:0]);
+            `OR1K_ALU_OPC_SECONDARY_SHRT_SRL:
+              $sformat(insnstring, "l.srli  r%0d,r%0d,0x%01h",rD_num,rA_num,insn[5:0]);
+            `OR1K_ALU_OPC_SECONDARY_SHRT_SRA:
+              $sformat(insnstring, "l.srai  r%0d,r%0d,0x%01h",rD_num,rA_num,insn[5:0]);
+            `OR1K_ALU_OPC_SECONDARY_SHRT_ROR:
+              $sformat(insnstring, "l.rori  r%0d,r%0d,0x%01h",rD_num,rA_num,insn[5:0]);		  
+          endcase // case (insn[`OR1K_ALU_OPC_SECONDARY_SELECT])
+          //$sformat(insnstring, "r%0d,r%0d,0x%0h",rD_num,rA_num,insn[5:0]);				
+        end // case: `OR1K_OPCODE_SHRTI
 
-        `OR1K_OPCODE_ANDI:
-          begin
-            $sformat(insnstring, "l.andi  r%0d,r%0d,0x%04h",rD_num,rA_num,imm_16bit);
-          end	     
+        `OR1K_OPCODE_SFIMM: begin
+          case(insn[`OR1K_COMP_OPC_SELECT])
+            `OR1K_COMP_OPC_EQ:
+              $sformat(insnstring, "l.sfeqi r%0d,0x%04h",rA_num, imm_16bit);
+            `OR1K_COMP_OPC_NE:
+              $sformat(insnstring, "l.sfnei r%0d,0x%04h",rA_num, imm_16bit);
+            `OR1K_COMP_OPC_GTU:
+              $sformat(insnstring, "l.sfgtuir%0d,0x%04h",rA_num, imm_16bit);
+            `OR1K_COMP_OPC_GEU:
+              $sformat(insnstring, "l.sfgeuir%0d,0x%04h",rA_num, imm_16bit);
+            `OR1K_COMP_OPC_LTU:
+              $sformat(insnstring, "l.sfltuir%0d,0x%04h",rA_num, imm_16bit);
+            `OR1K_COMP_OPC_LEU:
+              $sformat(insnstring, "l.sfleuir%0d,0x%04h",rA_num, imm_16bit);
+            `OR1K_COMP_OPC_GTS:
+              $sformat(insnstring, "l.sfgtsir%0d,0x%04h",rA_num, imm_16bit);
+            `OR1K_COMP_OPC_GES:
+              $sformat(insnstring, "l.sfgesir%0d,0x%04h",rA_num, imm_16bit); 
+            `OR1K_COMP_OPC_LTS:
+              $sformat(insnstring, "l.sfltsir%0d,0x%04h",rA_num, imm_16bit);
+            `OR1K_COMP_OPC_LES:
+              $sformat(insnstring, "l.sflesir%0d,0x%04h",rA_num, imm_16bit);
+          endcase // case (sf_op[2:0])
 
-        `OR1K_OPCODE_ORI:
-          begin
-            $sformat(insnstring, "l.ori   r%0d,r%0d,0x%04h",rD_num,rA_num,imm_16bit);
-          end	     
+          //$sformat(insnstring, "r%0d,0x%0h",rA_num, imm_16bit);
 
-        `OR1K_OPCODE_XORI:
-          begin
-            $sformat(insnstring, "l.xori  r%0d,r%0d,0x%04h",rD_num,rA_num,imm_16bit);
-          end	     
+        end // case: `OR1K_OPCODE_SFXXI
 
-        `OR1K_OPCODE_MULI:
-          begin
-            $sformat(insnstring, "l.muli  r%0d,r%0d,0x%04h",rD_num,rA_num,imm_16bit);
-          end
+        `OR1K_OPCODE_SF: begin
+          case(insn[`OR1K_COMP_OPC_SELECT])
+            `OR1K_COMP_OPC_EQ:
+              $sformat(insnstring, "l.sfeq  r%0d,r%0d",rA_num, rB_num);
+            `OR1K_COMP_OPC_NE:
+              $sformat(insnstring, "l.sfne  r%0d,r%0d",rA_num, rB_num);
+            `OR1K_COMP_OPC_GTU:
+              $sformat(insnstring, "l.sfgtu r%0d,r%0d",rA_num, rB_num);
+            `OR1K_COMP_OPC_GEU:
+              $sformat(insnstring, "l.sfgeu r%0d,r%0d",rA_num, rB_num);
+            `OR1K_COMP_OPC_LTU:
+              $sformat(insnstring, "l.sfltu r%0d,r%0d",rA_num, rB_num);
+            `OR1K_COMP_OPC_LEU:
+              $sformat(insnstring, "l.sfleu r%0d,r%0d",rA_num, rB_num);
+            `OR1K_COMP_OPC_GTS:
+              $sformat(insnstring, "l.sfgts r%0d,r%0d",rA_num, rB_num);
+            `OR1K_COMP_OPC_GES:
+              $sformat(insnstring, "l.sfges r%0d,r%0d",rA_num, rB_num); 
+            `OR1K_COMP_OPC_LTS:
+              $sformat(insnstring, "l.sflts r%0d,r%0d",rA_num, rB_num);
+            `OR1K_COMP_OPC_LES:
+              $sformat(insnstring, "l.sfles r%0d,r%0d",rA_num, rB_num);
+          endcase // case (sf_op[2:0])
+          //$sformat(insnstring, "r%0d,r%0d",rA_num, rB_num);
 
-        `OR1K_OPCODE_ALU:
-          begin
-            case(insn[`OR1K_ALU_OPC_SELECT])
-              `OR1K_ALU_OPC_ADD:
-                $sformat(insnstring, "l.add   r%0d,r%0d,r%0d",rD_num,rA_num,rB_num); 
-              `OR1K_ALU_OPC_ADDC:
-                $sformat(insnstring, "l.addc  r%0d,r%0d,r%0d",rD_num,rA_num,rB_num); 
-              `OR1K_ALU_OPC_SUB:
-                $sformat(insnstring, "l.sub   r%0d,r%0d,r%0d",rD_num,rA_num,rB_num);
-              `OR1K_ALU_OPC_AND:
-                $sformat(insnstring, "l.and   r%0d,r%0d,r%0d",rD_num,rA_num,rB_num); 
-              `OR1K_ALU_OPC_OR:
-                $sformat(insnstring, "l.or    r%0d,r%0d,r%0d",rD_num,rA_num,rB_num); 
-              `OR1K_ALU_OPC_XOR:
-                $sformat(insnstring, "l.xor   r%0d,r%0d,r%0d",rD_num,rA_num,rB_num); 
-              `OR1K_ALU_OPC_MUL:
-                $sformat(insnstring, "l.mul   r%0d,r%0d,r%0d",rD_num,rA_num,rB_num); 
-              `OR1K_ALU_OPC_SHRT:
-                begin
-                  case(insn[`OR1K_ALU_OPC_SECONDARY_SELECT])
-                    `OR1K_ALU_OPC_SECONDARY_SHRT_SLL:
-                      $sformat(insnstring, "l.sll   r%0d,r%0d,r%0d",rD_num,rA_num,rB_num);
-                    `OR1K_ALU_OPC_SECONDARY_SHRT_SRL:
-                      $sformat(insnstring, "l.srl   r%0d,r%0d,r%0d",rD_num,rA_num,rB_num);
-                    `OR1K_ALU_OPC_SECONDARY_SHRT_SRA:
-                      $sformat(insnstring, "l.sra   r%0d,r%0d,r%0d",rD_num,rA_num,rB_num);
-                    `OR1K_ALU_OPC_SECONDARY_SHRT_ROR:
-                      $sformat(insnstring, "l.ror   r%0d,r%0d,r%0d",rD_num,rA_num,rB_num);
-                  endcase // case (insn[`OR1K_ALU_OPC_SECONDARY_SELECT])
-                end
-              `OR1K_ALU_OPC_DIV:
-                $sformat(insnstring, "l.div   r%0d,r%0d,r%0d",rD_num,rA_num,rB_num); 
-              `OR1K_ALU_OPC_DIVU:
-                $sformat(insnstring, "l.divu  r%0d,r%0d,r%0d",rD_num,rA_num,rB_num);
-              `OR1K_ALU_OPC_MULU:
-                $sformat(insnstring, "l.mulu  r%0d,r%0d,r%0d",rD_num,rA_num,rB_num);		  
-              `OR1K_ALU_OPC_CMOV:
-                $sformat(insnstring, "l.cmov  r%0d,r%0d,r%0d",rD_num,rA_num,rB_num);
-              `OR1K_ALU_OPC_FFL1:
-                begin
-                  case(insn[8])
-                    0:
-                      $sformat(insnstring, "l.ff1   r%0d,r%0d",rD_num,rA_num);
-                    1:
-                      $sformat(insnstring, "l.fl1   r%0d,r%0d",rD_num,rA_num);
-                  endcase // case (insn[8])
-                end
+        end
 
-            endcase // case (alu_op)
-            //$sformat(insnstring, "r%0d,r%0d,r%0d",rD_num,rA_num,rB_num);
-          end
+        `OR1K_OPCODE_MACI: begin
+          $sformat(insnstring, "l.maci r%0d,0x%04h",rA_num,imm_16bit);
+        end
 
-        `OR1K_OPCODE_SHRTI:
-          begin
-            case(insn[`OR1K_ALU_OPC_SECONDARY_SELECT])
-              `OR1K_ALU_OPC_SECONDARY_SHRT_SLL:
-                $sformat(insnstring, "l.slli  r%0d,r%0d,0x%01h",rD_num,rA_num,insn[5:0]);
-              `OR1K_ALU_OPC_SECONDARY_SHRT_SRL:
-                $sformat(insnstring, "l.srli  r%0d,r%0d,0x%01h",rD_num,rA_num,insn[5:0]);
-              `OR1K_ALU_OPC_SECONDARY_SHRT_SRA:
-                $sformat(insnstring, "l.srai  r%0d,r%0d,0x%01h",rD_num,rA_num,insn[5:0]);
-              `OR1K_ALU_OPC_SECONDARY_SHRT_ROR:
-                $sformat(insnstring, "l.rori  r%0d,r%0d,0x%01h",rD_num,rA_num,insn[5:0]);		  
-            endcase // case (insn[`OR1K_ALU_OPC_SECONDARY_SELECT])
-            //$sformat(insnstring, "r%0d,r%0d,0x%0h",rD_num,rA_num,insn[5:0]);				
-          end // case: `OR1K_OPCODE_SHRTI
+        `OR1K_OPCODE_NOP: begin
+          $sformat(insnstring, "l.nop   0x%04h",imm_16bit);
+        end
 
-        `OR1K_OPCODE_SFIMM:
-          begin
-            case(insn[`OR1K_COMP_OPC_SELECT])
-              `OR1K_COMP_OPC_EQ:
-                $sformat(insnstring, "l.sfeqi r%0d,0x%04h",rA_num, imm_16bit);
-              `OR1K_COMP_OPC_NE:
-                $sformat(insnstring, "l.sfnei r%0d,0x%04h",rA_num, imm_16bit);
-              `OR1K_COMP_OPC_GTU:
-                $sformat(insnstring, "l.sfgtuir%0d,0x%04h",rA_num, imm_16bit);
-              `OR1K_COMP_OPC_GEU:
-                $sformat(insnstring, "l.sfgeuir%0d,0x%04h",rA_num, imm_16bit);
-              `OR1K_COMP_OPC_LTU:
-                $sformat(insnstring, "l.sfltuir%0d,0x%04h",rA_num, imm_16bit);
-              `OR1K_COMP_OPC_LEU:
-                $sformat(insnstring, "l.sfleuir%0d,0x%04h",rA_num, imm_16bit);
-              `OR1K_COMP_OPC_GTS:
-                $sformat(insnstring, "l.sfgtsir%0d,0x%04h",rA_num, imm_16bit);
-              `OR1K_COMP_OPC_GES:
-                $sformat(insnstring, "l.sfgesir%0d,0x%04h",rA_num, imm_16bit); 
-              `OR1K_COMP_OPC_LTS:
-                $sformat(insnstring, "l.sfltsir%0d,0x%04h",rA_num, imm_16bit);
-              `OR1K_COMP_OPC_LES:
-                $sformat(insnstring, "l.sflesir%0d,0x%04h",rA_num, imm_16bit);
-            endcase // case (sf_op[2:0])
-
-            //$sformat(insnstring, "r%0d,0x%0h",rA_num, imm_16bit);
-
-          end // case: `OR1K_OPCODE_SFXXI
-
-        `OR1K_OPCODE_SF:
-          begin
-            case(insn[`OR1K_COMP_OPC_SELECT])
-              `OR1K_COMP_OPC_EQ:
-                $sformat(insnstring, "l.sfeq  r%0d,r%0d",rA_num, rB_num);
-              `OR1K_COMP_OPC_NE:
-                $sformat(insnstring, "l.sfne  r%0d,r%0d",rA_num, rB_num);
-              `OR1K_COMP_OPC_GTU:
-                $sformat(insnstring, "l.sfgtu r%0d,r%0d",rA_num, rB_num);
-              `OR1K_COMP_OPC_GEU:
-                $sformat(insnstring, "l.sfgeu r%0d,r%0d",rA_num, rB_num);
-              `OR1K_COMP_OPC_LTU:
-                $sformat(insnstring, "l.sfltu r%0d,r%0d",rA_num, rB_num);
-              `OR1K_COMP_OPC_LEU:
-                $sformat(insnstring, "l.sfleu r%0d,r%0d",rA_num, rB_num);
-              `OR1K_COMP_OPC_GTS:
-                $sformat(insnstring, "l.sfgts r%0d,r%0d",rA_num, rB_num);
-              `OR1K_COMP_OPC_GES:
-                $sformat(insnstring, "l.sfges r%0d,r%0d",rA_num, rB_num); 
-              `OR1K_COMP_OPC_LTS:
-                $sformat(insnstring, "l.sflts r%0d,r%0d",rA_num, rB_num);
-              `OR1K_COMP_OPC_LES:
-                $sformat(insnstring, "l.sfles r%0d,r%0d",rA_num, rB_num);
-            endcase // case (sf_op[2:0])
-            //$sformat(insnstring, "r%0d,r%0d",rA_num, rB_num);
-
-          end
-
-        `OR1K_OPCODE_MACI:
-          begin
-            $sformat(insnstring, "l.maci r%0d,0x%04h",rA_num,imm_16bit);
-          end
-
-        `OR1K_OPCODE_NOP:
-          begin
-            $sformat(insnstring, "l.nop   0x%04h",imm_16bit);
-          end
-
-        `OR1K_OPCODE_SYSTRAPSYNC:
-          begin
-            case (insn[`OR1K_SYSTRAPSYNC_OPC_SELECT])
-              `OR1K_SYSTRAPSYNC_OPC_SYSCALL:
-                $sformat(insnstring, "l.sys   0x%04h",imm_16bit);
-              `OR1K_SYSTRAPSYNC_OPC_TRAP:
-                $sformat(insnstring, "l.trap  0x%04h",imm_16bit);
-              `OR1K_SYSTRAPSYNC_OPC_MSYNC:
-                $sformat(insnstring, "l.msync");
-              `OR1K_SYSTRAPSYNC_OPC_PSYNC:
-                $sformat(insnstring, "l.psync");
-              `OR1K_SYSTRAPSYNC_OPC_CSYNC:
-                $sformat(insnstring, "l.csync");
-            endcase // case (insn[`OR1K_SYSTRAPSYNC_OPC_SELECT])
-          end
-        `OR1K_OPCODE_FPU:
-          begin
-            case (insn[`OR1K_FPUOP_SELECT])
-              `OR1K_FPUOP_ADD:
-                $sformat(insnstring, "lf.add.s   r%0d,r%0d,r%0d",rD_num,rA_num,rB_num);
-              `OR1K_FPUOP_SUB:
-                $sformat(insnstring, "lf.sub.s   r%0d,r%0d,r%0d",rD_num,rA_num,rB_num);
-              `OR1K_FPUOP_MUL:
-                $sformat(insnstring, "lf.mul.s   r%0d,r%0d,r%0d",rD_num,rA_num,rB_num);
-              `OR1K_FPUOP_DIV:
-                $sformat(insnstring, "lf.div.s   r%0d,r%0d,r%0d",rD_num,rA_num,rB_num);
-              `OR1K_FPUOP_ITOF:
-                $sformat(insnstring, "lf.itof.s  r%0d,r%0d",rD_num,rA_num);
-              `OR1K_FPUOP_FTOI:
-                $sformat(insnstring, "lf.ftoi.s  r%0d,r%0d",rD_num,rA_num);
-              `OR1K_FPUOP_REM:
-                $sformat(insnstring, "lf.rem.s   r%0d,r%0d,r%0d",rD_num,rA_num,rB_num);
-              `OR1K_FPCOP_SFEQ:
-                $sformat(insnstring, "lf.sfeq.s   r%0d,r%0d",rA_num,rB_num);
-              `OR1K_FPCOP_SFNE:
-                $sformat(insnstring, "lf.sfne.s   r%0d,r%0d",rA_num,rB_num);
-              `OR1K_FPCOP_SFGT:
-                $sformat(insnstring, "lf.sfgt.s   r%0d,r%0d",rA_num,rB_num);
-              `OR1K_FPCOP_SFGE:
-                $sformat(insnstring, "lf.sfge.s   r%0d,r%0d",rA_num,rB_num);
-              `OR1K_FPCOP_SFLT:
-                $sformat(insnstring, "lf.sflt.s   r%0d,r%0d",rA_num,rB_num);
-              `OR1K_FPCOP_SFLE:
-                $sformat(insnstring, "lf.sfle.s   r%0d,r%0d",rA_num,rB_num);
-              default:
-                $sformat(insnstring, "%t: FPU opcode 0x%0h, r%0d,r%0d,r%0d", $time, opcode, rD_num,rA_num,rB_num);
-            endcase // case(insn[`OR1K_FPUOP_SELECT])
-          end
-        default:
-          begin
-            $sformat(insnstring, "%t: Unknown opcode 0x%0h",$time,opcode);
-            $sformat(insnstring, "%t: Unknown opcode 0x%0h",$time,opcode);
-          end
+        `OR1K_OPCODE_SYSTRAPSYNC: begin
+          case (insn[`OR1K_SYSTRAPSYNC_OPC_SELECT])
+            `OR1K_SYSTRAPSYNC_OPC_SYSCALL:
+              $sformat(insnstring, "l.sys   0x%04h",imm_16bit);
+            `OR1K_SYSTRAPSYNC_OPC_TRAP:
+              $sformat(insnstring, "l.trap  0x%04h",imm_16bit);
+            `OR1K_SYSTRAPSYNC_OPC_MSYNC:
+              $sformat(insnstring, "l.msync");
+            `OR1K_SYSTRAPSYNC_OPC_PSYNC:
+              $sformat(insnstring, "l.psync");
+            `OR1K_SYSTRAPSYNC_OPC_CSYNC:
+              $sformat(insnstring, "l.csync");
+          endcase // case (insn[`OR1K_SYSTRAPSYNC_OPC_SELECT])
+        end
+        `OR1K_OPCODE_FPU: begin
+          case (insn[`OR1K_FPUOP_SELECT])
+            `OR1K_FPUOP_ADD:
+              $sformat(insnstring, "lf.add.s   r%0d,r%0d,r%0d",rD_num,rA_num,rB_num);
+            `OR1K_FPUOP_SUB:
+              $sformat(insnstring, "lf.sub.s   r%0d,r%0d,r%0d",rD_num,rA_num,rB_num);
+            `OR1K_FPUOP_MUL:
+              $sformat(insnstring, "lf.mul.s   r%0d,r%0d,r%0d",rD_num,rA_num,rB_num);
+            `OR1K_FPUOP_DIV:
+              $sformat(insnstring, "lf.div.s   r%0d,r%0d,r%0d",rD_num,rA_num,rB_num);
+            `OR1K_FPUOP_ITOF:
+              $sformat(insnstring, "lf.itof.s  r%0d,r%0d",rD_num,rA_num);
+            `OR1K_FPUOP_FTOI:
+              $sformat(insnstring, "lf.ftoi.s  r%0d,r%0d",rD_num,rA_num);
+            `OR1K_FPUOP_REM:
+              $sformat(insnstring, "lf.rem.s   r%0d,r%0d,r%0d",rD_num,rA_num,rB_num);
+            `OR1K_FPCOP_SFEQ:
+              $sformat(insnstring, "lf.sfeq.s   r%0d,r%0d",rA_num,rB_num);
+            `OR1K_FPCOP_SFNE:
+              $sformat(insnstring, "lf.sfne.s   r%0d,r%0d",rA_num,rB_num);
+            `OR1K_FPCOP_SFGT:
+              $sformat(insnstring, "lf.sfgt.s   r%0d,r%0d",rA_num,rB_num);
+            `OR1K_FPCOP_SFGE:
+              $sformat(insnstring, "lf.sfge.s   r%0d,r%0d",rA_num,rB_num);
+            `OR1K_FPCOP_SFLT:
+              $sformat(insnstring, "lf.sflt.s   r%0d,r%0d",rA_num,rB_num);
+            `OR1K_FPCOP_SFLE:
+              $sformat(insnstring, "lf.sfle.s   r%0d,r%0d",rA_num,rB_num);
+            default:
+              $sformat(insnstring, "%t: FPU opcode 0x%0h, r%0d,r%0d,r%0d", $time, opcode, rD_num,rA_num,rB_num);
+          endcase // case(insn[`OR1K_FPUOP_SELECT])
+        end
+        default: begin
+          $sformat(insnstring, "%t: Unknown opcode 0x%0h",$time,opcode);
+          $sformat(insnstring, "%t: Unknown opcode 0x%0h",$time,opcode);
+        end
 
       endcase // case (opcode)
 
