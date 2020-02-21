@@ -2,4 +2,4 @@ export PATH=/opt/or1k-elf/bin:${PATH}
 make clean
 make clean_elf-loader
 make clean_jtag_vpi
-make
+make run
