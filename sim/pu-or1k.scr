@@ -5,7 +5,7 @@
 +incdir+../rtl/verilog/core
 +incdir+../rtl/verilog/pu
 +incdir+../msi/rtl/verilog/wb/core
-+incdir+../uart/rtl/verilog/wb
++incdir+../uart/rtl/verilog/pkg
 ../bench/verilog/mor1kx_monitor.v
 ../bench/verilog/orpsoc_tb.v
 ../bench/verilog/vlog_functions.v
