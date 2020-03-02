@@ -228,8 +228,8 @@ wb_ram #(
 
 wire uart_irq;
 
-uart_top #(
-	.debug	(0),
+mpsoc_wb_uart #(
+	.DEBUG	(0),
 	.SIM	(1)
 ) uart16550 (
 	//Wishbone Master interface
