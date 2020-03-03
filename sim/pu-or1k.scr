@@ -84,8 +84,8 @@
 ../rtl/verilog/core/pfpu32/pfpu32_muldiv.v
 ../rtl/verilog/core/pfpu32/pfpu32_rnd.v
 ../rtl/verilog/core/pfpu32/pfpu32_top.v
-../spram/rtl/verilog/wb/wb_ram_generic.v
-../spram/rtl/verilog/wb/wb_ram.v
+../spram/rtl/verilog/wb/mpsoc_wb_ram_generic.v
+../spram/rtl/verilog/wb/mpsoc_wb_ram.v
 ../rtl/verilog/pu/orpsoc_top.v
 ../uart/rtl/verilog/wb/mpsoc_wb_raminfr.v
 ../uart/rtl/verilog/wb/mpsoc_wb_uart.v
