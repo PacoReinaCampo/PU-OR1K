@@ -26,8 +26,8 @@ clean_elf-loader:
 	$(RM) elf-loader.vpi
 
 jtag_vpi_LIBS := 
-jtag_vpi_INCS := -I../dbg/rtl/verilog/jtag_vpi/
-jtag_vpi_SRCS := ../dbg/rtl/verilog/jtag_vpi/jtag_common.c ../dbg/rtl/verilog/jtag_vpi/jtag_vpi.c ../dbg/rtl/verilog/jtag_vpi/jtag_vpi.v
+jtag_vpi_INCS := -I../dbg/bench/verilog/or1k/jtag_vpi/
+jtag_vpi_SRCS := ../dbg/bench/verilog/or1k/jtag_vpi/jtag_common.c ../dbg/bench/verilog/or1k/jtag_vpi/jtag_vpi.c ../dbg/bench/verilog/or1k/jtag_vpi/jtag_vpi.v
 
 jtag_vpi.vpi: $(jtag_vpi_SRCS)
 	iverilog-vpi --name=jtag_vpi $(jtag_vpi_LIBS) $(jtag_vpi_INCS) $?
