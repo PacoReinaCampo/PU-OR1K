@@ -206,7 +206,7 @@ mor1kx #(
 // Generic main RAM
 //
 ////////////////////////////////////////////////////////////////////////
-mpsoc_wb_ram #(
+mpsoc_wb_spram #(
 	.DEPTH	(MEM_SIZE/4)
 ) wb_bfm_memory0 (
 	//Wishbone Master interface
