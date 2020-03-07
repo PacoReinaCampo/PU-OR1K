@@ -23,9 +23,9 @@
 ../dbg/rtl/verilog/or1k/wb/adbg_top.v
 ../dbg/rtl/verilog/or1k/wb/adbg_wb_biu.v
 ../dbg/rtl/verilog/or1k/wb/adbg_wb_module.v
-../dbg/rtl/verilog/or1k/wb/bytefifo.v
-../dbg/rtl/verilog/or1k/wb/syncflop.v
-../dbg/rtl/verilog/or1k/wb/syncreg.v
+../dbg/rtl/verilog/or1k/wb/adbg_bytefifo.v
+../dbg/rtl/verilog/or1k/wb/adbg_syncflop.v
+../dbg/rtl/verilog/or1k/wb/adbg_syncreg.v
 ../msi/rtl/verilog/wb/arbiter/mpsoc_msi_arbiter.v
 ../msi/rtl/verilog/wb/cdc_utils/mpsoc_msi_wb_cc561.v
 ../msi/rtl/verilog/wb/cdc_utils/mpsoc_msi_wb_sync2_pgen.v
