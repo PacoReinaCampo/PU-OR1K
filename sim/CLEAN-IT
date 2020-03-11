@@ -7,6 +7,4 @@ rm -rf jtag_common.o
 rm -rf jtag_vpi.o
 rm -rf vpi_wrapper.o
 
-rm -rf mor1kx-general.log
-rm -rf mor1kx-trace.log
-rm -rf xt2
+rm -rf *.log
