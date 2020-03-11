@@ -1,6 +1,6 @@
 TARGET               := pu-or1k
 VPI_MODULES          := elf-loader.vpi jtag_vpi.vpi
-TOPLEVEL             := orpsoc_tb
+TOPLEVEL             := or1k_testbench
 IVERILOG_OPTIONS     := -DSIM
 ALIGNILLEGALINSN     ?= +elf_load=../software/tests/build/or1k/or1k-alignillegalinsn
 BACKTOBACK_JMP       ?= +elf_load=../software/tests/build/or1k/or1k-backtoback_jmp
@@ -45,6 +45,8 @@ TICKSYSCALL          ?= +elf_load=../software/tests/build/or1k/or1k-ticksyscall
 TIMER                ?= +elf_load=../software/tests/build/or1k/or1k-timer
 TRAP                 ?= +elf_load=../software/tests/build/or1k/or1k-trap
 TRAPDELAYSLOT        ?= +elf_load=../software/tests/build/or1k/or1k-trapdelayslot
+
+HELLO                ?= +elf_load=../software/hello/hello.elf
 
 all: $(VPI_MODULES) $(TARGET)
 
@@ -179,6 +181,10 @@ run-trap: $(VPI_MODULES) $(TARGET)
 
 run-trapdelayslot: $(VPI_MODULES) $(TARGET)
 	vvp -n -M. -l or1k-trapdelayslot.log $(patsubst %.vpi,-m%,$(VPI_MODULES)) $(TARGET) $(TRAPDELAYSLOT)
+
+
+run-hello: $(VPI_MODULES) $(TARGET)
+	vvp -n -M. -l or1k-hello.log $(patsubst %.vpi,-m%,$(VPI_MODULES)) $(TARGET) $(HELLO)
 
 
 clean:

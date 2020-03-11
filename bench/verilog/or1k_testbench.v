@@ -1,4 +1,4 @@
-module orpsoc_tb;
+module or1k_testbench;
 
   localparam MEM_SIZE = 32'h02000000; //Set default memory size to 32MB
 
@@ -24,7 +24,7 @@ module orpsoc_tb;
     .tdi       (tdi),
     .tdo       (tdo),
     .enable    (enable_jtag_vpi),
-    .init_done (orpsoc_tb.dut.wb_rst)
+    .init_done (or1k_testbench.dut.wb_rst)
   );
 
   ////////////////////////////////////////////////////////////////////////
@@ -34,14 +34,15 @@ module orpsoc_tb;
   ////////////////////////////////////////////////////////////////////////
   integer mem_words;
   integer i;
-  reg [31:0] mem_word;
+
+  reg [  31:0] mem_word;
   reg [1023:0] elf_file;
 
   initial begin
     if ($test$plusargs("clear_ram")) begin
       $display("Clearing RAM");
       for(i=0; i < MEM_SIZE/4; i = i+1)
-        orpsoc_tb.dut.wb_bfm_memory0.ram0.mem[i] = 32'h00000000;
+        or1k_testbench.dut.wb_bfm_memory0.ram0.mem[i] = 32'h00000000;
     end
     if($value$plusargs("elf_load=%s", elf_file)) begin
       $elf_load_file(elf_file);
@@ -49,7 +50,7 @@ module orpsoc_tb;
       mem_words = $elf_get_size/4;
       $display("Loading %d words", mem_words);
       for(i=0; i < mem_words; i = i+1)
-        orpsoc_tb.dut.wb_bfm_memory0.ram0.mem[i] = $elf_read_32(i*4);
+        or1k_testbench.dut.wb_bfm_memory0.ram0.mem[i] = $elf_read_32(i*4);
     end else
       $display("No ELF file specified");
   end
@@ -77,11 +78,10 @@ module orpsoc_tb;
   // DUT
   //
   ////////////////////////////////////////////////////////////////////////
-  orpsoc_top #(
+  or1k_pu #(
     .MEM_SIZE (MEM_SIZE)
   )
-  dut
-  (
+  dut (
     .wb_clk_i (syst_clk),
     .wb_rst_i (syst_rst),
     .tms_pad_i (tms),

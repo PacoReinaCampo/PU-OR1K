@@ -43,3 +43,5 @@ make clean; make clean_elf-loader; make clean_jtag_vpi; make run-ticksyscall
 make clean; make clean_elf-loader; make clean_jtag_vpi; make run-timer
 make clean; make clean_elf-loader; make clean_jtag_vpi; make run-trap
 make clean; make clean_elf-loader; make clean_jtag_vpi; make run-trapdelayslot
+
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-hello

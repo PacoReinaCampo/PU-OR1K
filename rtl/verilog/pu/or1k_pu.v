@@ -1,4 +1,4 @@
-module orpsoc_top #(
+module or1k_pu #(
   parameter MEM_SIZE = 32'h02000000
 )
   (

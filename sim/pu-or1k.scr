@@ -7,7 +7,7 @@
 +incdir+../rtl/verilog/pu
 +incdir+../uart/rtl/verilog/pkg
 ../bench/verilog/mor1kx_monitor.v
-../bench/verilog/orpsoc_tb.v
+../bench/verilog/or1k_testbench.v
 ../bench/verilog/vlog_functions.v
 ../bench/verilog/vlog_tap_generator.v
 ../bench/verilog/vlog_tb_utils.v
@@ -84,7 +84,7 @@
 ../rtl/verilog/core/pfpu32/pfpu32_muldiv.v
 ../rtl/verilog/core/pfpu32/pfpu32_rnd.v
 ../rtl/verilog/core/pfpu32/pfpu32_top.v
-../rtl/verilog/pu/orpsoc_top.v
+../rtl/verilog/pu/or1k_pu.v
 ../spram/rtl/verilog/wb/mpsoc_wb_ram_generic.v
 ../spram/rtl/verilog/wb/mpsoc_wb_spram.v
 ../uart/rtl/verilog/wb/mpsoc_wb_raminfr.v
