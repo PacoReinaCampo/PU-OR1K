@@ -27,10 +27,10 @@
 ../dbg/rtl/verilog/or1k/wb/adbg_wb_biu.v
 ../dbg/rtl/verilog/or1k/wb/adbg_wb_module.v
 ../msi/rtl/verilog/wb/arbiter/mpsoc_msi_arbiter.v
-../msi/rtl/verilog/wb/bfm/mpsoc_msi_wb_bfm_master.v
-../msi/rtl/verilog/wb/bfm/mpsoc_msi_wb_bfm_memory.v
-../msi/rtl/verilog/wb/bfm/mpsoc_msi_wb_bfm_slave.v
-../msi/rtl/verilog/wb/bfm/mpsoc_msi_wb_bfm_transactor.v
+../msi/bench/verilog/bfm/mpsoc_msi_wb_bfm_master.v
+../msi/bench/verilog/bfm/mpsoc_msi_wb_bfm_memory.v
+../msi/bench/verilog/bfm/mpsoc_msi_wb_bfm_slave.v
+../msi/bench/verilog/bfm/mpsoc_msi_wb_bfm_transactor.v
 ../msi/rtl/verilog/wb/cdc/mpsoc_msi_wb_cc561.v
 ../msi/rtl/verilog/wb/cdc/mpsoc_msi_wb_cdc.v
 ../msi/rtl/verilog/wb/cdc/mpsoc_msi_wb_sync2_pgen.v
