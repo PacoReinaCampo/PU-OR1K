@@ -203,11 +203,10 @@ module mor1kx_cpu
 `ifndef SYNTHESIS
    /* Provide interface hooks for register functions. */
    generate
-      if (OPTION_CPU=="CAPPUCCINO") begin : monitor
+      if (OPTION_CPU=="CAPPUCCINO") begin : monitor_cappuccino
 
 `include "mor1kx_utils.vh"
-         localparam RF_ADDR_WIDTH = calc_rf_addr_width(OPTION_RF_ADDR_WIDTH,
-                                                       OPTION_RF_NUM_SHADOW_GPR);
+         localparam RF_ADDR_WIDTH = OPTION_RF_ADDR_WIDTH;
 
          function [OPTION_OPERAND_WIDTH-1:0] get_gpr;
             // verilator public
@@ -221,7 +220,7 @@ module mor1kx_cpu
             cappuccino.mor1kx_cpu.set_gpr(gpr_num, gpr_value);
          endtask
       end
-      if (OPTION_CPU=="ESPRESSO") begin : monitor
+      if (OPTION_CPU=="ESPRESSO") begin : monitor_espresso
          function [OPTION_OPERAND_WIDTH-1:0] get_gpr;
             // verilator public
             input [15:0] gpr_num;
@@ -235,7 +234,7 @@ module mor1kx_cpu
          endtask
       end
       /* verilator lint_off WIDTH */
-      if (OPTION_CPU=="PRONTO_ESPRESSO") begin : monitor
+      if (OPTION_CPU=="PRONTO_ESPRESSO") begin : monitor_pronto_espresso
          function [OPTION_OPERAND_WIDTH-1:0] get_gpr;
             // verilator public
             input [15:0] gpr_num;

@@ -31,8 +31,8 @@
 `define CPU_FLAG `CPU_WRAPPER.monitor_flag
 `define CPU_SR `CPU_WRAPPER.monitor_spr_sr
 `define EXECUTE_PC `CPU_WRAPPER.monitor_execute_pc
-`define GPR_GET(x) `CPU_WRAPPER.monitor.get_gpr(x)
-`define GPR_SET(x, y) `CPU_WRAPPER.monitor.set_gpr(x, y)
+`define GPR_GET(x) `CPU_WRAPPER.monitor_cappuccino.get_gpr(x)
+`define GPR_SET(x, y) `CPU_WRAPPER.monitor_cappuccino.set_gpr(x, y)
 
 `include "mor1kx-defines.v"
 
