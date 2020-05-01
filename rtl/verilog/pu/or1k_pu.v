@@ -1,4 +1,49 @@
+////////////////////////////////////////////////////////////////////////////////
+//                                            __ _      _     _               //
+//                                           / _(_)    | |   | |              //
+//                __ _ _   _  ___  ___ _ __ | |_ _  ___| | __| |              //
+//               / _` | | | |/ _ \/ _ \ '_ \|  _| |/ _ \ |/ _` |              //
+//              | (_| | |_| |  __/  __/ | | | | | |  __/ | (_| |              //
+//               \__, |\__,_|\___|\___|_| |_|_| |_|\___|_|\__,_|              //
+//                  | |                                                       //
+//                  |_|                                                       //
+//                                                                            //
+//                                                                            //
+//              MPSoC-OR1K CPU                                                //
+//              Processing Unit                                               //
+//              Wishbone Bus Interface                                        //
+//                                                                            //
+////////////////////////////////////////////////////////////////////////////////
+
+/* Copyright (c) 2018-2019 by the author(s)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ * =============================================================================
+ * Author(s):
+ *   Francisco Javier Reina Campo <frareicam@gmail.com>
+ */
+
 module or1k_pu #(
+  parameter AW = 32,
+  parameter DW = 32,
+
   parameter MEM_SIZE = 32'h02000000
 )
   (
@@ -10,9 +55,6 @@ module or1k_pu #(
     input  tdi_pad_i
   );
 
-  localparam wb_aw = 32;
-  localparam wb_dw = 32;
-
   ////////////////////////////////////////////////////////////////////////
   //
   // Wishbone interconnect
@@ -21,74 +63,79 @@ module or1k_pu #(
   wire wb_clk = wb_clk_i;
   wire wb_rst = wb_rst_i;
 
-  wire [31:0] wb_m2s_or1k_d_adr;
-  wire [31:0] wb_m2s_or1k_d_dat;
-  wire  [3:0] wb_m2s_or1k_d_sel;
-  wire        wb_m2s_or1k_d_we;
-  wire        wb_m2s_or1k_d_cyc;
-  wire        wb_m2s_or1k_d_stb;
-  wire  [2:0] wb_m2s_or1k_d_cti;
-  wire  [1:0] wb_m2s_or1k_d_bte;
-  wire [31:0] wb_s2m_or1k_d_dat;
-  wire        wb_s2m_or1k_d_ack;
-  wire        wb_s2m_or1k_d_err;
-  wire        wb_s2m_or1k_d_rty;
-  wire [31:0] wb_m2s_or1k_i_adr;
-  wire [31:0] wb_m2s_or1k_i_dat;
-  wire  [3:0] wb_m2s_or1k_i_sel;
-  wire        wb_m2s_or1k_i_we;
-  wire        wb_m2s_or1k_i_cyc;
-  wire        wb_m2s_or1k_i_stb;
-  wire  [2:0] wb_m2s_or1k_i_cti;
-  wire  [1:0] wb_m2s_or1k_i_bte;
-  wire [31:0] wb_s2m_or1k_i_dat;
-  wire        wb_s2m_or1k_i_ack;
-  wire        wb_s2m_or1k_i_err;
-  wire        wb_s2m_or1k_i_rty;
-  wire [31:0] wb_m2s_dbg_adr;
-  wire [31:0] wb_m2s_dbg_dat;
-  wire  [3:0] wb_m2s_dbg_sel;
-  wire        wb_m2s_dbg_we;
-  wire        wb_m2s_dbg_cyc;
-  wire        wb_m2s_dbg_stb;
-  wire  [2:0] wb_m2s_dbg_cti;
-  wire  [1:0] wb_m2s_dbg_bte;
-  wire [31:0] wb_s2m_dbg_dat;
-  wire        wb_s2m_dbg_ack;
-  wire        wb_s2m_dbg_err;
-  wire        wb_s2m_dbg_rty;
-  wire [31:0] wb_m2s_mem_adr;
-  wire [31:0] wb_m2s_mem_dat;
-  wire  [3:0] wb_m2s_mem_sel;
-  wire        wb_m2s_mem_we;
-  wire        wb_m2s_mem_cyc;
-  wire        wb_m2s_mem_stb;
-  wire  [2:0] wb_m2s_mem_cti;
-  wire  [1:0] wb_m2s_mem_bte;
-  wire [31:0] wb_s2m_mem_dat;
-  wire        wb_s2m_mem_ack;
-  wire        wb_s2m_mem_err;
-  wire        wb_s2m_mem_rty;
-  wire [31:0] wb_m2s_uart_adr;
-  wire  [7:0] wb_m2s_uart_dat;
-  wire  [3:0] wb_m2s_uart_sel;
-  wire        wb_m2s_uart_we;
-  wire        wb_m2s_uart_cyc;
-  wire        wb_m2s_uart_stb;
-  wire  [2:0] wb_m2s_uart_cti;
-  wire  [1:0] wb_m2s_uart_bte;
-  wire  [7:0] wb_s2m_uart_dat;
-  wire        wb_s2m_uart_ack;
-  wire        wb_s2m_uart_err;
-  wire        wb_s2m_uart_rty;
+  wire [AW-1:0] wb_m2s_or1k_d_adr;
+  wire [DW-1:0] wb_m2s_or1k_d_dat;
+  wire [   3:0] wb_m2s_or1k_d_sel;
+  wire          wb_m2s_or1k_d_we;
+  wire          wb_m2s_or1k_d_cyc;
+  wire          wb_m2s_or1k_d_stb;
+  wire [   2:0] wb_m2s_or1k_d_cti;
+  wire [   1:0] wb_m2s_or1k_d_bte;
+  wire [DW-1:0] wb_s2m_or1k_d_dat;
+  wire          wb_s2m_or1k_d_ack;
+  wire          wb_s2m_or1k_d_err;
+  wire          wb_s2m_or1k_d_rty;
+
+  wire [AW-1:0] wb_m2s_or1k_i_adr;
+  wire [DW-1:0] wb_m2s_or1k_i_dat;
+  wire [   3:0] wb_m2s_or1k_i_sel;
+  wire          wb_m2s_or1k_i_we;
+  wire          wb_m2s_or1k_i_cyc;
+  wire          wb_m2s_or1k_i_stb;
+  wire [   2:0] wb_m2s_or1k_i_cti;
+  wire [   1:0] wb_m2s_or1k_i_bte;
+  wire [DW-1:0] wb_s2m_or1k_i_dat;
+  wire          wb_s2m_or1k_i_ack;
+  wire          wb_s2m_or1k_i_err;
+  wire          wb_s2m_or1k_i_rty;
+
+  wire [AW-1:0] wb_m2s_dbg_adr;
+  wire [DW-1:0] wb_m2s_dbg_dat;
+  wire [   3:0] wb_m2s_dbg_sel;
+  wire          wb_m2s_dbg_we;
+  wire          wb_m2s_dbg_cyc;
+  wire          wb_m2s_dbg_stb;
+  wire [   2:0] wb_m2s_dbg_cti;
+  wire [   1:0] wb_m2s_dbg_bte;
+  wire [DW-1:0] wb_s2m_dbg_dat;
+  wire          wb_s2m_dbg_ack;
+  wire          wb_s2m_dbg_err;
+  wire          wb_s2m_dbg_rty;
+
+  wire [AW-1:0] wb_m2s_mem_adr;
+  wire [DW-1:0] wb_m2s_mem_dat;
+  wire [   3:0] wb_m2s_mem_sel;
+  wire          wb_m2s_mem_we;
+  wire          wb_m2s_mem_cyc;
+  wire          wb_m2s_mem_stb;
+  wire [   2:0] wb_m2s_mem_cti;
+  wire [   1:0] wb_m2s_mem_bte;
+  wire [DW-1:0] wb_s2m_mem_dat;
+  wire          wb_s2m_mem_ack;
+  wire          wb_s2m_mem_err;
+  wire          wb_s2m_mem_rty;
+
+  wire [AW-1:0] wb_m2s_uart_adr;
+  wire [   7:0] wb_m2s_uart_dat;
+  wire [   3:0] wb_m2s_uart_sel;
+  wire          wb_m2s_uart_we;
+  wire          wb_m2s_uart_cyc;
+  wire          wb_m2s_uart_stb;
+  wire [   2:0] wb_m2s_uart_cti;
+  wire [   1:0] wb_m2s_uart_bte;
+  wire [   7:0] wb_s2m_uart_dat;
+  wire          wb_s2m_uart_ack;
+  wire          wb_s2m_uart_err;
+  wire          wb_s2m_uart_rty;
 
   mpsoc_msi_wb_interface wb_interface0 (
     .wb_clk_i        (wb_clk),
     .wb_rst_i        (wb_rst),
+
     .wb_or1k_d_adr_i (wb_m2s_or1k_d_adr),
     .wb_or1k_d_dat_i (wb_m2s_or1k_d_dat),
     .wb_or1k_d_sel_i (wb_m2s_or1k_d_sel),
-    .wb_or1k_d_we_i  (wb_m2s_or1k_d_we),
+    .wb_or1k_d_we_i  (wb_m2s_or1k_d_we ),
     .wb_or1k_d_cyc_i (wb_m2s_or1k_d_cyc),
     .wb_or1k_d_stb_i (wb_m2s_or1k_d_stb),
     .wb_or1k_d_cti_i (wb_m2s_or1k_d_cti),
@@ -97,10 +144,11 @@ module or1k_pu #(
     .wb_or1k_d_ack_o (wb_s2m_or1k_d_ack),
     .wb_or1k_d_err_o (wb_s2m_or1k_d_err),
     .wb_or1k_d_rty_o (wb_s2m_or1k_d_rty),
+
     .wb_or1k_i_adr_i (wb_m2s_or1k_i_adr),
     .wb_or1k_i_dat_i (wb_m2s_or1k_i_dat),
     .wb_or1k_i_sel_i (wb_m2s_or1k_i_sel),
-    .wb_or1k_i_we_i  (wb_m2s_or1k_i_we),
+    .wb_or1k_i_we_i  (wb_m2s_or1k_i_we ),
     .wb_or1k_i_cyc_i (wb_m2s_or1k_i_cyc),
     .wb_or1k_i_stb_i (wb_m2s_or1k_i_stb),
     .wb_or1k_i_cti_i (wb_m2s_or1k_i_cti),
@@ -109,10 +157,11 @@ module or1k_pu #(
     .wb_or1k_i_ack_o (wb_s2m_or1k_i_ack),
     .wb_or1k_i_err_o (wb_s2m_or1k_i_err),
     .wb_or1k_i_rty_o (wb_s2m_or1k_i_rty),
+
     .wb_dbg_adr_i    (wb_m2s_dbg_adr),
     .wb_dbg_dat_i    (wb_m2s_dbg_dat),
     .wb_dbg_sel_i    (wb_m2s_dbg_sel),
-    .wb_dbg_we_i     (wb_m2s_dbg_we),
+    .wb_dbg_we_i     (wb_m2s_dbg_we ),
     .wb_dbg_cyc_i    (wb_m2s_dbg_cyc),
     .wb_dbg_stb_i    (wb_m2s_dbg_stb),
     .wb_dbg_cti_i    (wb_m2s_dbg_cti),
@@ -121,10 +170,11 @@ module or1k_pu #(
     .wb_dbg_ack_o    (wb_s2m_dbg_ack),
     .wb_dbg_err_o    (wb_s2m_dbg_err),
     .wb_dbg_rty_o    (wb_s2m_dbg_rty),
+
     .wb_mem_adr_o    (wb_m2s_mem_adr),
     .wb_mem_dat_o    (wb_m2s_mem_dat),
     .wb_mem_sel_o    (wb_m2s_mem_sel),
-    .wb_mem_we_o     (wb_m2s_mem_we),
+    .wb_mem_we_o     (wb_m2s_mem_we ),
     .wb_mem_cyc_o    (wb_m2s_mem_cyc),
     .wb_mem_stb_o    (wb_m2s_mem_stb),
     .wb_mem_cti_o    (wb_m2s_mem_cti),
@@ -133,10 +183,11 @@ module or1k_pu #(
     .wb_mem_ack_i    (wb_s2m_mem_ack),
     .wb_mem_err_i    (wb_s2m_mem_err),
     .wb_mem_rty_i    (wb_s2m_mem_rty),
+
     .wb_uart_adr_o   (wb_m2s_uart_adr),
     .wb_uart_dat_o   (wb_m2s_uart_dat),
     .wb_uart_sel_o   (wb_m2s_uart_sel),
-    .wb_uart_we_o    (wb_m2s_uart_we),
+    .wb_uart_we_o    (wb_m2s_uart_we ),
     .wb_uart_cyc_o   (wb_m2s_uart_cyc),
     .wb_uart_stb_o   (wb_m2s_uart_stb),
     .wb_uart_cti_o   (wb_m2s_uart_cti),
@@ -192,25 +243,26 @@ module or1k_pu #(
   // Debug Interface
   //
   ////////////////////////////////////////////////////////////////////////
-  wire [31:0] or1k_dbg_dat_i;
-  wire [31:0] or1k_dbg_adr_i;
-  wire        or1k_dbg_we_i;
-  wire        or1k_dbg_stb_i;
-  wire        or1k_dbg_ack_o;
-  wire [31:0] or1k_dbg_dat_o;
+  wire [AW-1:0] or1k_dbg_adr_i;
+  wire [DW-1:0] or1k_dbg_dat_i;
+  wire          or1k_dbg_we_i;
+  wire          or1k_dbg_stb_i;
+  wire [DW-1:0] or1k_dbg_dat_o;
+  wire          or1k_dbg_ack_o;
 
-  wire        or1k_dbg_stall_i;
-  wire        or1k_dbg_ewt_i;
-  wire [ 3:0] or1k_dbg_lss_o;
-  wire [ 1:0] or1k_dbg_is_o;
-  wire [10:0] or1k_dbg_wp_o;
-  wire        or1k_dbg_bp_o;
-  wire        or1k_dbg_rst;
+  wire          or1k_dbg_stall_i;
+  wire          or1k_dbg_ewt_i;
+  wire [   3:0] or1k_dbg_lss_o;
+  wire [   1:0] or1k_dbg_is_o;
+  wire [  10:0] or1k_dbg_wp_o;
+  wire          or1k_dbg_bp_o;
+  wire          or1k_dbg_rst;
 
   adbg_top dbg_if0 (
     // OR1K interface
     .cpu0_clk_i   (wb_clk),
     .cpu0_rst_o   (or1k_dbg_rst),
+
     .cpu0_addr_o  (or1k_dbg_adr_i),
     .cpu0_data_o  (or1k_dbg_dat_i),
     .cpu0_stb_o   (or1k_dbg_stb_i),
@@ -233,6 +285,7 @@ module or1k_pu #(
 
     // Wishbone debug master
     .wb_clk_i (wb_clk),
+
     .wb_dat_i (wb_s2m_dbg_dat),
     .wb_ack_i (wb_s2m_dbg_ack),
     .wb_err_i (wb_s2m_dbg_err),
@@ -242,7 +295,7 @@ module or1k_pu #(
     .wb_cyc_o (wb_m2s_dbg_cyc),
     .wb_stb_o (wb_m2s_dbg_stb),
     .wb_sel_o (wb_m2s_dbg_sel),
-    .wb_we_o  (wb_m2s_dbg_we),
+    .wb_we_o  (wb_m2s_dbg_we ),
     .wb_cti_o (wb_m2s_dbg_cti),
     .wb_bte_o (wb_m2s_dbg_bte)
   );
@@ -285,7 +338,7 @@ module or1k_pu #(
     .iwbm_stb_o   (wb_m2s_or1k_i_stb),
     .iwbm_cyc_o   (wb_m2s_or1k_i_cyc),
     .iwbm_sel_o   (wb_m2s_or1k_i_sel),
-    .iwbm_we_o    (wb_m2s_or1k_i_we),
+    .iwbm_we_o    (wb_m2s_or1k_i_we ),
     .iwbm_cti_o   (wb_m2s_or1k_i_cti),
     .iwbm_bte_o   (wb_m2s_or1k_i_bte),
     .iwbm_dat_o   (wb_m2s_or1k_i_dat),
@@ -336,6 +389,7 @@ module or1k_pu #(
     //Wishbone Master interface
     .wb_clk_i (wb_clk_i),
     .wb_rst_i (wb_rst_i),
+
     .wb_adr_i (wb_m2s_mem_adr[$clog2(MEM_SIZE)-3:0]),
     .wb_dat_i (wb_m2s_mem_dat),
     .wb_sel_i (wb_m2s_mem_sel),
@@ -348,6 +402,7 @@ module or1k_pu #(
     .wb_ack_o (wb_s2m_mem_ack),
     .wb_err_o (wb_s2m_mem_err)
   );
+
   assign wb_s2m_mem_rty = 1'b0;
 
   wire uart_irq;
@@ -359,6 +414,7 @@ module or1k_pu #(
     //Wishbone Master interface
     .wb_clk_i  (wb_clk_i),
     .wb_rst_i  (wb_rst_i),
+
     .wb_adr_i  (wb_m2s_uart_adr[2:0]),
     .wb_dat_i  (wb_m2s_uart_dat),
     .wb_sel_i  (4'h0),
@@ -367,7 +423,9 @@ module or1k_pu #(
     .wb_stb_i  (wb_m2s_uart_stb),
     .wb_dat_o  (wb_s2m_uart_dat),
     .wb_ack_o  (wb_s2m_uart_ack),
+
     .int_o     (uart_irq),
+
     .srx_pad_i (1'b0),
     .stx_pad_o (),
     .rts_pad_o (),

@@ -1,5 +1,8 @@
 export PATH=/opt/or1k-elf/bin:${PATH}
 
+rm -rf log
+mkdir log
+
 make clean; make clean_elf-loader; make clean_jtag_vpi; make run-alignillegalinsn
 make clean; make clean_elf-loader; make clean_jtag_vpi; make run-backtoback_jmp
 make clean; make clean_elf-loader; make clean_jtag_vpi; make run-basic

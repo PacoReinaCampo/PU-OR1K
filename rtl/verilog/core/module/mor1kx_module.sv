@@ -1,3 +1,45 @@
+////////////////////////////////////////////////////////////////////////////////
+//                                            __ _      _     _               //
+//                                           / _(_)    | |   | |              //
+//                __ _ _   _  ___  ___ _ __ | |_ _  ___| | __| |              //
+//               / _` | | | |/ _ \/ _ \ '_ \|  _| |/ _ \ |/ _` |              //
+//              | (_| | |_| |  __/  __/ | | | | | |  __/ | (_| |              //
+//               \__, |\__,_|\___|\___|_| |_|_| |_|\___|_|\__,_|              //
+//                  | |                                                       //
+//                  |_|                                                       //
+//                                                                            //
+//                                                                            //
+//              MPSoC-OR1K CPU                                                //
+//              Processing Unit                                               //
+//              Wishbone Bus Interface                                        //
+//                                                                            //
+////////////////////////////////////////////////////////////////////////////////
+
+/* Copyright (c) 2018-2019 by the author(s)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ * =============================================================================
+ * Author(s):
+ *   Francisco Javier Reina Campo <frareicam@gmail.com>
+ */
+
 import opensocdebug::mor1kx_trace_exec;
 
 module mor1kx_module #(
@@ -30,32 +72,32 @@ module mor1kx_module #(
     input [31:0]  pic_ints_i,
 
     // Instruction WISHBONE interface
+    output [31:0] iwb_adr_o, // address bus outputs
+    output [31:0] iwb_dat_o, // output data bus
+    output [ 3:0] iwb_sel_o, // byte select outputs
+    output        iwb_we_o,  // indicates write transfer
+    output        iwb_cyc_o, // cycle valid output
+    output        iwb_stb_o, // strobe output
+    output [ 2:0] iwb_cti_o,
+    output [ 1:0] iwb_bte_o,
+    input  [31:0] iwb_dat_i, // input data bus
     input         iwb_ack_i, // normal termination
     input         iwb_err_i, // termination w/ error
     input         iwb_rty_i, // termination w/ retry
-    input  [31:0] iwb_dat_i, // input data bus
-    output        iwb_cyc_o, // cycle valid output
-    output [31:0] iwb_adr_o, // address bus outputs
-    output        iwb_stb_o, // strobe output
-    output        iwb_we_o,  // indicates write transfer
-    output [ 3:0] iwb_sel_o, // byte select outputs
-    output [31:0] iwb_dat_o, // output data bus
-    output [ 1:0] iwb_bte_o,
-    output [ 2:0] iwb_cti_o,
 
     // Data WISHBONE interface
+    output [31:0] dwb_adr_o, // address bus outputs
+    output [31:0] dwb_dat_o, // output data bus
+    output [ 3:0] dwb_sel_o, // byte select outputs
+    output        dwb_we_o,  // indicates write transfer
+    output        dwb_cyc_o, // cycle valid output
+    output        dwb_stb_o, // strobe output
+    output [ 2:0] dwb_cti_o,
+    output [ 1:0] dwb_bte_o,
+    input  [31:0] dwb_dat_i, // input data bus
     input         dwb_ack_i, // normal termination
     input         dwb_err_i, // termination w/ error
     input         dwb_rty_i, // termination w/ retry
-    input  [31:0] dwb_dat_i, // input data bus
-    output        dwb_cyc_o, // cycle valid output
-    output [31:0] dwb_adr_o, // address bus outputs
-    output        dwb_stb_o, // strobe output
-    output        dwb_we_o,  // indicates write transfer
-    output [ 3:0] dwb_sel_o, // byte select outputs
-    output [31:0] dwb_dat_o, // output data bus
-    output [ 1:0] dwb_bte_o,
-    output [ 2:0] dwb_cti_o,
 
     input         snoop_enable_i,
     input  [31:0] snoop_adr_i,
@@ -97,26 +139,41 @@ module mor1kx_module #(
     .clk                         (clk_i),
     .rst                         (rst_i),
 
-    // Outputs
     .iwbm_adr_o                  (iwb_adr_o[31:0]),
-    .iwbm_stb_o                  (iwb_stb_o),
-    .iwbm_cyc_o                  (iwb_cyc_o),
+    .iwbm_dat_o                  (iwb_dat_o[31:0]),
     .iwbm_sel_o                  (iwb_sel_o[3:0]),
     .iwbm_we_o                   (iwb_we_o),
+    .iwbm_cyc_o                  (iwb_cyc_o),
+    .iwbm_stb_o                  (iwb_stb_o),
     .iwbm_cti_o                  (iwb_cti_o[2:0]),
     .iwbm_bte_o                  (iwb_bte_o[1:0]),
-    .iwbm_dat_o                  (iwb_dat_o[31:0]),
+    .iwbm_dat_i                  (iwb_dat_i[31:0]),
+    .iwbm_ack_i                  (iwb_ack_i),
+    .iwbm_err_i                  (iwb_err_i),
+    .iwbm_rty_i                  (iwb_rty_i),
+
     .dwbm_adr_o                  (dwb_adr_o[31:0]),
-    .dwbm_stb_o                  (dwb_stb_o),
-    .dwbm_cyc_o                  (dwb_cyc_o),
+    .dwbm_dat_o                  (dwb_dat_o[31:0]),
     .dwbm_sel_o                  (dwb_sel_o[3:0]),
     .dwbm_we_o                   (dwb_we_o),
+    .dwbm_cyc_o                  (dwb_cyc_o),
+    .dwbm_stb_o                  (dwb_stb_o),
     .dwbm_cti_o                  (dwb_cti_o[2:0]),
     .dwbm_bte_o                  (dwb_bte_o[1:0]),
-    .dwbm_dat_o                  (dwb_dat_o[31:0]),
+    .dwbm_dat_i                  (dwb_dat_i[31:0]),
+    .dwbm_ack_i                  (dwb_ack_i),
+    .dwbm_err_i                  (dwb_err_i),
+    .dwbm_rty_i                  (dwb_rty_i),
+
     .du_dat_o                    (dbg_dat_o[31:0]),
     .du_ack_o                    (dbg_ack_o),
     .du_stall_o                  (dbg_stall_o),
+    .du_addr_i                   (dbg_adr_i[15:0]),
+    .du_stb_i                    (dbg_stb_i),
+    .du_dat_i                    (dbg_dat_i[31:0]),
+    .du_we_i                     (dbg_we_i),
+    .du_stall_i                  (dbg_stall_i),
+
     .traceport_exec_valid_o      (trace_exec.valid),
     .traceport_exec_pc_o         (trace_exec.pc),
     .traceport_exec_jb_o         (trace_exec.jb),
@@ -127,21 +184,8 @@ module mor1kx_module #(
     .traceport_exec_wbdata_o     (trace_exec.wbdata),
     .traceport_exec_wbreg_o      (trace_exec.wbreg),
     .traceport_exec_wben_o       (trace_exec.wben),
-    // Inputs
-    .iwbm_err_i                  (iwb_err_i),
-    .iwbm_ack_i                  (iwb_ack_i),
-    .iwbm_dat_i                  (iwb_dat_i[31:0]),
-    .iwbm_rty_i                  (iwb_rty_i),
-    .dwbm_err_i                  (dwb_err_i),
-    .dwbm_ack_i                  (dwb_ack_i),
-    .dwbm_dat_i                  (dwb_dat_i[31:0]),
-    .dwbm_rty_i                  (dwb_rty_i),
+
     .irq_i                       (pic_ints_i),
-    .du_addr_i                   (dbg_adr_i[15:0]),
-    .du_stb_i                    (dbg_stb_i),
-    .du_dat_i                    (dbg_dat_i[31:0]),
-    .du_we_i                     (dbg_we_i),
-    .du_stall_i                  (dbg_stall_i),
     .multicore_coreid_i          (32'(ID)),
     .multicore_numcores_i        (NUMCORES),
     .snoop_adr_i                 (snoop_adr_i[31:0]),

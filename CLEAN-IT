@@ -1,0 +1,8 @@
+cd sim/verilog/regression/iverilog
+
+make clean
+make clean_elf-loader
+make clean_jtag_vpi
+
+rm -rf *.o *.log
+rm -rf log
