@@ -38,48 +38,47 @@
 
 `include "mor1kx-defines.v"
 
-module pfpu32_muldiv
-(
-   input             clk,
-   input             rst,
-   input             flush_i,  // flushe pipe
-   input             adv_i,    // advance pipe
-   input             start_i,  // start
-   input             is_div_i, // 1: division, 0: multiplication
-   // input 'a' related values
-   input             signa_i,
-   input       [9:0] exp10a_i,
-   input      [23:0] fract24a_i,
-   input             infa_i,
-   input             zeroa_i,
-   // input 'b' related values
-   input             signb_i,
-   input       [9:0] exp10b_i,
-   input      [23:0] fract24b_i,
-   input             infb_i,
-   input             zerob_i,
-   // 'a'/'b' related
-   input             snan_i,
-   input             qnan_i,
-   input             anan_sign_i,
-   // MUL/DIV common outputs
-   output reg        muldiv_rdy_o,       // ready
-   output reg        muldiv_sign_o,      // signum
-   output reg  [4:0] muldiv_shr_o,       // do right shift in align stage
-   output reg  [9:0] muldiv_exp10shr_o,  // exponent for right shift align
-   output reg        muldiv_shl_o,       // do left shift in align stage
-   output reg  [9:0] muldiv_exp10shl_o,  // exponent for left shift align
-   output reg  [9:0] muldiv_exp10sh0_o,  // exponent for no shift in align
-   output reg [27:0] muldiv_fract28_o,   // fractional with appended {r,s} bits
-   output reg        muldiv_inv_o,       // invalid operation flag
-   output reg        muldiv_inf_o,       // infinity output reg
-   output reg        muldiv_snan_o,      // signaling NaN output reg
-   output reg        muldiv_qnan_o,      // quiet NaN output reg
-   output reg        muldiv_anan_sign_o, // signum for output nan
-   // DIV additional outputs
-   output reg        div_op_o,           // operation is division
-   output reg        div_sign_rmnd_o,    // signum of reminder for IEEE compliant rounding
-   output reg        div_dbz_o           // div division by zero flag
+module pfpu32_muldiv (
+  input             clk,
+  input             rst,
+  input             flush_i,  // flushe pipe
+  input             adv_i,    // advance pipe
+  input             start_i,  // start
+  input             is_div_i, // 1: division, 0: multiplication
+  // input 'a' related values
+  input             signa_i,
+  input      [ 9:0] exp10a_i,
+  input      [23:0] fract24a_i,
+  input             infa_i,
+  input             zeroa_i,
+  // input 'b' related values
+  input             signb_i,
+  input      [ 9:0] exp10b_i,
+  input      [23:0] fract24b_i,
+  input             infb_i,
+  input             zerob_i,
+  // 'a'/'b' related
+  input             snan_i,
+  input             qnan_i,
+  input             anan_sign_i,
+  // MUL/DIV common outputs
+  output reg        muldiv_rdy_o,       // ready
+  output reg        muldiv_sign_o,      // signum
+  output reg  [4:0] muldiv_shr_o,       // do right shift in align stage
+  output reg  [9:0] muldiv_exp10shr_o,  // exponent for right shift align
+  output reg        muldiv_shl_o,       // do left shift in align stage
+  output reg  [9:0] muldiv_exp10shl_o,  // exponent for left shift align
+  output reg  [9:0] muldiv_exp10sh0_o,  // exponent for no shift in align
+  output reg [27:0] muldiv_fract28_o,   // fractional with appended {r,s} bits
+  output reg        muldiv_inv_o,       // invalid operation flag
+  output reg        muldiv_inf_o,       // infinity output reg
+  output reg        muldiv_snan_o,      // signaling NaN output reg
+  output reg        muldiv_qnan_o,      // quiet NaN output reg
+  output reg        muldiv_anan_sign_o, // signum for output nan
+  // DIV additional outputs
+  output reg        div_op_o,           // operation is division
+  output reg        div_sign_rmnd_o,    // signum of reminder for IEEE compliant rounding
+  output reg        div_dbz_o           // div division by zero flag
 );
 
   /*
@@ -87,21 +86,19 @@ module pfpu32_muldiv
      Definitions:
        s??o_name - "S"tage number "??", "O"utput
        s??t_name - "S"tage number "??", "T"emporary (internally)
-  */
+   */
 
+  // Stage #1: pre-operation stage
 
-  /* Stage #1: pre-operation stage */
-
-
-    // detection of some exceptions
+  // detection of some exceptions
   wire s0t_inv = is_div_i ? ((zeroa_i & zerob_i) | (infa_i & infb_i)) : // div: 0/0, inf/inf -> invalid operation; snan output
-                            ((zeroa_i & infb_i) | (zerob_i & infa_i));  // mul: 0 * inf -> invalid operation; snan output
-    // division by zero
+                 ((zeroa_i & infb_i) | (zerob_i & infa_i));  // mul: 0 * inf -> invalid operation; snan output
+  // division by zero
   wire s0t_dbz   = is_div_i & (~zeroa_i) & (~infa_i) & zerob_i;
-    //   inf input
-  wire s0t_inf_i = infa_i | (infb_i & (~is_div_i)); // for DIV only infA is used
+  //   inf input
+  wire s0t_inf_i = infa_i | (infb_i & (~is_div_i));  // for DIV only infA is used
 
-    // force intermediate results to zero
+  // force intermediate results to zero
   wire s0t_opc_0 = zeroa_i | zerob_i | (is_div_i & (infa_i | infb_i));
 
   // count leading zeros
@@ -134,7 +131,7 @@ module pfpu32_muldiv
       24'b000000000000000000000001: s0t_nlza = 23;
       24'b000000000000000000000000: s0t_nlza =  0; // zero rezult
     endcase
-  end // nlz for 'a'
+  end
 
   // count leading zeros
   reg [4:0] s0t_nlzb;
@@ -166,35 +163,33 @@ module pfpu32_muldiv
       24'b000000000000000000000001: s0t_nlzb = 23;
       24'b000000000000000000000000: s0t_nlzb =  0; // zero result
     endcase
-  end // nlz of 'b'
-
+  end
 
   // pre-norm stage outputs
   //   input related
-  reg s0o_inv, s0o_inf_i,
-      s0o_snan_i, s0o_qnan_i, s0o_anan_i_sign;
+  reg s0o_inv, s0o_inf_i, s0o_snan_i, s0o_qnan_i, s0o_anan_i_sign;
   //   computation related
   reg        s0o_is_div;
   reg        s0o_opc_0;
   reg        s0o_signc;
-  reg  [9:0] s0o_exp10a;
+  reg [ 9:0] s0o_exp10a;
   reg [23:0] s0o_fract24a;
-  reg  [4:0] s0o_shla;
-  reg  [9:0] s0o_exp10b;
+  reg [ 4:0] s0o_shla;
+  reg [ 9:0] s0o_exp10b;
   reg [23:0] s0o_fract24b;
-  reg  [4:0] s0o_shlb;
+  reg [ 4:0] s0o_shlb;
   // DIV additional outputs
   reg        s0o_dbz;
   // registering
   always @(posedge clk) begin
     if(adv_i) begin
-        // input related
+      // input related
       s0o_inv         <= s0t_inv;
       s0o_inf_i       <= s0t_inf_i;
       s0o_snan_i      <= snan_i;
       s0o_qnan_i      <= qnan_i;
       s0o_anan_i_sign <= anan_sign_i;
-        // computation related
+      // computation related
       s0o_is_div   <= is_div_i;
       s0o_opc_0    <= s0t_opc_0;
       s0o_signc    <= signa_i ^ signb_i;
@@ -204,9 +199,9 @@ module pfpu32_muldiv
       s0o_exp10b   <= exp10b_i;
       s0o_fract24b <= fract24b_i;
       s0o_shlb     <= s0t_nlzb;
-        // DIV additional outputs
+      // DIV additional outputs
       s0o_dbz   <= s0t_dbz;
-    end // push pipe
+    end
   end
 
   // route ready through side back
@@ -218,25 +213,22 @@ module pfpu32_muldiv
       s0o_ready <= 0;
     else if(adv_i)
       s0o_ready <= start_i;
-  end // posedge clock
-
+  end
 
   // left-shift the dividend and divisor
   wire [23:0] s1t_fract24a_shl = s0o_fract24a << s0o_shla;
   wire [23:0] s1t_fract24b_shl = s0o_fract24b << s0o_shlb;
-  
+
   // force result to zero
   wire [23:0] s1t_fract24a = s1t_fract24a_shl & {24{~s0o_opc_0}};
   wire [23:0] s1t_fract24b = s1t_fract24b_shl & {24{~s0o_opc_0}};
 
   // exponent
-  wire [9:0] s1t_exp10mux =
-    s0o_is_div ? (s0o_exp10a - {5'd0,s0o_shla} - s0o_exp10b + {5'd0,s0o_shlb} + 10'd127) :
-                 (s0o_exp10a - {5'd0,s0o_shla} + s0o_exp10b - {5'd0,s0o_shlb} - 10'd127);
-  
+  wire [9:0] s1t_exp10mux = s0o_is_div ? (s0o_exp10a - {5'd0,s0o_shla} - s0o_exp10b + {5'd0,s0o_shlb} + 10'd127) :
+                                         (s0o_exp10a - {5'd0,s0o_shla} + s0o_exp10b - {5'd0,s0o_shlb} - 10'd127);
+
   // force result to zero
   wire [9:0] s1t_exp10c = s1t_exp10mux & {10{~s0o_opc_0}};
-
 
   // Goldshmidt division iterations control
   reg [10:0] itr_state; // iteration state indicator
@@ -255,20 +247,18 @@ module pfpu32_muldiv
       itr_state <= 11'd1;
     else if(adv_i)
       itr_state <= {itr_state[9:0],1'b0};
-  end // posedge clock
+  end
 
   // Multiplication operation flag
   wire s1t_is_mul = s0o_ready & (~s0o_is_div);
 
-
   // stage #1 outputs
   //   input related
-  reg s1o_inv, s1o_inf_i,
-      s1o_snan_i, s1o_qnan_i, s1o_anan_i_sign;
+  reg s1o_inv, s1o_inf_i, s1o_snan_i, s1o_qnan_i, s1o_anan_i_sign;
   //   computation related
   reg        s1o_opc_0;
   reg        s1o_signc;
-  reg [9:0]  s1o_exp10c;
+  reg [ 9:0] s1o_exp10c;
   reg [23:0] s1o_fract24a;
   reg [23:0] s1o_fract24b;
   // DIV additional outputs
@@ -276,22 +266,22 @@ module pfpu32_muldiv
   //   registering
   always @(posedge clk) begin
     if(adv_i & ~itr_Proc) begin
-        // input related
+      // input related
       s1o_inv         <= s0o_inv;
       s1o_inf_i       <= s0o_inf_i;
       s1o_snan_i      <= s0o_snan_i;
       s1o_qnan_i      <= s0o_qnan_i;
       s1o_anan_i_sign <= s0o_anan_i_sign;
-        // computation related
+      // computation related
       s1o_opc_0    <= s0o_opc_0;
       s1o_signc    <= s0o_signc;
       s1o_exp10c   <= s1t_exp10c;
       s1o_fract24a <= s1t_fract24a;
       s1o_fract24b <= s1t_fract24b;
-        // DIV additional outputs
+      // DIV additional outputs
       s1o_dbz <= s0o_dbz;
-    end // advance pipe
-  end // posedge clock
+    end
+  end
 
   // ready is special case
   reg s1o_mul_ready;
@@ -307,11 +297,9 @@ module pfpu32_muldiv
       s1o_mul_ready <= s1t_is_mul;
       s1o_div_ready <= itr_rndQ;
     end
-  end // posedge clock
+  end
 
-
-  /* Stage #2: 1st part of multiplier */
-
+  // Stage #2: 1st part of multiplier
 
   // rigt shift value
   // and appropriatelly corrected exponent
@@ -321,25 +309,24 @@ module pfpu32_muldiv
   wire [9:0] s2t_shr_t;
   wire [9:0] s2t_exp10rx;
   assign {s2t_shr_t,s2t_exp10rx} =
-    // force zero result
-    s1o_opc_0     ? {10'd0,10'd0} :
-    // negative exponent sum
-    //   (!) takes 1x.xx case into account automatically
-    s1o_exp10c[9] ? {s2t_shr_of_neg_exp,10'd1} :
-    // (a) zero exponent sum (denorm. result potentially)
-    //   (!) takes 1x.xx case into account automatically
-    // (b) normal case
-    //   (!) 1x.xx case is processed in next stage
-                    {{9'd0,s1o_exp10c_0},(s1o_exp10c | {9'd0,s1o_exp10c_0})};
+         // force zero result
+         s1o_opc_0     ? {10'd0,10'd0} :
+         // negative exponent sum
+         //   (!) takes 1x.xx case into account automatically
+         s1o_exp10c[9] ? {s2t_shr_of_neg_exp,10'd1} :
+         // (a) zero exponent sum (denorm. result potentially)
+         //   (!) takes 1x.xx case into account automatically
+         // (b) normal case
+         //   (!) 1x.xx case is processed in next stage
+         {{9'd0,s1o_exp10c_0},(s1o_exp10c | {9'd0,s1o_exp10c_0})};
+
   // limited by 31 and forced result to zero
   wire [4:0] s2t_shrx = s2t_shr_t[4:0] | {5{|s2t_shr_t[9:5]}};
-
 
   // Support Goldshmidt iteration
   // initial estimation of reciprocal
   wire [8:0] itr_recip9b;
-  arecip_lut u_arlut
-  (
+  arecip_lut u_arlut (
     .b_i(s1o_fract24b[22:16]),
     .r_o(itr_recip9b)
   );
@@ -347,7 +334,7 @@ module pfpu32_muldiv
   wire b_eq_1 = s1o_fract24b[23] & (~(|s1o_fract24b[22:0]));
   // reciprocal with restored leading 01
   wire [10:0] itr_recip11b = b_eq_1 ?  11'b10000000000 :
-                                      {2'b01,itr_recip9b};
+  {2'b01,itr_recip9b};
 
   // the subsequent two stages multiplier operates with 32-bit inputs
   // 25-bits: fractionals (quotient is in range 0.5 to 1)
@@ -368,18 +355,17 @@ module pfpu32_muldiv
   //   'F' (2-D) or 'Reminder'
   wire [32:0] itr_rmnd33;
 
-
   // control for multiplier's input 'A'
   //   the register also contains quotient to output
-  wire itr_uinA = s1t_is_mul   |
-                  itr_state[0] | itr_state[3] | 
-                  itr_state[6] | itr_rndQ;
+  wire itr_uinA = s1t_is_mul |
+       itr_state[0] | itr_state[3] | 
+       itr_state[6] | itr_rndQ;
   // multiplexer for multiplier's input 'A'
   wire [31:0] itr_mul32a =
-     s1t_is_mul   ? {s1t_fract24a,8'd0}   :
-     itr_state[0] ? {itr_recip11b,21'd0}  :
-     itr_rndQ     ? {itr_res_qtnt26,6'd0} : // truncate by 2^(-n-1)
-                     itr_rmnd33[31:0];
+              s1t_is_mul   ? {s1t_fract24a,8'd0}   :
+              itr_state[0] ? {itr_recip11b,21'd0}  :
+              itr_rndQ     ? {itr_res_qtnt26,6'd0} : // truncate by 2^(-n-1)
+              itr_rmnd33[31:0];
   // register of multiplier's input 'A'
   reg [15:0] s1o_mul16_al;
   reg [15:0] s1o_mul16_ah;
@@ -389,35 +375,34 @@ module pfpu32_muldiv
       s1o_mul16_al <= itr_mul32a[15: 0];
       s1o_mul16_ah <= itr_mul32a[31:16];
     end
-  end // posedge clock
-
+  end
 
   // control for multiplier's input 'B'
-  wire itr_uinB = s1t_is_mul   |
-                  itr_state[0] | itr_state[1] |
-                  itr_state[3] | itr_state[4] |
-                  itr_state[6] | itr_state[7] |
-                  itr_rndQ;
+  wire itr_uinB = s1t_is_mul |
+       itr_state[0] | itr_state[1] |
+       itr_state[3] | itr_state[4] |
+       itr_state[6] | itr_state[7] |
+       itr_rndQ;
   // multiplexer for multiplier's input 'B'
   wire [31:0] itr_mul32b =
-     s1t_is_mul               ? {s1t_fract24b,8'd0} :
-    (itr_state[0] | itr_rndQ) ? {s1o_fract24b,8'd0} :
-     itr_state[1]             ? {s1o_fract24a,8'd0} :
-                                 itr_qtnt33[31:0];
+              s1t_is_mul               ? {s1t_fract24b,8'd0} :
+             (itr_state[0] | itr_rndQ) ? {s1o_fract24b,8'd0} :
+              itr_state[1]             ? {s1o_fract24a,8'd0} :
+              itr_qtnt33[31:0];
   // register of multiplier's input 'B'
   reg [15:0] s1o_mul16_bl;
   reg [15:0] s1o_mul16_bh;
+
   always @(posedge clk) begin
     if(adv_i & itr_uinB) begin
       s1o_mul16_bl <= itr_mul32b[15: 0];
       s1o_mul16_bh <= itr_mul32b[31:16];
     end
-  end // posedge clock
+  end
 
   // stage #2 outputs
   //   input related
-  reg s2o_inv, s2o_inf_i,
-      s2o_snan_i, s2o_qnan_i, s2o_anan_i_sign;
+  reg s2o_inv, s2o_inf_i, s2o_snan_i, s2o_qnan_i, s2o_anan_i_sign;
   // DIV additional outputs
   reg        s2o_dbz;
   reg [23:0] s2o_fract24a;
@@ -433,32 +418,33 @@ module pfpu32_muldiv
   reg [31:0] s2o_fract32_albh;
   reg [31:0] s2o_fract32_ahbl;
   reg [31:0] s2o_fract32_ahbh;
+
   //   registering
   always @(posedge clk) begin
     if(adv_i) begin
-        // input related
+      // input related
       s2o_inv         <= s1o_inv;
       s2o_inf_i       <= s1o_inf_i;
       s2o_snan_i      <= s1o_snan_i;
       s2o_qnan_i      <= s1o_qnan_i;
       s2o_anan_i_sign <= s1o_anan_i_sign;
-        // DIV additional outputs
+      // DIV additional outputs
       s2o_dbz      <= s1o_dbz;
       s2o_fract24a <= s1o_fract24a;
-        // computation related
+      // computation related
       s2o_opc_0   <= s1o_opc_0;
       s2o_signc   <= s1o_signc;
       s2o_exp10c  <= s1o_exp10c;
       s2o_shrx    <= s2t_shrx;
       s2o_is_shrx <= (|s2t_shrx);
       s2o_exp10rx <= s2t_exp10rx;
-        // multipliers
+      // multipliers
       s2o_fract32_albl <= s1o_mul16_al * s1o_mul16_bl;
       s2o_fract32_albh <= s1o_mul16_al * s1o_mul16_bh;
       s2o_fract32_ahbl <= s1o_mul16_ah * s1o_mul16_bl;
       s2o_fract32_ahbh <= s1o_mul16_ah * s1o_mul16_bh;
-    end // advance pipe
-  end // posedge clock
+    end
+  end
 
   // ready is special case
   reg s2o_mul_ready;
@@ -474,11 +460,9 @@ module pfpu32_muldiv
       s2o_mul_ready <= s1o_mul_ready;
       s2o_div_ready <= s1o_div_ready;
     end
-  end // posedge clock
+  end
 
-
-  /* Stage #3: 2nd part of multiplier */
-
+  // Stage #3: 2nd part of multiplier
 
   // 2nd stage of multiplier
   wire [47:0] s3t_fract48;
@@ -488,7 +472,7 @@ module pfpu32_muldiv
                        {32'd0, s2o_fract32_albl[31:16]};
 
   // stage #3 outputs (for division support)
-  
+
   // full product
   reg [32:0] s3o_mul33o; // output
   reg        s3o_mul33s; // sticky
@@ -498,31 +482,30 @@ module pfpu32_muldiv
       s3o_mul33o <= s3t_fract48[47:15];
       s3o_mul33s <= (|s3t_fract48[14:0]) | (|s2o_fract32_albl[15:0]);
     end
-  end // posedge clock
+  end
 
   // For pipelinization of division final stage
   //   input related
-  reg s3o_inv, s3o_inf_i,
-      s3o_snan_i, s3o_qnan_i, s3o_anan_i_sign;
+  reg s3o_inv, s3o_inf_i, s3o_snan_i, s3o_qnan_i, s3o_anan_i_sign;
   //   DIV computation related
   reg        s3o_dbz;
   reg [23:0] s3o_fract24a;
   reg        s3o_opc_0;
   reg        s3o_signc;
-  reg  [9:0] s3o_exp10c;
-  reg  [4:0] s3o_shrx;
+  reg [ 9:0] s3o_exp10c;
+  reg [ 4:0] s3o_shrx;
   reg        s3o_is_shrx;
-  reg  [9:0] s3o_exp10rx;
+  reg [ 9:0] s3o_exp10rx;
   // registering
   always @(posedge clk) begin
     if(adv_i) begin
-        // input related
+      // input related
       s3o_inv         <= s2o_inv;
       s3o_inf_i       <= s2o_inf_i;
       s3o_snan_i      <= s2o_snan_i;
       s3o_qnan_i      <= s2o_qnan_i;
       s3o_anan_i_sign <= s2o_anan_i_sign;
-        // DIV computation related
+      // DIV computation related
       s3o_dbz      <= s2o_dbz;
       s3o_fract24a <= s2o_fract24a;
       s3o_opc_0    <= s2o_opc_0;
@@ -531,9 +514,9 @@ module pfpu32_muldiv
       s3o_shrx     <= s2o_shrx;
       s3o_is_shrx  <= s2o_is_shrx;
       s3o_exp10rx  <= s2o_exp10rx;
-    end // advance pipe
-  end // @clock
-  
+    end
+  end
+
   // stage 3 ready makes sense for division only
   reg s3o_div_ready;
   always @(posedge clk `OR_ASYNC_RST) begin
@@ -543,8 +526,7 @@ module pfpu32_muldiv
       s3o_div_ready <= 1'b0;
     else if(adv_i)
       s3o_div_ready <= s2o_div_ready;
-  end // posedge clock
-
+  end
 
   // Feedback from multiplier's output with various rounding tecqs.
   //   +2^(-n-2) in case of rounding 1.xxx qutient
@@ -553,17 +535,16 @@ module pfpu32_muldiv
   wire itr_rndQ01x = (~s3o_mul33o[31]);
   //   rounding mask:
   wire [32:0] itr_rndM33 = // bits [6],[5] ... [0]
-    { 26'd0,(itr_rndQ & itr_rndQ1xx),(itr_rndQ & itr_rndQ01x), // round resulting quotient
-       4'd0,(itr_rndD & s3o_mul33s) };                         // round intermediate divisor
-  //   rounding
+              { 26'd0,(itr_rndQ & itr_rndQ1xx),(itr_rndQ & itr_rndQ01x), // round resulting quotient
+                 4'd0,(itr_rndD & s3o_mul33s) };                         // round intermediate divisor
+                                                                         //   rounding
   assign itr_qtnt33 = s3o_mul33o + itr_rndM33;
-
 
   // compute 2's complement or reminder (for sticky bit detection)
   // binary point position is located just after bit [30]
   wire [32:0] itr_AorT33 =
-    s3o_div_ready ? {1'b0,s3o_fract24a,8'd0} : // for reminder
-                    {32'h80000000,1'b0};       // for two's complement
+              s3o_div_ready ? {1'b0,s3o_fract24a,8'd0} : // for reminder
+                              {32'h80000000,1'b0};       // for two's complement
 
   // 'Reminder' / Two's complement
   assign itr_rmnd33 = itr_AorT33 - itr_qtnt33;
@@ -575,7 +556,6 @@ module pfpu32_muldiv
   wire s4t_qtnt_exact = ~(s4t_rmnd33_n0 | s3o_mul33s);
   //  - signum of final reminder
   wire s4t_sign_rmnd  = itr_rmnd33[32] | ((~s4t_rmnd33_n0) & s3o_mul33s);
-
 
   // Additionally store 26-bit of non-rounded (_raw_) and rounded (_res_) quotients.
   // It is used for rounding in cases of denormalized result.
@@ -593,7 +573,7 @@ module pfpu32_muldiv
       s3o_res_qtnt26 <= itr_res_qtnt26;
     end
   end
-  
+
   // Possible left shift computation.
   // In fact, as the dividend and divisor was normalized
   //   and the result is non-zero
@@ -604,37 +584,34 @@ module pfpu32_muldiv
   wire       s4t_shlx;
   wire [9:0] s4t_exp10lx;
   assign {s4t_shlx,s4t_exp10lx} =
-      // shift isn't needed (includes zero result)
-    (~s4t_nlz)            ? {1'b0,s3o_exp10c} :
-      // normalization is possible
-    (s3o_exp10c >  10'd1) ? {1'b1,s4t_exp10_m1} :
-      // denormalized and zero cases
-                            {1'b0,{9'd0,~s3o_opc_0}};
+         // shift isn't needed (includes zero result)
+         (~s4t_nlz)            ? {1'b0,s3o_exp10c} :
+         // normalization is possible
+         (s3o_exp10c >  10'd1) ? {1'b1,s4t_exp10_m1} :
+         // denormalized and zero cases
+         {1'b0,{9'd0,~s3o_opc_0}};
 
   // check if quotient is denormalized
   wire s4t_denorm = s3o_is_shrx |
-                    ((~s3o_is_shrx) & (~s4t_shlx) & s4t_nlz);
+  ((~s3o_is_shrx) & (~s4t_shlx) & s4t_nlz);
   // Select quotient for subsequent align and rounding
   // The rounded (_res_) quotient is used:
   //   - for normalized result
   //   - exact result
   //   - non-exact but lesser than infinity precision result
-  wire [25:0] s4t_qtnt26 =
-    ( (~s4t_denorm) | s4t_qtnt_exact |
-      ((~s4t_qtnt_exact) & (~s4t_sign_rmnd)) ) ? s3o_res_qtnt26 :
-                                                 s3o_raw_qtnt26;
-
+  wire [25:0] s4t_qtnt26 = ((~s4t_denorm) | s4t_qtnt_exact |
+                           ((~s4t_qtnt_exact) & (~s4t_sign_rmnd)) ) ? s3o_res_qtnt26 : s3o_raw_qtnt26;
 
   // output
   always @(posedge clk) begin
     if(adv_i) begin
-        // input related
+      // input related
       muldiv_inv_o       <= s3o_div_ready ? s3o_inv : s2o_inv;
       muldiv_inf_o       <= s3o_div_ready ? s3o_inf_i : s2o_inf_i;
       muldiv_snan_o      <= s3o_div_ready ? s3o_snan_i : s2o_snan_i;
       muldiv_qnan_o      <= s3o_div_ready ? s3o_qnan_i : s2o_qnan_i;
       muldiv_anan_sign_o <= s3o_div_ready ? s3o_anan_i_sign : s2o_anan_i_sign;
-        // computation related
+      // computation related
       muldiv_sign_o     <= s3o_div_ready ? s3o_signc : s2o_signc;
       muldiv_shr_o      <= s3o_div_ready ? s3o_shrx : s2o_shrx;
       muldiv_exp10shr_o <= s3o_div_ready ? s3o_exp10rx : s2o_exp10rx;
@@ -644,12 +621,12 @@ module pfpu32_muldiv
       muldiv_fract28_o  <= s3o_div_ready ?
                            {1'b0,s4t_qtnt26,~s4t_qtnt_exact} :      // quotient
                            {s3t_fract48[47:21],|s3t_fract48[20:0]}; // product
-        // DIV additional outputs
+      // DIV additional outputs
       div_op_o        <= s3o_div_ready;
       div_sign_rmnd_o <= s3o_div_ready & s4t_sign_rmnd;
       div_dbz_o       <= s3o_div_ready & s3o_dbz;
-    end // advance pipe
-  end // posedge clock
+    end
+  end
 
   // ready is special case
   always @(posedge clk `OR_ASYNC_RST) begin
@@ -659,14 +636,11 @@ module pfpu32_muldiv
       muldiv_rdy_o <= 0;
     else if(adv_i)
       muldiv_rdy_o <= s2o_mul_ready | s3o_div_ready;
-  end // posedge clock
-
-endmodule // pfpu32_muldiv
-
+  end
+endmodule
 
 // initial reciprocal approximation
-module arecip_lut
-(
+module arecip_lut (
   input      [6:0] b_i,
   output reg [8:0] r_o
 );
@@ -800,6 +774,6 @@ module arecip_lut
       7'd125 : r_o = 9'd5;
       7'd126 : r_o = 9'd3;
       default: r_o = 9'd1;
-    endcase // LUT for initial approximation of reciprocal
-  end // always
+    endcase
+  end
 endmodule
