@@ -14,9 +14,7 @@
 `define SPR_BASE(x)   (x/(2**11))
 `define SPR_OFFSET(x) (x%(2**11))
 
-//
 // Addresses
-//
 `define OR1K_SPR_SYS_BASE       {4'd0}
 `define OR1K_SPR_VR_ADDR        {5'd0,11'd0}
 `define OR1K_SPR_UPR_ADDR       {5'd0,11'd1}
@@ -132,38 +130,36 @@
 
 `define OR1K_SPR_FPU_BASE       {4'd11}
 
-//
 // Register bit defines
-//
 
 // Supervision Register
-`define OR1K_SPR_SR_SM     0  /* Supervisor mode */
-`define OR1K_SPR_SR_TEE    1  /* Timer exception enable */
-`define OR1K_SPR_SR_IEE    2  /* Interrupt exception enable */
-`define OR1K_SPR_SR_DCE    3  /* Data cache enable */
-`define OR1K_SPR_SR_ICE    4  /* Instruction cache enable */
-`define OR1K_SPR_SR_DME    5  /* Data MMU enable */
-`define OR1K_SPR_SR_IME    6  /* Instruction MMU enable */
-`define OR1K_SPR_SR_LEE    7  /* Little-endian enable */
-`define OR1K_SPR_SR_CE     8  /* CID enable */
-`define OR1K_SPR_SR_F      9  /* Flag */
-`define OR1K_SPR_SR_CY    10  /* Carry flag */
-`define OR1K_SPR_SR_OV    11  /* Overflow flag */
-`define OR1K_SPR_SR_OVE   12  /* Overflow exception enable */
-`define OR1K_SPR_SR_DSX   13  /* Delay slot exception */
-`define OR1K_SPR_SR_EPH   14  /* Exception prefix high */
-`define OR1K_SPR_SR_FO    15  /* Fixed to one */
-`define OR1K_SPR_SR_SUMRA 16  /* SPR user read mode access */
-`define OR1K_SPR_SR_RESERVED 27:17 /* Reserved */
-`define OR1K_SPR_SR_CID      31:28 /* Context ID */
+`define OR1K_SPR_SR_SM     0  // Supervisor mode
+`define OR1K_SPR_SR_TEE    1  // Timer exception enable
+`define OR1K_SPR_SR_IEE    2  // Interrupt exception enable
+`define OR1K_SPR_SR_DCE    3  // Data cache enable
+`define OR1K_SPR_SR_ICE    4  // Instruction cache enable
+`define OR1K_SPR_SR_DME    5  // Data MMU enable
+`define OR1K_SPR_SR_IME    6  // Instruction MMU enable
+`define OR1K_SPR_SR_LEE    7  // Little-endian enable
+`define OR1K_SPR_SR_CE     8  // CID enable
+`define OR1K_SPR_SR_F      9  // Flag
+`define OR1K_SPR_SR_CY    10  // Carry flag
+`define OR1K_SPR_SR_OV    11  // Overflow flag
+`define OR1K_SPR_SR_OVE   12  // Overflow exception enable
+`define OR1K_SPR_SR_DSX   13  // Delay slot exception
+`define OR1K_SPR_SR_EPH   14  // Exception prefix high
+`define OR1K_SPR_SR_FO    15  // Fixed to one
+`define OR1K_SPR_SR_SUMRA 16  // SPR user read mode access
+
+`define OR1K_SPR_SR_RESERVED 27:17  // Reserved
+`define OR1K_SPR_SR_CID      31:28  // Context ID
 
 // Version register - DEPRECATED
-`define OR1K_SPR_VR_REV   5:0  /* Revision */
-`define OR1K_SPR_VR_UVRP  6  /* Updated Version Registers Present */
-`define OR1K_SPR_VR_RESERVED 15:7 /* Reserved */
-`define OR1K_SPR_VR_CFG   23:16  /* Configuration Template */
-`define OR1K_SPR_VR_VER   31:24  /* Version */
-
+`define OR1K_SPR_VR_REV   5:0      // Revision
+`define OR1K_SPR_VR_UVRP  6        // Updated Version Registers Present
+`define OR1K_SPR_VR_RESERVED 15:7  // Reserved
+`define OR1K_SPR_VR_CFG   23:16    // Configuration Template
+`define OR1K_SPR_VR_VER   31:24    // Version
 
 // Unit Present register
 `define OR1K_SPR_UPR_UP    0
@@ -181,18 +177,18 @@
 `define OR1K_SPR_UPR_CUP   31:24
 
 // CPU Configuration register
-`define OR1K_SPR_CPUCFGR_NSGF   3:0 /* Number of shadow GPRs */
+`define OR1K_SPR_CPUCFGR_NSGF   3:0 // Number of shadow GPRs
 `define OR1K_SPR_CPUCFGR_CFG    4
 `define OR1K_SPR_CPUCFGR_OB32S  5
 `define OR1K_SPR_CPUCFGR_OB64S  6
 `define OR1K_SPR_CPUCFGR_OF32S  7
 `define OR1K_SPR_CPUCFGR_OF64S  8
 `define OR1K_SPR_CPUCFGR_OV64S  9
-`define OR1K_SPR_CPUCFGR_ND     10 /* No delay-slot implementation */
-`define OR1K_SPR_CPUCFGR_AVRP   11 /* Arch. version registers */
-`define OR1K_SPR_CPUCFGR_EVBARP 12 /* Exception vector base addr reg */
-`define OR1K_SPR_CPUCFGR_ISRP   13 /* Implementation specific regs */
-`define OR1K_SPR_CPUCFGR_AECSRP 14 /* Arith. exception regs */
+`define OR1K_SPR_CPUCFGR_ND     10 // No delay-slot implementation
+`define OR1K_SPR_CPUCFGR_AVRP   11 // Arch. version registers
+`define OR1K_SPR_CPUCFGR_EVBARP 12 // Exception vector base addr reg
+`define OR1K_SPR_CPUCFGR_ISRP   13 // Implementation specific regs
+`define OR1K_SPR_CPUCFGR_AECSRP 14 // Arith. exception regs
 `define OR1K_SPR_CPUCFGR_RESERVED 31:15
 
 // Version register 2 (new with OR1K 1.0)
@@ -230,54 +226,54 @@
 `define OR1K_SPR_AESR_RESERVED  31:7
 
 // Tick timer registers
-`define OR1K_SPR_TTMR_TP   27:0 /* Time period */
-`define OR1K_SPR_TTMR_IP   28   /* Interrupt pending */
-`define OR1K_SPR_TTMR_IE   29   /* Interrupt enable */
-`define OR1K_SPR_TTMR_M    31:30 /* Mode */
+`define OR1K_SPR_TTMR_TP   27:0  // Time period
+`define OR1K_SPR_TTMR_IP   28    // Interrupt pending
+`define OR1K_SPR_TTMR_IE   29    // Interrupt enable
+`define OR1K_SPR_TTMR_M    31:30 // Mode
 // Tick timer mode values
-`define OR1K_SPR_TTMR_M_DIS 2'b00  /* Disabled */
-`define OR1K_SPR_TTMR_M_RST 2'b01  /* Restart-on-match mode */
-`define OR1K_SPR_TTMR_M_STP 2'b10  /* Stop-on-match mode */
-`define OR1K_SPR_TTMR_M_CNT 2'b11  /* Continue counting mode */
+`define OR1K_SPR_TTMR_M_DIS 2'b00  // Disabled
+`define OR1K_SPR_TTMR_M_RST 2'b01  // Restart-on-match mode
+`define OR1K_SPR_TTMR_M_STP 2'b10  // Stop-on-match mode
+`define OR1K_SPR_TTMR_M_CNT 2'b11  // Continue counting mode
 
 // Data Cache Configuration register
-`define OR1K_SPR_DCCFGR_NCW   2:0 /* Number of Cache Ways */
-`define OR1K_SPR_DCCFGR_NCS   6:3 /* Number of Cache Sets */
-`define OR1K_SPR_DCCFGR_CBS   7   /* Cache Block Size */
-`define OR1K_SPR_DCCFGR_CWS   8   /* Cache Write Strategy */
-`define OR1K_SPR_DCCFGR_CCRI  9   /* Cache Control Register Implemented */
-`define OR1K_SPR_DCCFGR_CBIRI 10  /* Cache Block Invalidate Register Implemented */
-`define OR1K_SPR_DCCFGR_CBPRI 11  /* Cache Block Prefetch Register Implemented */
-`define OR1K_SPR_DCCFGR_CBLRI 12  /* Cache Block Lock Register Implemented */
-`define OR1K_SPR_DCCFGR_CBFRI 13  /* Cache Block Flush Register Implemented */
-`define OR1K_SPR_DCCFGR_CBWBRI 14 /* Cache Block Write-Back Register Implemented */
+`define OR1K_SPR_DCCFGR_NCW   2:0 // Number of Cache Ways
+`define OR1K_SPR_DCCFGR_NCS   6:3 // Number of Cache Sets
+`define OR1K_SPR_DCCFGR_CBS   7   // Cache Block Size
+`define OR1K_SPR_DCCFGR_CWS   8   // Cache Write Strategy
+`define OR1K_SPR_DCCFGR_CCRI  9   // Cache Control Register Implemented
+`define OR1K_SPR_DCCFGR_CBIRI 10  // Cache Block Invalidate Register Implemented
+`define OR1K_SPR_DCCFGR_CBPRI 11  // Cache Block Prefetch Register Implemented
+`define OR1K_SPR_DCCFGR_CBLRI 12  // Cache Block Lock Register Implemented
+`define OR1K_SPR_DCCFGR_CBFRI 13  // Cache Block Flush Register Implemented
+`define OR1K_SPR_DCCFGR_CBWBRI 14 // Cache Block Write-Back Register Implemented
 
 // Instruction Cache Configuration register
-`define OR1K_SPR_ICCFGR_NCW   2:0 /* Number of Cache Ways */
-`define OR1K_SPR_ICCFGR_NCS   6:3 /* Number of Cache Sets */
-`define OR1K_SPR_ICCFGR_CBS   7   /* Cache Block Size */
-`define OR1K_SPR_ICCFGR_CCRI  9   /* Cache Control Register Implemented */
-`define OR1K_SPR_ICCFGR_CBIRI 10  /* Cache Block Invalidate Register Implemented */
-`define OR1K_SPR_ICCFGR_CBPRI 11  /* Cache Block Prefetch Register Implemented */
-`define OR1K_SPR_ICCFGR_CBLRI 12  /* Cache Block Lock Register Implemented */
+`define OR1K_SPR_ICCFGR_NCW   2:0 // Number of Cache Ways
+`define OR1K_SPR_ICCFGR_NCS   6:3 // Number of Cache Sets
+`define OR1K_SPR_ICCFGR_CBS   7   // Cache Block Size
+`define OR1K_SPR_ICCFGR_CCRI  9   // Cache Control Register Implemented
+`define OR1K_SPR_ICCFGR_CBIRI 10  // Cache Block Invalidate Register Implemented
+`define OR1K_SPR_ICCFGR_CBPRI 11  // Cache Block Prefetch Register Implemented
+`define OR1K_SPR_ICCFGR_CBLRI 12  // Cache Block Lock Register Implemented
 
 // Data MMU Configuration register
-`define OR1K_SPR_DMMUFGR_NTW   1:0 /* Number of TLB ways */
-`define OR1K_SPR_DMMUFGR_NTS   4:2 /* Number of TLB sets */
-`define OR1K_SPR_DMMUFGR_NAE   7:5 /* Number of ATB entries */
-`define OR1K_SPR_DMMUFGR_CRI   8   /* Control Register Implemented */
-`define OR1K_SPR_DMMUFGR_PRI   9   /* Protection Register Implemented */
-`define OR1K_SPR_DMMUFGR_TEIRI 10  /* TLB Entry Invalidate Register Implemented */
-`define OR1K_SPR_DMMUFGR_HTR   11  /* Hardware TLB Reload */
+`define OR1K_SPR_DMMUFGR_NTW   1:0 // Number of TLB ways
+`define OR1K_SPR_DMMUFGR_NTS   4:2 // Number of TLB sets
+`define OR1K_SPR_DMMUFGR_NAE   7:5 // Number of ATB entries
+`define OR1K_SPR_DMMUFGR_CRI   8   // Control Register Implemented
+`define OR1K_SPR_DMMUFGR_PRI   9   // Protection Register Implemented
+`define OR1K_SPR_DMMUFGR_TEIRI 10  // TLB Entry Invalidate Register Implemented
+`define OR1K_SPR_DMMUFGR_HTR   11  // Hardware TLB Reload
 
 // Instruction MMU Configuration register
-`define OR1K_SPR_IMMUFGR_NTW   1:0 /* Number of TLB ways */
-`define OR1K_SPR_IMMUFGR_NTS   4:2 /* Number of TLB sets */
-`define OR1K_SPR_IMMUFGR_NAE   7:5 /* Number of ATB entries */
-`define OR1K_SPR_IMMUFGR_CRI   8   /* Control Register Implemented */
-`define OR1K_SPR_IMMUFGR_PRI   9   /* Protection Register Implemented */
-`define OR1K_SPR_IMMUFGR_TEIRI 10  /* TLB Entry Invalidate Register Implemented */
-`define OR1K_SPR_IMMUFGR_HTR   11  /* Hardware TLB Reload */
+`define OR1K_SPR_IMMUFGR_NTW   1:0 // Number of TLB ways
+`define OR1K_SPR_IMMUFGR_NTS   4:2 // Number of TLB sets
+`define OR1K_SPR_IMMUFGR_NAE   7:5 // Number of ATB entries
+`define OR1K_SPR_IMMUFGR_CRI   8   // Control Register Implemented
+`define OR1K_SPR_IMMUFGR_PRI   9   // Protection Register Implemented
+`define OR1K_SPR_IMMUFGR_TEIRI 10  // TLB Entry Invalidate Register Implemented
+`define OR1K_SPR_IMMUFGR_HTR   11  // Hardware TLB Reload
 
 // Debug Mode Register 1
 `define OR1K_SPR_DMR1_ST 22

@@ -18,90 +18,90 @@
 module mor1kx #(
   parameter OPTION_OPERAND_WIDTH = 32,
 
-  parameter OPTION_CPU0  = "CAPPUCCINO",
+  parameter OPTION_CPU0 = "CAPPUCCINO",
 
-  parameter FEATURE_DATACACHE  = "NONE",
-  parameter OPTION_DCACHE_BLOCK_WIDTH = 5,
-  parameter OPTION_DCACHE_SET_WIDTH = 9,
-  parameter OPTION_DCACHE_WAYS = 2,
-  parameter OPTION_DCACHE_LIMIT_WIDTH = 32,
-  parameter OPTION_DCACHE_SNOOP = "NONE",
-  parameter FEATURE_DMMU  = "NONE",
+  parameter FEATURE_DATACACHE          = "NONE",
+  parameter OPTION_DCACHE_BLOCK_WIDTH  = 5,
+  parameter OPTION_DCACHE_SET_WIDTH    = 9,
+  parameter OPTION_DCACHE_WAYS         = 2,
+  parameter OPTION_DCACHE_LIMIT_WIDTH  = 32,
+  parameter OPTION_DCACHE_SNOOP        = "NONE",
+  parameter FEATURE_DMMU               = "NONE",
   parameter FEATURE_DMMU_HW_TLB_RELOAD = "NONE",
-  parameter OPTION_DMMU_SET_WIDTH = 6,
-  parameter OPTION_DMMU_WAYS  = 1,
-  parameter FEATURE_INSTRUCTIONCACHE = "NONE",
-  parameter OPTION_ICACHE_BLOCK_WIDTH = 5,
-  parameter OPTION_ICACHE_SET_WIDTH = 9,
-  parameter OPTION_ICACHE_WAYS = 2,
-  parameter OPTION_ICACHE_LIMIT_WIDTH = 32,
-  parameter FEATURE_IMMU  = "NONE",
+  parameter OPTION_DMMU_SET_WIDTH      = 6,
+  parameter OPTION_DMMU_WAYS           = 1,
+  parameter FEATURE_INSTRUCTIONCACHE   = "NONE",
+  parameter OPTION_ICACHE_BLOCK_WIDTH  = 5,
+  parameter OPTION_ICACHE_SET_WIDTH    = 9,
+  parameter OPTION_ICACHE_WAYS         = 2,
+  parameter OPTION_ICACHE_LIMIT_WIDTH  = 32,
+  parameter FEATURE_IMMU               = "NONE",
   parameter FEATURE_IMMU_HW_TLB_RELOAD = "NONE",
-  parameter OPTION_IMMU_SET_WIDTH = 6,
-  parameter OPTION_IMMU_WAYS  = 1,
-  parameter FEATURE_TIMER  = "ENABLED",
-  parameter FEATURE_DEBUGUNIT  = "NONE",
-  parameter FEATURE_PERFCOUNTERS = "NONE",
-  parameter OPTION_PERFCOUNTERS_NUM = 0,
-  parameter FEATURE_MAC  = "NONE",
+  parameter OPTION_IMMU_SET_WIDTH      = 6,
+  parameter OPTION_IMMU_WAYS           = 1,
+  parameter FEATURE_TIMER              = "ENABLED",
+  parameter FEATURE_DEBUGUNIT          = "NONE",
+  parameter FEATURE_PERFCOUNTERS       = "NONE",
+  parameter OPTION_PERFCOUNTERS_NUM    = 0,
+  parameter FEATURE_MAC                = "NONE",
 
-  parameter FEATURE_SYSCALL  = "ENABLED",
-  parameter FEATURE_TRAP  = "ENABLED",
-  parameter FEATURE_RANGE  = "ENABLED",
+  parameter FEATURE_SYSCALL = "ENABLED",
+  parameter FEATURE_TRAP    = "ENABLED",
+  parameter FEATURE_RANGE   = "ENABLED",
 
-  parameter FEATURE_PIC  = "ENABLED",
-  parameter OPTION_PIC_TRIGGER = "LEVEL",
+  parameter FEATURE_PIC          = "ENABLED",
+  parameter OPTION_PIC_TRIGGER   = "LEVEL",
   parameter OPTION_PIC_NMI_WIDTH = 0,
 
-  parameter FEATURE_DSX  = "ENABLED",
-  parameter FEATURE_OVERFLOW  = "ENABLED",
+  parameter FEATURE_DSX        = "ENABLED",
+  parameter FEATURE_OVERFLOW   = "ENABLED",
   parameter FEATURE_CARRY_FLAG = "ENABLED",
 
-  parameter FEATURE_FASTCONTEXTS = "NONE",
-  parameter OPTION_RF_CLEAR_ON_INIT = 0,
+  parameter FEATURE_FASTCONTEXTS     = "NONE",
+  parameter OPTION_RF_CLEAR_ON_INIT  = 0,
   parameter OPTION_RF_NUM_SHADOW_GPR = 0,
-  parameter OPTION_RF_ADDR_WIDTH = 5,
-  parameter OPTION_RF_WORDS  = 32,
+  parameter OPTION_RF_ADDR_WIDTH     = 5,
+  parameter OPTION_RF_WORDS          = 32,
 
-  parameter OPTION_RESET_PC  = {{(OPTION_OPERAND_WIDTH-13){1'b0}}, `OR1K_RESET_VECTOR,8'd0},
+  parameter OPTION_RESET_PC = {{(OPTION_OPERAND_WIDTH-13){1'b0}}, `OR1K_RESET_VECTOR,8'd0},
 
   parameter FEATURE_MULTIPLIER = "THREESTAGE",
-  parameter FEATURE_DIVIDER  = "SERIAL",
+  parameter FEATURE_DIVIDER    = "SERIAL",
 
-  parameter FEATURE_ADDC  = "ENABLED",
-  parameter FEATURE_SRA  = "ENABLED",
-  parameter FEATURE_ROR  = "NONE",
-  parameter FEATURE_EXT  = "NONE",
-  parameter FEATURE_CMOV  = "ENABLED",
-  parameter FEATURE_FFL1  = "ENABLED",
-  parameter FEATURE_ATOMIC  = "ENABLED",
+  parameter FEATURE_ADDC   = "ENABLED",
+  parameter FEATURE_SRA    = "ENABLED",
+  parameter FEATURE_ROR    = "NONE",
+  parameter FEATURE_EXT    = "NONE",
+  parameter FEATURE_CMOV   = "ENABLED",
+  parameter FEATURE_FFL1   = "ENABLED",
+  parameter FEATURE_ATOMIC = "ENABLED",
 
-  parameter FEATURE_CUST1  = "NONE",
-  parameter FEATURE_CUST2  = "NONE",
-  parameter FEATURE_CUST3  = "NONE",
-  parameter FEATURE_CUST4  = "NONE",
-  parameter FEATURE_CUST5  = "NONE",
-  parameter FEATURE_CUST6  = "NONE",
-  parameter FEATURE_CUST7  = "NONE",
-  parameter FEATURE_CUST8  = "NONE",
+  parameter FEATURE_CUST1 = "NONE",
+  parameter FEATURE_CUST2 = "NONE",
+  parameter FEATURE_CUST3 = "NONE",
+  parameter FEATURE_CUST4 = "NONE",
+  parameter FEATURE_CUST5 = "NONE",
+  parameter FEATURE_CUST6 = "NONE",
+  parameter FEATURE_CUST7 = "NONE",
+  parameter FEATURE_CUST8 = "NONE",
 
-  parameter FEATURE_FPU     = "NONE", // ENABLED|NONE: actual for cappuccino pipeline only
-  parameter OPTION_FTOI_ROUNDING = "CPP", // "CPP" (force toward zero; default) / "IEEE" (by rounding mode bits from FPCSR)
+  parameter FEATURE_FPU          = "NONE",  // ENABLED|NONE: actual for cappuccino pipeline only
+  parameter OPTION_FTOI_ROUNDING = "CPP",   // "CPP" (force toward zero; default) / "IEEE" (by rounding mode bits from FPCSR)
 
-  parameter OPTION_SHIFTER  = "BARREL",
+  parameter OPTION_SHIFTER = "BARREL",
 
-  parameter FEATURE_STORE_BUFFER = "ENABLED",
+  parameter FEATURE_STORE_BUFFER            = "ENABLED",
   parameter OPTION_STORE_BUFFER_DEPTH_WIDTH = 8,
 
   parameter FEATURE_MULTICORE = "NONE",
 
-  parameter FEATURE_TRACEPORT_EXEC = "NONE",
+  parameter FEATURE_TRACEPORT_EXEC   = "NONE",
   parameter FEATURE_BRANCH_PREDICTOR = "SIMPLE",  // SIMPLE|SAT_COUNTER|GSHARE
 
-  parameter BUS_IF_TYPE  = "WISHBONE32",
+  parameter BUS_IF_TYPE = "WISHBONE32",
 
-  parameter IBUS_WB_TYPE  = "B3_READ_BURSTING",
-  parameter DBUS_WB_TYPE  = "CLASSIC"
+  parameter IBUS_WB_TYPE = "B3_READ_BURSTING",
+  parameter DBUS_WB_TYPE = "CLASSIC"
 )
   (
     input         clk,
@@ -203,31 +203,31 @@ module mor1kx #(
                                                             : 1 )
       )
       ibus_bridge (
-        // Outputs
-        .cpu_err_o (ibus_err_i),
-        .cpu_ack_o (ibus_ack_i),
-        .cpu_dat_o (ibus_dat_i[`OR1K_INSN_WIDTH-1:0]),
+        .clk (clk),
+        .rst (rst),
+
         .wbm_adr_o (iwbm_adr_o),
-        .wbm_stb_o (iwbm_stb_o),
-        .wbm_cyc_o (iwbm_cyc_o),
+        .wbm_dat_o (iwbm_dat_o),
         .wbm_sel_o (iwbm_sel_o),
-        .wbm_we_o (iwbm_we_o),
+        .wbm_we_o  (iwbm_we_o),
+        .wbm_cyc_o (iwbm_cyc_o),
+        .wbm_stb_o (iwbm_stb_o),
         .wbm_cti_o (iwbm_cti_o),
         .wbm_bte_o (iwbm_bte_o),
-        .wbm_dat_o (iwbm_dat_o),
-        // Inputs
-        .clk  (clk),
-        .rst  (rst),
-        .cpu_adr_i (ibus_adr_o),
-        .cpu_dat_i ({OPTION_OPERAND_WIDTH{1'b0}}),
-        .cpu_req_i (ibus_req_o),
-        .cpu_bsel_i (4'b1111),
-        .cpu_we_i (1'b0),
-        .cpu_burst_i (ibus_burst_o),
-        .wbm_err_i (iwbm_err_i),
-        .wbm_ack_i (iwbm_ack_i),
         .wbm_dat_i (iwbm_dat_i),
-        .wbm_rty_i (iwbm_rty_i)
+        .wbm_ack_i (iwbm_ack_i),
+        .wbm_err_i (iwbm_err_i),
+        .wbm_rty_i (iwbm_rty_i),
+
+        .cpu_dat_o   (ibus_dat_i[`OR1K_INSN_WIDTH-1:0]),
+        .cpu_err_o   (ibus_err_i),
+        .cpu_ack_o   (ibus_ack_i),
+        .cpu_adr_i   (ibus_adr_o),
+        .cpu_dat_i   ({OPTION_OPERAND_WIDTH{1'b0}}),
+        .cpu_req_i   (ibus_req_o),
+        .cpu_bsel_i  (4'b1111),
+        .cpu_we_i    (1'b0),
+        .cpu_burst_i (ibus_burst_o)
       );
 
       mor1kx_bus_if_wb32 #(
@@ -238,10 +238,9 @@ module mor1kx #(
                                                            : 1 )
       )
       dbus_bridge (
-        // Outputs
-        .cpu_err_o   (dbus_err_i),
-        .cpu_ack_o   (dbus_ack_i),
-        .cpu_dat_o   (dbus_dat_i[OPTION_OPERAND_WIDTH-1:0]),
+        .clk (clk),
+        .rst (rst),
+
         .wbm_adr_o   (dwbm_adr_o),
         .wbm_stb_o   (dwbm_stb_o),
         .wbm_cyc_o   (dwbm_cyc_o),
@@ -250,19 +249,20 @@ module mor1kx #(
         .wbm_cti_o   (dwbm_cti_o),
         .wbm_bte_o   (dwbm_bte_o),
         .wbm_dat_o   (dwbm_dat_o),
-        // Inputs
-        .clk   (clk),
-        .rst   (rst),
+        .wbm_err_i   (dwbm_err_i),
+        .wbm_ack_i   (dwbm_ack_i),
+        .wbm_dat_i   (dwbm_dat_i),
+        .wbm_rty_i   (dwbm_rty_i),
+
+        .cpu_dat_o   (dbus_dat_i[OPTION_OPERAND_WIDTH-1:0]),
+        .cpu_err_o   (dbus_err_i),
+        .cpu_ack_o   (dbus_ack_i),
         .cpu_adr_i   (dbus_adr_o[31:0]),
         .cpu_dat_i   (dbus_dat_o),
         .cpu_req_i   (dbus_req_o),
         .cpu_bsel_i  (dbus_bsel_o),
         .cpu_we_i    (dbus_we_o),
-        .cpu_burst_i (dbus_burst_o),
-        .wbm_err_i   (dwbm_err_i),
-        .wbm_ack_i   (dwbm_ack_i),
-        .wbm_dat_i   (dwbm_dat_i),
-        .wbm_rty_i   (dwbm_rty_i)
+        .cpu_burst_i (dbus_burst_o)
       );
     end
     else begin
