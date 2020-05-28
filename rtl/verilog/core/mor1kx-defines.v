@@ -247,9 +247,7 @@
 `define OR1K_FPCOP_SFUN      8'b0010_1110
 
 
-//
 // OR1K SPR defines
-//
 `include "mor1kx-sprs.v"
 
 /* Exception addresses */
