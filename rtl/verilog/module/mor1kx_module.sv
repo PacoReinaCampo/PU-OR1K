@@ -135,7 +135,7 @@ module mor1kx_module #(
     .FEATURE_DEBUGUNIT               (FEATURE_DEBUGUNIT),
     .FEATURE_TRACEPORT_EXEC          ("ENABLED")
   )
-  u_cpu(
+  u_cpu (
     .clk                         (clk_i),
     .rst                         (rst_i),
 
