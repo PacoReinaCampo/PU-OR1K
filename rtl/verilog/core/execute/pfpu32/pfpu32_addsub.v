@@ -2,8 +2,8 @@
 //                                                                  //
 //    pfpu32_addsub                                                 //
 //                                                                  //
-//    This file is part of the mor1kx project                       //
-//    https://github.com/openrisc/mor1kx                            //
+//    This file is part of the or1k project                       //
+//    https://github.com/openrisc/or1k                            //
 //                                                                  //
 //    Description                                                   //
 //    addition/subtraction pipeline for single precision floating   //
@@ -14,7 +14,7 @@
 //          Jidan Al-eryani, jidan@gmx.net                          //
 //        - Conv. to Verilog and inclusion in OR1200 -              //
 //          Julius Baxter, julius@opencores.org                     //
-//        - Update for mor1kx,                                      //
+//        - Update for or1k,                                      //
 //          bug fixing and further development -                    //
 //          Andrey Bacherov, avbacherov@opencores.org               //
 //                                                                  //
@@ -42,7 +42,7 @@
 //  POSSIBILITY OF SUCH DAMAGE.                                     //
 //////////////////////////////////////////////////////////////////////
 
-`include "mor1kx-defines.v"
+`include "or1k-defines.v"
 
 module pfpu32_addsub (
   input             clk,

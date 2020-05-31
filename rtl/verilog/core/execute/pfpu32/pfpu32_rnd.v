@@ -3,8 +3,8 @@
 //    pfpu32_rnd                                                   //
 //    32-bit common rounding module for FPU                        //
 //                                                                 //
-//    This file is part of the mor1kx project                      //
-//    https://github.com/openrisc/mor1kx                           //
+//    This file is part of the or1k project                      //
+//    https://github.com/openrisc/or1k                           //
 //                                                                 //
 //    Author: Andrey Bacherov                                      //
 //            avbacherov@opencores.org                             //
@@ -35,7 +35,7 @@
 //                                                                 //
 /////////////////////////////////////////////////////////////////////
 
-`include "mor1kx-defines.v"
+`include "or1k-defines.v"
 
 module pfpu32_rnd #(
   parameter OPTION_FTOI_ROUNDING = "CPP" // "CPP" / "IEEE"

@@ -9,7 +9,7 @@
 ////  Modified by Julius Baxter, July, 2010                      ////
 ////              julius.baxter@orsoc.se                         ////
 ////                                                             ////
-////  Update for mor1kx, bug fixing and further development      ////
+////  Update for or1k, bug fixing and further development      ////
 ////              Andrey Bacherov, 2014,                         ////
 ////              avbacherov@opencores.org                       ////
 ////                                                             ////
@@ -39,7 +39,7 @@
 ////                                                             ////
 /////////////////////////////////////////////////////////////////////
 
-`include "mor1kx-defines.v"
+`include "or1k-defines.v"
 
 // completely combinatorial module
 

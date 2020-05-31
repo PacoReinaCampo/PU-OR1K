@@ -44,7 +44,7 @@
 // 0111 = reserved
 // 1xxx = comparison
 
-`include "mor1kx-defines.v"
+`include "or1k-defines.v"
 
 module pfpu32_top #(
   parameter OPTION_OPERAND_WIDTH = 32,

@@ -302,7 +302,7 @@ module or1k_pu #(
 
   ////////////////////////////////////////////////////////////////////////
   //
-  // mor1kx cpu
+  // or1k cpu
   //
   ////////////////////////////////////////////////////////////////////////
   wire [31:0] or1k_irq;
@@ -312,7 +312,7 @@ module or1k_pu #(
   assign or1k_clk = wb_clk;
   assign or1k_rst = wb_rst | or1k_dbg_rst;
 
-  mor1kx #(
+  or1k_core #(
     .FEATURE_DEBUGUNIT ("ENABLED"),
     .FEATURE_CMOV ("ENABLED"),
     .FEATURE_INSTRUCTIONCACHE ("ENABLED"),
@@ -333,7 +333,7 @@ module or1k_pu #(
     .OPTION_CPU0 ("CAPPUCCINO"),
     .OPTION_RESET_PC (32'h00000100)
   )
-  mor1kx0 (
+  core (
     .iwbm_adr_o   (wb_m2s_or1k_i_adr),
     .iwbm_stb_o   (wb_m2s_or1k_i_stb),
     .iwbm_cyc_o   (wb_m2s_or1k_i_cyc),

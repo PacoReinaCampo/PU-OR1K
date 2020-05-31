@@ -2,8 +2,8 @@
 //                                                                  //
 //    pfpu32_muldiv                                                 //
 //                                                                  //
-//    This file is part of the mor1kx project                       //
-//    https://github.com/openrisc/mor1kx                            //
+//    This file is part of the or1k project                       //
+//    https://github.com/openrisc/or1k                            //
 //                                                                  //
 //    Description                                                   //
 //    combined multiplier/divisor pipeline for                      //
@@ -36,7 +36,7 @@
 //  POSSIBILITY OF SUCH DAMAGE.                                     //
 //////////////////////////////////////////////////////////////////////
 
-`include "mor1kx-defines.v"
+`include "or1k-defines.v"
 
 module pfpu32_muldiv (
   input             clk,
