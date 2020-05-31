@@ -1,4 +1,4 @@
-TARGET               := pu-or1k
+TARGET               := or1k-pu
 VPI_MODULES          := elf-loader.vpi jtag_vpi.vpi
 TOPLEVEL             := or1k_testbench
 IVERILOG_OPTIONS     := -DSIM
