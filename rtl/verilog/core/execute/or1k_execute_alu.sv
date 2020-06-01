@@ -335,19 +335,18 @@ module or1k_execute_alu #(
       assign mul_unsigned_overflow =  OPTION_OPERAND_WIDTH==64 ? 0 :
         |mul_prod_r[(OPTION_OPERAND_WIDTH*2)-1:OPTION_OPERAND_WIDTH];
 
+      // synthesis translate_off
       `ifndef verilator
       always @(posedge mul_valid) begin
         @(posedge clk);
 
-        if (((a*b) & {OPTION_OPERAND_WIDTH{1'b1}}) != mul_result)
-          begin
-            $display("%t incorrect serial multiply result at pc %08h",
-                     $time, pc_execute_i);
-            $display("a=%08h b=%08h, mul_result=%08h, expected %08h",
-                     a, b, mul_result, ((a*b) & {OPTION_OPERAND_WIDTH{1'b1}}));
-          end
+        if (((a*b) & {OPTION_OPERAND_WIDTH{1'b1}}) != mul_result) begin
+          $display("%t incorrect serial multiply result at pc %08h", $time, pc_execute_i);
+          $display("a=%08h b=%08h, mul_result=%08h, expected %08h", a, b, mul_result, ((a*b) & {OPTION_OPERAND_WIDTH{1'b1}}));
+        end
       end
       `endif
+      // synthesis translate_on
     end
     else if (FEATURE_MULTIPLIER=="SIMULATION") begin
       // Simple multiplier result

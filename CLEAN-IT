@@ -1,3 +1,5 @@
+rm -rf synthesis/qflow/synthesis
+
 cd sim/verilog/regression/iverilog
 
 make clean

@@ -5,7 +5,7 @@ A Processing Unit (PU) is an electronic system within a computer that carries ou
 The OpenRISC implementation has a 32/64 bit Microarchitecture, 5 stages data pipeline and an Instruction Set Architecture based on Reduced Instruction Set Computer. Compatible with Wishbone Bus. Only For Researching.
 
 
-## Open Source Tools
+## FRONT-END Open Source Tools
 
 ### Verilator
 Hardware Description Language SystemVerilog Simulator
@@ -85,6 +85,144 @@ sudo make install
 ```
 cd synthesis/yosys
 source SYNTHESIZE-IT
+```
+
+## BACK-END Open Source Tools
+Back-End Workflow
+```
+mkdir qflow
+cd qflow
+
+git clone https://github.com/RTimothyEdwards/magic
+git clone https://github.com/rubund/graywolf
+git clone https://github.com/The-OpenROAD-Project/OpenSTA
+git clone https://github.com/RTimothyEdwards/qrouter
+git clone https://github.com/RTimothyEdwards/irsim
+git clone https://github.com/RTimothyEdwards/netgen
+git clone https://github.com/RTimothyEdwards/qflow
+
+cd magic
+./configure
+make
+sudo make install
+
+cd graywolf
+mkdir build
+cd build
+cmake ..
+make
+sudo make install
+
+cd OpenSTA
+mkdir build
+cd build
+cmake ..
+make
+sudo make install
+
+cd qrouter
+./configure
+make
+sudo make install
+
+cd irsim
+./configure
+make
+sudo make install
+
+cd netgen
+./configure
+make
+sudo make install
+
+cd qflow
+./configure
+make
+sudo make install
+```
+
+```
+cd synthesis/qflow
+source FLOW-IT
+```
+
+
+## for WINDOWS users!
+
+open Microsoft Store and install Ubuntu
+
+type:
+```
+sudo apt update upgrade
+
+sudo apt-get install bison cmake flex freeglut3-dev libcairo2-dev libgsl-dev \
+libncurses-dev libx11-dev m4 python-tk python3-tk swig tcl tcl-dev tk-dev tcsh
+```
+
+### FRONT-END
+
+type:
+```
+sudo apt install verilator
+sudo apt install iverilog
+sudo apt install ghdl
+
+sudo apt install yosys
+```
+
+### BACK-END
+
+type:
+```
+mkdir qflow
+cd qflow
+
+git clone https://github.com/RTimothyEdwards/magic
+git clone https://github.com/rubund/graywolf
+git clone https://github.com/The-OpenROAD-Project/OpenSTA
+git clone https://github.com/RTimothyEdwards/qrouter
+git clone https://github.com/RTimothyEdwards/irsim
+git clone https://github.com/RTimothyEdwards/netgen
+git clone https://github.com/RTimothyEdwards/qflow
+
+cd magic
+./configure
+make
+sudo make install
+
+cd graywolf
+mkdir build
+cd build
+cmake ..
+make
+sudo make install
+
+cd OpenSTA
+mkdir build
+cd build
+cmake ..
+make
+sudo make install
+
+cd qrouter
+./configure
+make
+sudo make install
+
+cd irsim
+./configure
+make
+sudo make install
+
+cd netgen
+./configure
+make
+sudo make install
+
+cd qflow
+./configure
+make
+sudo make install
 ```
 
 
