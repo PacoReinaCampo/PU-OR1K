@@ -83,7 +83,10 @@
 //       .lru_post (lru_post[NUMWAYS-1:0]));
 
 module or1k_cache_lru #(
-  parameter NUMWAYS = 2
+  parameter NUMWAYS = 2,
+
+  // Triangular number
+  parameter WIDTH = NUMWAYS*(NUMWAYS-1) >> 1
 )
   (
     input      [WIDTH-1:0] current,
@@ -93,9 +96,6 @@ module or1k_cache_lru #(
     output reg [NUMWAYS-1:0] lru_pre,
     output reg [NUMWAYS-1:0] lru_post
   );
-
-  // Triangular number
-  localparam WIDTH = NUMWAYS*(NUMWAYS-1) >> 1;
 
   reg [NUMWAYS-1:0] expand [0:NUMWAYS-1];
 
