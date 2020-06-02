@@ -216,32 +216,6 @@ module or1k_cpu #(
         cappuccino.or1k_cpu.set_gpr(gpr_num, gpr_value);
       endtask
     end
-    if (OPTION_CPU=="ESPRESSO") begin : monitor_espresso
-      function [OPTION_OPERAND_WIDTH-1:0] get_gpr;
-        // verilator public
-        input [15:0] gpr_num;
-        get_gpr = espresso.or1k_cpu.get_gpr(gpr_num);
-      endfunction
-      task set_gpr;
-        // verilator public
-        input [15:0] gpr_num;
-        input [OPTION_OPERAND_WIDTH-1:0] gpr_value;
-        espresso.or1k_cpu.set_gpr(gpr_num, gpr_value);
-      endtask
-    end
-    if (OPTION_CPU=="PRONTO_ESPRESSO") begin : monitor_pronto_espresso
-      function [OPTION_OPERAND_WIDTH-1:0] get_gpr;
-        // verilator public
-        input [15:0] gpr_num;
-        get_gpr = prontoespresso.or1k_cpu.get_gpr(gpr_num);
-      endfunction
-      task set_gpr;
-        // verilator public
-        input [15:0] gpr_num;
-        input [OPTION_OPERAND_WIDTH-1:0] gpr_value;
-        prontoespresso.or1k_cpu.set_gpr(gpr_num, gpr_value);
-      endtask
-    end
   endgenerate
   `endif
 

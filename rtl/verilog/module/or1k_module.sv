@@ -40,7 +40,7 @@
  *   Francisco Javier Reina Campo <frareicam@gmail.com>
  */
 
-import opensocdebug::or1k_trace_exec;
+import opensocdebug::mor1kx_trace_exec;
 
 module or1k_module #(
   parameter ID                   = 0,
@@ -102,12 +102,12 @@ module or1k_module #(
     input         snoop_enable_i,
     input  [31:0] snoop_adr_i,
 
-    output or1k_trace_exec trace_exec
+    output mor1kx_trace_exec trace_exec
   );
 
   wire dbg_stall_o;
 
-  or1k #(
+  or1k_core #(
     .OPTION_CPU0                     (CPU_IMPLEMENTATION),
     .OPTION_OPERAND_WIDTH            (32),
     .OPTION_RF_NUM_SHADOW_GPR        (1),
@@ -135,7 +135,7 @@ module or1k_module #(
     .FEATURE_DEBUGUNIT               (FEATURE_DEBUGUNIT),
     .FEATURE_TRACEPORT_EXEC          ("ENABLED")
   )
-  u_cpu (
+  core (
     .clk                         (clk_i),
     .rst                         (rst_i),
 
