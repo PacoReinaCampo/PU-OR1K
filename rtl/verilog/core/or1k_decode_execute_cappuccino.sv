@@ -79,8 +79,8 @@ module or1k_decode_execute_cappuccino #(
     input                                 pipeline_flush_i,
 
     // ALU related inputs from decode
-    input       [`OR1K_ALU_OPC_WIDTH-1:0] decode_opc_alu_i,
-    input       [`OR1K_ALU_OPC_WIDTH-1:0] decode_opc_alu_secondary_i,
+    input      [`OR1K_ALU_OPC_WIDTH -1:0] decode_opc_alu_i,
+    input      [`OR1K_ALU_OPC_WIDTH -1:0] decode_opc_alu_secondary_i,
 
     input      [`OR1K_IMM_WIDTH     -1:0] decode_imm16_i,
     input      [OPTION_OPERAND_WIDTH-1:0] decode_immediate_i,
@@ -103,8 +103,8 @@ module or1k_decode_execute_cappuccino #(
     output reg                            execute_adder_do_carry_o,
 
     // Upper 10 bits of immediate for jumps and branches
-    input                           [9:0] decode_immjbr_upper_i,
-    output reg                      [9:0] execute_immjbr_upper_o,
+    input      [                     9:0] decode_immjbr_upper_i,
+    output reg [                     9:0] execute_immjbr_upper_o,
 
     // GPR numbers
     output reg [OPTION_RF_ADDR_WIDTH-1:0] execute_rfd_adr_o,
@@ -134,7 +134,7 @@ module or1k_decode_execute_cappuccino #(
     input                                 decode_op_lsu_load_i,
     input                                 decode_op_lsu_store_i,
     input                                 decode_op_lsu_atomic_i,
-    input                           [1:0] decode_lsu_length_i,
+    input      [                     1:0] decode_lsu_length_i,
     input                                 decode_lsu_zext_i,
 
     input                                 decode_op_mfspr_i,
@@ -153,9 +153,9 @@ module or1k_decode_execute_cappuccino #(
     input                                 decode_op_movhi_i,
     input                                 decode_op_ext_i,
     input                                 decode_op_msync_i,
-    input        [`OR1K_FPUOP_WIDTH -1:0] decode_op_fpu_i,
+    input      [`OR1K_FPUOP_WIDTH   -1:0] decode_op_fpu_i,
 
-    input        [`OR1K_OPCODE_WIDTH-1:0] decode_opc_insn_i,
+    input      [`OR1K_OPCODE_WIDTH  -1:0] decode_opc_insn_i,
 
     // Control signal outputs to execute stage
     output reg                            execute_rf_wb_o,

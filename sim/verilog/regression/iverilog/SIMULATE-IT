@@ -3,48 +3,48 @@ export PATH=/opt/or1k-elf/bin:${PATH}
 rm -rf log
 mkdir log
 
-make clean; make clean_elf-loader; make clean_jtag_vpi; make run-alignillegalinsn
-make clean; make clean_elf-loader; make clean_jtag_vpi; make run-backtoback_jmp
-make clean; make clean_elf-loader; make clean_jtag_vpi; make run-basic
-make clean; make clean_elf-loader; make clean_jtag_vpi; make run-cmov
-make clean; make clean_elf-loader; make clean_jtag_vpi; make run-cy
-make clean; make clean_elf-loader; make clean_jtag_vpi; make run-dsx
-make clean; make clean_elf-loader; make clean_jtag_vpi; make run-dsxinsn
-make clean; make clean_elf-loader; make clean_jtag_vpi; make run-ext
-make clean; make clean_elf-loader; make clean_jtag_vpi; make run-ffl1
-make clean; make clean_elf-loader; make clean_jtag_vpi; make run-icache
-make clean; make clean_elf-loader; make clean_jtag_vpi; make run-illegalinsn
-make clean; make clean_elf-loader; make clean_jtag_vpi; make run-illegalinsndelayslot
-make clean; make clean_elf-loader; make clean_jtag_vpi; make run-insnfetchalign
-make clean; make clean_elf-loader; make clean_jtag_vpi; make run-insnfetcherror
-#make clean; make clean_elf-loader; make clean_jtag_vpi; make run-intloop
-#make clean; make clean_elf-loader; make clean_jtag_vpi; make run-intmulticycle
-#make clean; make clean_elf-loader; make clean_jtag_vpi; make run-intsyscall
-#make clean; make clean_elf-loader; make clean_jtag_vpi; make run-inttickloop
-make clean; make clean_elf-loader; make clean_jtag_vpi; make run-jmp
-make clean; make clean_elf-loader; make clean_jtag_vpi; make run-jr
-make clean; make clean_elf-loader; make clean_jtag_vpi; make run-lsu
-make clean; make clean_elf-loader; make clean_jtag_vpi; make run-lsualign
-make clean; make clean_elf-loader; make clean_jtag_vpi; make run-lsualigndelayslot
-make clean; make clean_elf-loader; make clean_jtag_vpi; make run-lsuerror
-make clean; make clean_elf-loader; make clean_jtag_vpi; make run-lsuerrordelayslot
-make clean; make clean_elf-loader; make clean_jtag_vpi; make run-lwjr
-make clean; make clean_elf-loader; make clean_jtag_vpi; make run-msync
-make clean; make clean_elf-loader; make clean_jtag_vpi; make run-mul-basic
-make clean; make clean_elf-loader; make clean_jtag_vpi; make run-ov
-make clean; make clean_elf-loader; make clean_jtag_vpi; make run-regjmp
-make clean; make clean_elf-loader; make clean_jtag_vpi; make run-rfe
-make clean; make clean_elf-loader; make clean_jtag_vpi; make run-sf
-make clean; make clean_elf-loader; make clean_jtag_vpi; make run-sfbf
-make clean; make clean_elf-loader; make clean_jtag_vpi; make run-shiftopts
-make clean; make clean_elf-loader; make clean_jtag_vpi; make run-shortbranch
-make clean; make clean_elf-loader; make clean_jtag_vpi; make run-shortjump
-make clean; make clean_elf-loader; make clean_jtag_vpi; make run-systemcall
-make clean; make clean_elf-loader; make clean_jtag_vpi; make run-tickloop
-make clean; make clean_elf-loader; make clean_jtag_vpi; make run-tickrfforward
-make clean; make clean_elf-loader; make clean_jtag_vpi; make run-ticksyscall
-make clean; make clean_elf-loader; make clean_jtag_vpi; make run-timer
-make clean; make clean_elf-loader; make clean_jtag_vpi; make run-trap
-make clean; make clean_elf-loader; make clean_jtag_vpi; make run-trapdelayslot
-
-make clean; make clean_elf-loader; make clean_jtag_vpi; make run-hello
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-alignillegalinsn; echo -e "\nalignillegalinsn test finished\n\n"
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-backtoback_jmp; echo -e "\nbacktoback_jmp test finished\n\n"
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-basic; echo -e "\nbasic test finished\n\n"
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-cmov; echo -e "\ncmov test finished\n\n"
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-cy; echo -e "\ncy test finished\n\n"
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-dsx; echo -e "\ndsx test finished\n\n"
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-dsxinsn; echo -e "\ndsxinsn test finished\n\n"
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-ext; echo -e "\next test finished\n\n"
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-ffl1; echo -e "\nffl1 test finished\n\n"
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-icache; echo -e "\nicache test finished\n\n"
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-illegalinsn; echo -e "\nillegalinsn test finished\n\n"
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-illegalinsndelayslot; echo -e "\nillegalinsndelayslot test finished\n\n"
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-insnfetchalign; echo -e "\ninsnfetchalign test finished\n\n"
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-insnfetcherror; echo -e "\ninsnfetcherror test finished\n\n"
+#make clean; make clean_elf-loader; make clean_jtag_vpi; make run-intloop; echo -e "\nintloop test finished\n\n"
+#make clean; make clean_elf-loader; make clean_jtag_vpi; make run-intmulticycle; echo -e "\nintmulticycle test finished\n\n"
+#make clean; make clean_elf-loader; make clean_jtag_vpi; make run-intsyscall; echo -e "\nintsyscall test finished\n\n"
+#make clean; make clean_elf-loader; make clean_jtag_vpi; make run-inttickloop; echo -e "\ninttickloop test finished\n\n"
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-jmp; echo -e "\njmp test finished\n\n"
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-jr; echo -e "\njr test finished\n\n"
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-lsu; echo -e "\nlsu test finished\n\n"
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-lsualign; echo -e "\nlsualign test finished\n\n"
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-lsualigndelayslot; echo -e "\nlsualigndelayslot test finished\n\n"
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-lsuerror; echo -e "\nlsuerror test finished\n\n"
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-lsuerrordelayslot; echo -e "\nlsuerrordelayslot test finished\n\n"
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-lwjr; echo -e "\nlwjr test finished\n\n"
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-msync; echo -e "\nmsync test finished\n\n"
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-mul-basic; echo -e "\nmul-basic test finished\n\n"
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-ov; echo -e "\nov test finished\n\n"
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-regjmp; echo -e "\nregjmp test finished\n\n"
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-rfe; echo -e "\nrfe test finished\n\n"
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-sf; echo -e "\nsf test finished\n\n"
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-sfbf; echo -e "\nsfbf test finished\n\n"
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-shiftopts; echo -e "\nshiftopts test finished\n\n"
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-shortbranch; echo -e "\nshortbranch test finished\n\n"
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-shortjump; echo -e "\nshortjump test finished\n\n"
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-systemcall; echo -e "\nsystemcall test finished\n\n"
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-tickloop; echo -e "\ntickloop test finished\n\n"
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-tickrfforward; echo -e "\ntickrfforward test finished\n\n"
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-ticksyscall; echo -e "\nticksyscall test finished\n\n"
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-timer; echo -e "\ntimer test finished\n\n"
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-trap; echo -e "\ntrap test finished\n\n"
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-trapdelayslot; echo -e "\ntrapdelayslot test finished\n\n"
+ 
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-hello; echo -e "\nhello test finished\n\n"
