@@ -246,8 +246,9 @@ sudo apt install ghdl
 
 cd /mnt/c/../sim/verilog/regression/wb/iverilog
 source SIMULATE-IT
+```
 
-
+```
 sudo apt install yosys
 
 cd /mnt/c/../synthesis/yosys
