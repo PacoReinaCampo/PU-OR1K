@@ -1,86 +1,44 @@
-/******************************************************************************
- This Source Code Form is subject to the terms of the
- Open Hardware Description License, v. 1.0. If a copy
- of the OHDL was not distributed with this file, You
- can obtain one at http://juliusbaxter.net/ohdl/ohdl.txt
+////////////////////////////////////////////////////////////////////////////////
+//                                            __ _      _     _               //
+//                                           / _(_)    | |   | |              //
+//                __ _ _   _  ___  ___ _ __ | |_ _  ___| | __| |              //
+//               / _` | | | |/ _ \/ _ \ '_ \|  _| |/ _ \ |/ _` |              //
+//              | (_| | |_| |  __/  __/ | | | | | |  __/ | (_| |              //
+//               \__, |\__,_|\___|\___|_| |_|_| |_|\___|_|\__,_|              //
+//                  | |                                                       //
+//                  |_|                                                       //
+//                                                                            //
+//                                                                            //
+//              MPSoC-OR1K CPU                                                //
+//              Processing Unit                                               //
+//              Wishbone Bus Interface                                        //
+//                                                                            //
+////////////////////////////////////////////////////////////////////////////////
 
- Description: Data cache LRU implementation
-
- Copyright (C) 2012 Stefan Wallentowitz <stefan.wallentowitz@tum.de>
-
- ******************************************************************************/
-
-// This is the least-recently-used (LRU) calculation module. It
-// essentially has two types of input and output. First, the history
-// information needs to be evaluated to calculate the LRU value.
-// Second, the current access and the LRU are one hot values of the
-// ways.
-//
-// This module is pure combinational. All registering is done outside
-// this module. The following parameter exists:
-//
-//  * NUMWAYS: Number of ways (must be greater than 1)
-//
-// The following ports exist:
-//
-//  * current: The current LRU history
-//  * update: The new LRU history after access
-//
-//  * access: 0 if no access or one-hot of the way that accesses
-//  * lru_pre: LRU before the access (one hot of ways)
-//  * lru_post: LRU after the access (one hot of ways)
-//
-// The latter three have the width of NUMWAYS apparently. The first
-// three are more complicated as this is an optimized way of storing
-// the history information, which will be shortly described in the
-// following.
-//
-// A naive approach to store the history of the access is to store the
-// relative "age" of each element in a vector, for example for four
-// ways:
-//
-//   0: 1 1: 3 2: 1 3:0
-//
-// This needs 4x2 bits, but more important it also needs a set of
-// comparators and adders. This can become increasingly complex when
-// using a higher number of cache ways with an impact on area and
-// timing.
-//
-// Similarly, it is possible to store a "stack" of the access and
-// reorder this stack on an access. But the problems are similar, it
-// needs comparators etc.
-//
-// A neat approach is to store the history efficiently coded, while
-// also easing the calculation. This approach stores the information
-// whether each entry is older than the others. For example for the
-// four-way example (x<y means x is older than y):
-//
-// |0<1|0<2|0<3|1<0|1<2|1<3|2<0|2<1|2<3|3<0|3<1|3<2|
-//
-// This is redundant as two entries can never be equally old meaning
-// x<y == !y<x, leading to a simpler version
-//
-// |0<1|0<2|0<3|1<2|1<3|2<3|
-//
-// The calculations on this vector are much simpler and it is
-// therefore used by this module.
-//
-// The width of this vector is the triangular number of (NUMWAYS-1),
-// specifically:
-//  WIDTH=NUMWAYS*(NUMWAYS-1)/2.
-//
-// The details of the algorithms are described below. The designer
-// just needs to apply current history vector and the access and gets
-// the updated history and the LRU before and after the access.
-//
-// Instantiation example:
-// or1k_dcache_lru
-//  (.NUMWAYS(4))
-// u_lru(.current  (current_history[((NUMWAYS*(NUMWAYS-1))>>1)-1:0])),
-//       .update   (updated_history[((NUMWAYS*(NUMWAYS-1))>>1)-1:0])),
-//       .access   (access[NUMWAYS-1:0]),
-//       .lru_pre  (lru_pre[NUMWAYS-1:0]),
-//       .lru_post (lru_post[NUMWAYS-1:0]));
+/* Copyright (c) 2015-2016 by the author(s)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ * =============================================================================
+ * Author(s):
+ *   Francisco Javier Reina Campo <frareicam@gmail.com>
+ */
 
 module or1k_cache_lru #(
   parameter NUMWAYS = 2,

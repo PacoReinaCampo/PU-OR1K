@@ -1,28 +1,44 @@
-/* ****************************************************************************
-  This Source Code Form is subject to the terms of the
-  Open Hardware Description License, v. 1.0. If a copy
-  of the OHDL was not distributed with this file, You
-  can obtain one at http://juliusbaxter.net/ohdl/ohdl.txt
+////////////////////////////////////////////////////////////////////////////////
+//                                            __ _      _     _               //
+//                                           / _(_)    | |   | |              //
+//                __ _ _   _  ___  ___ _ __ | |_ _  ___| | __| |              //
+//               / _` | | | |/ _ \/ _ \ '_ \|  _| |/ _ \ |/ _` |              //
+//              | (_| | |_| |  __/  __/ | | | | | |  __/ | (_| |              //
+//               \__, |\__,_|\___|\___|_| |_|_| |_|\___|_|\__,_|              //
+//                  | |                                                       //
+//                  |_|                                                       //
+//                                                                            //
+//                                                                            //
+//              MPSoC-OR1K CPU                                                //
+//              Processing Unit                                               //
+//              Wishbone Bus Interface                                        //
+//                                                                            //
+////////////////////////////////////////////////////////////////////////////////
 
-  Description: or1k control unit
-
-  inputs from execute stage
-
-  generate pipeline controls
-
-  manage SPRs
-
-  issue addresses for exceptions to fetch stage
-  control branches going to fetch stage
-
-  contains tick timer
-
-  contains PIC logic
-
-  Copyright (C) 2012 Julius Baxter <juliusbaxter@gmail.com>
-  Copyright (C) 2012-2013 Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
-
-***************************************************************************** */
+/* Copyright (c) 2015-2016 by the author(s)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ * =============================================================================
+ * Author(s):
+ *   Francisco Javier Reina Campo <frareicam@gmail.com>
+ */
 
 `include "or1k-defines.sv"
 
@@ -305,7 +321,7 @@ module or1k_ctrl_cappuccino #(
   wire                              du_access;
   reg                               cpu_stall;
   wire                              du_restart_from_stall;
-  reg [5:0]      pstep;
+  reg  [                       5:0] pstep;
   wire                              stepping;
   wire                              stepped_into_delay_slot;
   reg                               stepped_into_exception;
@@ -319,15 +335,15 @@ module or1k_ctrl_cappuccino #(
   wire                              spr_we;
   wire                              spr_read;
   wire                              spr_ack;
-  wire [OPTION_OPERAND_WIDTH-1:0]   spr_write_dat;
-  reg [11:0]                        spr_access;
-  wire [11:0]      spr_access_ack;
-  wire [31:0]      spr_internal_read_dat [0:11];
+  wire [OPTION_OPERAND_WIDTH  -1:0] spr_write_dat;
+  reg  [                      11:0] spr_access;
+  wire [                      11:0] spr_access_ack;
+  wire [                      31:0] spr_internal_read_dat [0:11];
   wire                              spr_read_access;
   wire                              spr_write_access;
   wire                              spr_bus_access;
-  reg [OPTION_OPERAND_WIDTH-1:0]    spr_sys_group_read;
-  wire [3:0]      spr_group;
+  reg  [OPTION_OPERAND_WIDTH  -1:0] spr_sys_group_read;
+  wire [                       3:0] spr_group;
 
   /* Wires from or1k_cfgrs module */
   wire [31:0]      spr_vr;
@@ -345,8 +361,7 @@ module or1k_ctrl_cappuccino #(
 
   assign  b = ctrl_rfb_i;
 
-  assign ctrl_branch_exception_o = (exception_r | ctrl_op_rfe_i | doing_rfe) &
-    !exception_taken;
+  assign ctrl_branch_exception_o = (exception_r | ctrl_op_rfe_i | doing_rfe) & !exception_taken;
   assign exception_pending = (except_ibus_err_i | except_ibus_align_i |
     except_illegal_i | except_syscall_i |
     except_dbus_i | except_align_i |
@@ -355,20 +370,16 @@ module or1k_ctrl_cappuccino #(
     except_itlb_miss_i | except_ipagefault_i |
     except_dtlb_miss_i | except_dpagefault_i);
 
-  assign exception = exception_pending &
-    (padv_ctrl & !ctrl_bubble_o | ctrl_stage_exceptions);
+  assign exception = exception_pending & (padv_ctrl & !ctrl_bubble_o | ctrl_stage_exceptions);
 
   assign exception_re = exception & !exception_r & !exception_taken;
 
   assign except_range = (FEATURE_RANGE!="NONE") ? spr_sr[`OR1K_SPR_SR_OVE] &&
-    (spr_sr[`OR1K_SPR_SR_OV] | ctrl_overflow_set_i) &
-    !doing_rfe : 0;
+                        (spr_sr[`OR1K_SPR_SR_OV] | ctrl_overflow_set_i) & !doing_rfe : 0;
 
-  assign deassert_decode_execute_halt = fetch_exception_taken_i &
-    decode_execute_halt;
+  assign deassert_decode_execute_halt = fetch_exception_taken_i & decode_execute_halt;
 
-  assign ctrl_branch_except_pc_o = (ctrl_op_rfe_i | doing_rfe) ? spr_epcr :
-    exception_pc_addr;
+  assign ctrl_branch_except_pc_o = (ctrl_op_rfe_i | doing_rfe) ? spr_epcr : exception_pc_addr;
 
   assign ctrl_epcr_o = ctrl_delay_slot ? pc_ctrl_i - 4 : pc_ctrl_i;
 
@@ -586,12 +597,10 @@ module or1k_ctrl_cappuccino #(
 
 
       wire [`OR1K_FPCSR_ALLF_SIZE-1:0] fpu_allf =
-      ctrl_fpcsr_set_i ? masked_fpres_flags :
-      masked_fpcsr_flags;
+      ctrl_fpcsr_set_i ? masked_fpres_flags : masked_fpcsr_flags;
       `else
       wire [`OR1K_FPCSR_ALLF_SIZE-1:0] fpu_allf =
-      ctrl_fpcsr_set_i ? ctrl_fpcsr_i[`OR1K_FPCSR_ALLF] :
-      spr_fpcsr[`OR1K_FPCSR_ALLF];
+      ctrl_fpcsr_set_i ? ctrl_fpcsr_i[`OR1K_FPCSR_ALLF] : spr_fpcsr[`OR1K_FPCSR_ALLF];
       `endif
 
       assign except_fpu = (~doing_rfe) &
@@ -905,14 +914,14 @@ module or1k_ctrl_cappuccino #(
     .OPTION_IMMU_WAYS(OPTION_IMMU_WAYS),
     .FEATURE_DEBUGUNIT(FEATURE_DEBUGUNIT),
     .FEATURE_PERFCOUNTERS(FEATURE_PERFCOUNTERS),
-    .OPTION_PERFCOUNTERS_NUM  (OPTION_PERFCOUNTERS_NUM),
+    .OPTION_PERFCOUNTERS_NUM(OPTION_PERFCOUNTERS_NUM),
     .FEATURE_MAC(FEATURE_MAC),
     .FEATURE_FPU(FEATURE_FPU), // or1k_cfgrs instance
     .FEATURE_SYSCALL(FEATURE_SYSCALL),
     .FEATURE_TRAP(FEATURE_TRAP),
     .FEATURE_RANGE(FEATURE_RANGE),
-    .FEATURE_DELAYSLOT               ("ENABLED"),
-    .FEATURE_EVBAR                   ("ENABLED")
+    .FEATURE_DELAYSLOT("ENABLED"),
+    .FEATURE_EVBAR("ENABLED")
   )
   or1k_cfgrs (
     // Outputs
