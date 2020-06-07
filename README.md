@@ -7,6 +7,11 @@ The OpenRISC implementation has a 32/64 bit Microarchitecture, 5 stages data pip
 
 ## FRONT-END Open Source Tools
 
+### Library
+```
+sudo apt install libelf-dev
+```
+
 ### Verilator
 SystemVerilog System Description Language Simulator
 
@@ -41,9 +46,9 @@ Verilog Hardware Description Language Simulator
 git clone https://github.com/steveicarus/iverilog
 
 cd iverilog
+sh autoconf.sh
 ./configure
 make
-sh autoconf.sh
 sudo make install
 ```
 
@@ -104,6 +109,16 @@ source SYNTHESIZE-IT
 ```
 
 ## BACK-END Open Source Tools
+
+### Library
+type:
+```
+sudo apt update
+sudo apt upgrade
+
+sudo apt install bison cmake flex freeglut3-dev libcairo2-dev libgsl-dev \
+libncurses-dev libx11-dev m4 python-tk python3-tk swig tcl tcl-dev tk-dev tcsh
+```
 
 ```
 mkdir qflow
@@ -221,15 +236,6 @@ source FLOW-IT
 
 open Microsoft Store and install Ubuntu
 
-type:
-```
-sudo apt update
-sudo apt upgrade
-
-sudo apt install bison cmake flex freeglut3-dev libcairo2-dev libgsl-dev \
-libncurses-dev libx11-dev m4 python-tk python3-tk swig tcl tcl-dev tk-dev tcsh
-```
-
 ### FRONT-END
 
 type:
@@ -238,11 +244,28 @@ sudo apt install verilator
 sudo apt install iverilog
 sudo apt install ghdl
 
+cd /mnt/c/../sim/verilog/regression/wb/iverilog
+source SIMULATE-IT
+
+
 sudo apt install yosys
+
+cd /mnt/c/../synthesis/yosys
+source SYNTHESIZE-IT
 ```
 
 
 ### BACK-END
+
+### Library
+type:
+```
+sudo apt update
+sudo apt upgrade
+
+sudo apt install bison cmake flex freeglut3-dev libcairo2-dev libgsl-dev \
+libncurses-dev libx11-dev m4 python-tk python3-tk swig tcl tcl-dev tk-dev tcsh
+```
 
 type:
 ```
@@ -256,6 +279,11 @@ git clone https://github.com/RTimothyEdwards/qrouter
 git clone https://github.com/RTimothyEdwards/irsim
 git clone https://github.com/RTimothyEdwards/netgen
 git clone https://github.com/RTimothyEdwards/qflow
+```
+
+```
+cd /mnt/c/../synthesis/qflow
+source FLOW-IT
 ```
 
 
