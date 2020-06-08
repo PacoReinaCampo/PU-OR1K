@@ -46,3 +46,4 @@ make clean; make clean_elf-loader; make clean_jtag_vpi; make run-trap; echo -e "
 make clean; make clean_elf-loader; make clean_jtag_vpi; make run-trapdelayslot; echo -e "\ntrapdelayslot test finished\n\n"
  
 make clean; make clean_elf-loader; make clean_jtag_vpi; make run-hello; echo -e "\nhello test finished\n\n"
+make clean; make clean_elf-loader; make clean_jtag_vpi; make run-vmlinux; echo -e "\nvmlinux test finished\n\n"

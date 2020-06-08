@@ -1,0 +1,13 @@
+export PATH=/opt/or1k-elf/bin:${PATH}
+
+git clone https://github.com/PacoReinaCampo/linux
+
+cd linux
+export ARCH=openrisc
+export CROSS_COMPILE=or1k-elf-
+make defconfig
+make
+
+cp vmlinux ../
+cd ..
+rm -rf linux

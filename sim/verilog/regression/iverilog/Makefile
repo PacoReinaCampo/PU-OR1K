@@ -91,6 +91,7 @@ TRAP                 ?= +elf_load=../../../../software/tests/build/or1k/or1k-tra
 TRAPDELAYSLOT        ?= +elf_load=../../../../software/tests/build/or1k/or1k-trapdelayslot
 
 HELLO                ?= +elf_load=../../../../software/hello/hello.elf
+VMLINUX              ?= +elf_load=../../../../software/linux/vmlinux
 
 all:
 	$(VPI_MODULES) $(TARGET)
@@ -230,6 +231,9 @@ run-trapdelayslot: $(VPI_MODULES) $(TARGET)
 
 run-hello: $(VPI_MODULES) $(TARGET)
 	vvp -n -M. -l log/or1k-hello.log $(patsubst %.vpi,-m%,$(VPI_MODULES)) $(TARGET) $(HELLO)
+
+run-vmlinux: $(VPI_MODULES) $(TARGET)
+	vvp -n -M. -l log/or1k-vmlinux.log $(patsubst %.vpi,-m%,$(VPI_MODULES)) $(TARGET) $(VMLINUX)
 
 
 clean:
