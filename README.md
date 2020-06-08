@@ -236,6 +236,16 @@ source FLOW-IT
 
 open Microsoft Store and install Ubuntu
 
+### Library
+type:
+```
+sudo apt update
+sudo apt upgrade
+
+sudo apt install bison cmake flex freeglut3-dev libcairo2-dev libgsl-dev \
+libncurses-dev libx11-dev m4 python-tk python3-tk swig tcl tcl-dev tk-dev tcsh
+```
+
 ### FRONT-END
 
 type:
@@ -257,16 +267,6 @@ source SYNTHESIZE-IT
 
 
 ### BACK-END
-
-### Library
-type:
-```
-sudo apt update
-sudo apt upgrade
-
-sudo apt install bison cmake flex freeglut3-dev libcairo2-dev libgsl-dev \
-libncurses-dev libx11-dev m4 python-tk python3-tk swig tcl tcl-dev tk-dev tcsh
-```
 
 type:
 ```
