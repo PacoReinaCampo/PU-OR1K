@@ -1,5 +1,3 @@
-export PATH=/opt/or1k-elf/bin:${PATH}
-
 rm -rf log
 mkdir log
 

@@ -222,14 +222,14 @@ module or1k_icache #(
     end
 
     for (i = 0; i < OPTION_ICACHE_WAYS; i=i+1) begin : ways
-      assign way_raddr[i] = cpu_adr_i[WAY_WIDTH-1:2];
-      assign way_waddr[i] = wradr_i[WAY_WIDTH-1:2];
-      assign way_din[i] = wrdat_i;
+      assign way_raddr [i] = cpu_adr_i[WAY_WIDTH-1:2];
+      assign way_waddr [i] = wradr_i[WAY_WIDTH-1:2];
+      assign way_din   [i] = wrdat_i;
 
       // compare stored tag with incoming tag and check valid bit
-      assign check_way_tag[i] = tag_way_out[i][TAG_WIDTH-1:0];
-      assign check_way_match[i] = (check_way_tag[i] == tag_tag);
-      assign check_way_valid[i] = tag_way_out[i][TAGMEM_WAY_VALID];
+      assign check_way_tag   [i] = tag_way_out[i][TAG_WIDTH-1:0];
+      assign check_way_match [i] = (check_way_tag[i] == tag_tag);
+      assign check_way_valid [i] = tag_way_out[i][TAGMEM_WAY_VALID];
 
       assign way_hit[i] = check_way_valid[i] & check_way_match[i];
 

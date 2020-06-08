@@ -362,6 +362,7 @@ module or1k_dcache #(
    * determined if a cache hit should cause a refill or if a write should
    * really be executed.
    */
+
   integer w1;
   always @(posedge clk `OR_ASYNC_RST) begin
     if (rst) begin

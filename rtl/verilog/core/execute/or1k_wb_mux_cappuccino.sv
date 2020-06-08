@@ -61,7 +61,7 @@ module or1k_wb_mux_cappuccino #(
     input 			      op_mfspr_i
   );
 
-  reg [OPTION_OPERAND_WIDTH-1:0]      rf_result;
+  reg      [OPTION_OPERAND_WIDTH-1:0] rf_result;
   reg 				      wb_op_mul;
 
   assign rf_result_o = wb_op_mul ? mul_result_i : rf_result;

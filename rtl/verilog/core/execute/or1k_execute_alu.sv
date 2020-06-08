@@ -45,16 +45,16 @@
 module or1k_execute_alu #(
   parameter OPTION_OPERAND_WIDTH = 32,
 
-  parameter FEATURE_OVERFLOW = "NONE",
+  parameter FEATURE_OVERFLOW   = "NONE",
   parameter FEATURE_CARRY_FLAG = "ENABLED",
 
   parameter FEATURE_MULTIPLIER = "THREESTAGE",
-  parameter FEATURE_DIVIDER = "NONE",
+  parameter FEATURE_DIVIDER    = "NONE",
 
   parameter FEATURE_ADDC = "NONE",
-  parameter FEATURE_SRA = "ENABLED",
-  parameter FEATURE_ROR = "NONE",
-  parameter FEATURE_EXT = "NONE",
+  parameter FEATURE_SRA  = "ENABLED",
+  parameter FEATURE_ROR  = "NONE",
+  parameter FEATURE_EXT  = "NONE",
   parameter FEATURE_CMOV = "NONE",
   parameter FEATURE_FFL1 = "NONE",
 
@@ -67,9 +67,9 @@ module or1k_execute_alu #(
   parameter FEATURE_CUST7 = "NONE",
   parameter FEATURE_CUST8 = "NONE",
 
-  parameter FEATURE_FPU    = "NONE", // ENABLED|NONE
+  parameter FEATURE_FPU          = "NONE", // ENABLED|NONE
   parameter OPTION_FTOI_ROUNDING = "CPP", // "CPP" / "IEEE"
-  parameter OPTION_SHIFTER = "BARREL",
+  parameter OPTION_SHIFTER       = "BARREL",
 
   // Pipeline specific internal parameters
   parameter CALCULATE_BRANCH_DEST = "TRUE"
@@ -355,8 +355,8 @@ module or1k_execute_alu #(
         ((a[OPTION_OPERAND_WIDTH-1] ^
           b[OPTION_OPERAND_WIDTH-1]) ?
          ~mul_prod_r[OPTION_OPERAND_WIDTH-1:0] + 1 :
-         mul_prod_r[OPTION_OPERAND_WIDTH-1:0]) :
-        mul_prod_r[OPTION_OPERAND_WIDTH-1:0];
+          mul_prod_r[OPTION_OPERAND_WIDTH-1:0]) :
+          mul_prod_r[OPTION_OPERAND_WIDTH-1:0];
 
       assign mul_unsigned_overflow =  OPTION_OPERAND_WIDTH==64 ? 0 :
         |mul_prod_r[(OPTION_OPERAND_WIDTH*2)-1:OPTION_OPERAND_WIDTH];
@@ -477,7 +477,7 @@ module or1k_execute_alu #(
             div_r <= div_sub[OPTION_OPERAND_WIDTH-1:0];
             div_n <= {div_n[OPTION_OPERAND_WIDTH-2:0], 1'b1};
           end
-          else begin // div_sub < 0
+          else begin
             div_r <= {div_r[OPTION_OPERAND_WIDTH-2:0],
                       div_n[OPTION_OPERAND_WIDTH-1]};
             div_n <= {div_n[OPTION_OPERAND_WIDTH-2:0], 1'b0};
@@ -636,9 +636,9 @@ module or1k_execute_alu #(
       wire op_sra = (opc_alu_shr==`OR1K_ALU_OPC_SECONDARY_SHRT_SRA) && (FEATURE_SRA!="NONE");
       wire op_ror = (opc_alu_shr==`OR1K_ALU_OPC_SECONDARY_SHRT_ROR) && (FEATURE_ROR!="NONE");
 
-      wire [OPTION_OPERAND_WIDTH-1:0] shift_right;
-      wire [OPTION_OPERAND_WIDTH-1:0] shift_lsw;
-      wire [OPTION_OPERAND_WIDTH-1:0] shift_msw;
+      wire [OPTION_OPERAND_WIDTH  -1:0] shift_right;
+      wire [OPTION_OPERAND_WIDTH  -1:0] shift_lsw;
+      wire [OPTION_OPERAND_WIDTH  -1:0] shift_msw;
       wire [OPTION_OPERAND_WIDTH*2-1:0] shift_wide;
 
       // Bit-reverse on left shift, perform right shift,
@@ -814,23 +814,23 @@ module or1k_execute_alu #(
   // Carry and overflow flag generation
   assign overflow_set_o = FEATURE_OVERFLOW!="NONE" &
     (op_add_i & adder_signed_overflow |
-      op_mul_signed_i & mul_signed_overflow |
-      op_div_signed_i & div_by_zero);
+     op_mul_signed_i & mul_signed_overflow |
+     op_div_signed_i & div_by_zero);
 
   assign overflow_clear_o = FEATURE_OVERFLOW!="NONE" &
     (op_add_i & !adder_signed_overflow |
-      op_mul_signed_i & !mul_signed_overflow |
-      op_div_signed_i & !div_by_zero);
+     op_mul_signed_i & !mul_signed_overflow |
+     op_div_signed_i & !div_by_zero);
 
   assign carry_set_o = FEATURE_CARRY_FLAG!="NONE" &
     (op_add_i & adder_unsigned_overflow |
-      op_mul_unsigned_i & mul_unsigned_overflow |
-      op_div_unsigned_i & div_by_zero);
+     op_mul_unsigned_i & mul_unsigned_overflow |
+     op_div_unsigned_i & div_by_zero);
 
   assign carry_clear_o = FEATURE_CARRY_FLAG!="NONE" &
     (op_add_i & !adder_unsigned_overflow |
-      op_mul_unsigned_i & !mul_unsigned_overflow |
-      op_div_unsigned_i & !div_by_zero);
+     op_mul_unsigned_i & !mul_unsigned_overflow |
+     op_div_unsigned_i & !div_by_zero);
 
   // Stall logic for multicycle ALU operations
   assign alu_stall = op_div_i & !div_valid |

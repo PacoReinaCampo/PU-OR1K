@@ -44,9 +44,9 @@
 
 module or1k_dmmu #(
   parameter FEATURE_DMMU_HW_TLB_RELOAD = "NONE",
-  parameter OPTION_OPERAND_WIDTH = 32,
-  parameter OPTION_DMMU_SET_WIDTH = 6,
-  parameter OPTION_DMMU_WAYS = 1
+  parameter OPTION_OPERAND_WIDTH       = 32,
+  parameter OPTION_DMMU_SET_WIDTH      = 6,
+  parameter OPTION_DMMU_WAYS           = 1
 )
   (
     input                                 clk,
@@ -214,7 +214,7 @@ module or1k_dmmu #(
     !tlb_reload_busy_o;
 
   assign spr_way_idx_full = {spr_bus_addr_i[10], spr_bus_addr_i[8]};
-  assign spr_way_idx = spr_way_idx_full[WAYS_WIDTH-1:0];
+  assign spr_way_idx      = spr_way_idx_full[WAYS_WIDTH-1:0];
 
   always @(posedge clk `OR_ASYNC_RST) begin
     if (rst) begin
@@ -310,19 +310,19 @@ module or1k_dmmu #(
       always @(posedge clk) begin
         if (tlb_reload_pagefault_clear_i)
           tlb_reload_pagefault <= 0;
-        dtlb_trans_reload_we <= 0;
-        dtlb_trans_reload_din <= 0;
-        dtlb_match_reload_we <= 0;
-        dtlb_match_reload_din <= 0;
+        dtlb_trans_reload_we   <= 0;
+        dtlb_trans_reload_din  <= 0;
+        dtlb_match_reload_we   <= 0;
+        dtlb_match_reload_din  <= 0;
 
         case (tlb_reload_state)
           TLB_IDLE: begin
             tlb_reload_huge <= 0;
             tlb_reload_req_o <= 0;
             if (do_reload) begin
-              tlb_reload_req_o <= 1;
+              tlb_reload_req_o  <= 1;
               tlb_reload_addr_o <= {dmmucr[31:10], virt_addr_match_i[31:24], 2'b00};
-              tlb_reload_state <= TLB_GET_PTE_POINTER;
+              tlb_reload_state  <= TLB_GET_PTE_POINTER;
             end
           end
 
@@ -337,17 +337,17 @@ module or1k_dmmu #(
             if (tlb_reload_ack_i) begin
               if (tlb_reload_data_i[31:13] == 0) begin
                 tlb_reload_pagefault <= 1;
-                tlb_reload_req_o <= 0;
-                tlb_reload_state <= TLB_IDLE;
+                tlb_reload_req_o     <= 0;
+                tlb_reload_state     <= TLB_IDLE;
               end
               else if (tlb_reload_data_i[9]) begin
-                tlb_reload_huge <= 1;
+                tlb_reload_huge  <= 1;
                 tlb_reload_req_o <= 0;
                 tlb_reload_state <= TLB_GET_PTE;
               end
               else begin
                 tlb_reload_addr_o <= {tlb_reload_data_i[31:13], virt_addr_match_i[23:13], 2'b00};
-                tlb_reload_state <= TLB_GET_PTE;
+                tlb_reload_state  <= TLB_GET_PTE;
               end
             end
           end
@@ -371,21 +371,20 @@ module or1k_dmmu #(
                 // SRE = 1
                 dtlb_trans_reload_din[8] <= 1'b1;
                 // UWE = W & U
-                dtlb_trans_reload_din[7] <= tlb_reload_data_i[7] &
-                tlb_reload_data_i[6];
+                dtlb_trans_reload_din[7] <= tlb_reload_data_i[7] & tlb_reload_data_i[6];
                 // URE = U
                 dtlb_trans_reload_din[6] <= tlb_reload_data_i[6];
                 // Dirty, Accessed, Weakly-Ordered-Memory, Writeback cache,
                 // Cache inhibit, Cache coherent
                 dtlb_trans_reload_din[5:0] <= tlb_reload_data_i[5:0];
-                dtlb_trans_reload_we <= 1;
+                dtlb_trans_reload_we       <= 1;
 
                 // Match register generation.
                 // VPN
                 dtlb_match_reload_din[31:13] <= virt_addr_match_i[31:13];
                 // Valid
                 dtlb_match_reload_din[0] <= 1;
-                dtlb_match_reload_we <= 1;
+                dtlb_match_reload_we     <= 1;
 
                 tlb_reload_state <= TLB_READ;
               end
@@ -408,14 +407,15 @@ module or1k_dmmu #(
     end
     else begin
       assign tlb_reload_pagefault_o = 0;
-      assign tlb_reload_busy_o = 0;
+      assign tlb_reload_busy_o      = 0;
+
       always @(posedge clk) begin
-        tlb_reload_req_o <= 0;
-        tlb_reload_addr_o <= 0;
-        tlb_reload_pagefault <= 0;
-        dtlb_trans_reload_we <= 0;
+        tlb_reload_req_o      <= 0;
+        tlb_reload_addr_o     <= 0;
+        tlb_reload_pagefault  <= 0;
+        dtlb_trans_reload_we  <= 0;
         dtlb_trans_reload_din <= 0;
-        dtlb_match_reload_we <= 0;
+        dtlb_match_reload_we  <= 0;
         dtlb_match_reload_din <= 0;
       end
     end

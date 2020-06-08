@@ -136,7 +136,7 @@ module or1k_decode #(
 
     // Sync operations
     output                            decode_op_msync_o,
-    output [`OR1K_FPUOP_WIDTH-1:0]    decode_op_fpu_o,
+    output [`OR1K_FPUOP_WIDTH   -1:0] decode_op_fpu_o,
 
 
     // Adder control logic
@@ -148,11 +148,11 @@ module or1k_decode #(
     output                            decode_except_syscall_o,
     output                            decode_except_trap_o,
 
-    output [`OR1K_OPCODE_WIDTH-1:0]   decode_opc_insn_o
+    output [`OR1K_OPCODE_WIDTH  -1:0] decode_opc_insn_o
   );
 
-  wire [`OR1K_OPCODE_WIDTH- 1:0]     opc_insn;
-  wire [`OR1K_ALU_OPC_WIDTH-1:0]     opc_alu;
+  wire [`OR1K_OPCODE_WIDTH  -1:0]    opc_insn;
+  wire [`OR1K_ALU_OPC_WIDTH -1:0]    opc_alu;
 
   wire [OPTION_OPERAND_WIDTH-1:0]    imm_sext;
   wire                               imm_sext_sel;
