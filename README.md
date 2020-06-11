@@ -5,18 +5,19 @@ A Processing Unit (PU) is an electronic system within a computer that carries ou
 The OpenRISC implementation has a 32/64 bit Microarchitecture, 5 stages data pipeline and an Instruction Set Architecture based on Reduced Instruction Set Computer. Compatible with Wishbone Bus. Only For Researching.
 
 
-## FRONT-END Open Source Tools
+## 1. FRONT-END Open Source Tools
 
-### Library
+### 1.1. Library
 ```
 sudo apt install libelf-dev
 ```
 
-### Verilator
+### 1.2. Verilator
 SystemVerilog System Description Language Simulator
 
 *A System Description Language Simulator (translator) is a computer program that translates computer code written in a Programming Language (the source language) into a Hardware Design Language (the target language). The compiler is primarily used for programs that translate source code from a high-level programming language to a low-level language to create an executable program.*
 
+type:
 ```
 git clone http://git.veripool.org/git/verilator
 
@@ -37,11 +38,12 @@ cd sim/verilog/regression/ahb3/vtor
 source SIMULATE-IT
 ```
 
-### Icarus Verilog
+### 1.3. Icarus Verilog
 Verilog Hardware Description Language Simulator
 
 *A Hardware Description Language Simulator uses mathematical models to replicate the behavior of an actual hardware device. Simulation software allows for modeling of circuit operation and is an invaluable analysis tool. Simulating a circuit’s behavior before actually building it can greatly improve design efficiency by making faulty designs known as such, and providing insight into the behavior of electronics circuit designs.*
 
+type:
 ```
 git clone https://github.com/steveicarus/iverilog
 
@@ -62,11 +64,12 @@ cd sim/verilog/regression/ahb3/iverilog
 source SIMULATE-IT
 ```
 
-### GHDL
+### 1.4. GHDL
 VHDL Hardware Description Language Simulator
 
 *A Hardware Description Language Simulator uses mathematical models to replicate the behavior of an actual hardware device. Simulation software allows for modeling of circuit operation and is an invaluable analysis tool. Simulating a circuit’s behavior before actually building it can greatly improve design efficiency by making faulty designs known as such, and providing insight into the behavior of electronics circuit designs.*
 
+type:
 ```
 git clone https://github.com/ghdl/ghdl
 
@@ -86,7 +89,7 @@ cd sim/vhdl/regression/ahb3/ghdl
 source SIMULATE-IT
 ```
 
-### Yosys-ABC
+### 1.5. Yosys-ABC
 Verilog Hardware Description Language Synthesizer
 
 *A Hardware Description Language Synthesizer turns a RTL implementation into a Logical Gate Level implementation. Logical design is a step in the standard design cycle in which the functional design of an electronic circuit is converted into the representation which captures logic operations, arithmetic operations, control flow, etc. In EDA parts of the logical design is automated using synthesis tools based on the behavioral description of the circuit.*
@@ -95,6 +98,7 @@ Hardware Description Language Optimizer
 
 *A Hardware Description Language Optimizer finds an equivalent representation of the specified logic circuit under specified constraints (minimum area, pre-specified delay). This tool combines scalable logic optimization based on And-Inverter Graphs (AIGs), optimal-delay DAG-based technology mapping for look-up tables and standard cells, and innovative algorithms for sequential synthesis and verification.*
 
+type:
 ```
 git clone https://github.com/YosysHQ/yosys
 
@@ -108,9 +112,9 @@ cd synthesis/yosys
 source SYNTHESIZE-IT
 ```
 
-## BACK-END Open Source Tools
+## 2. BACK-END Open Source Tools
 
-### Library
+### 2.1. Library
 type:
 ```
 sudo apt update
@@ -125,7 +129,7 @@ mkdir qflow
 cd qflow
 ```
 
-### Magic
+### 2.2. Magic
 Floor-Planner
 
 *A Floor-Planner of an Integrated Circuit (IC) is a schematic representation of tentative placement of its major functional blocks. In modern electronic design process floor-plans are created during the floor-planning design stage, an early stage in the hierarchical approach to Integrated Circuit design. Depending on the design methodology being followed, the actual definition of a floor-plan may differ.*
@@ -138,6 +142,7 @@ Standard Cell Editor
 
 *A Standard Cell Editor allows to print a set of standard cells. The standard cell methodology is an abstraction, whereby a low-level VLSI layout is encapsulated into a logical representation. A standard cell is a group of transistor and interconnect structures that provides a boolean logic function (AND, OR, XOR, XNOR, inverters) or a storage function (flipflop or latch).*
 
+type:
 ```
 git clone https://github.com/RTimothyEdwards/magic
 
@@ -147,13 +152,15 @@ make
 sudo make install
 ```
 
-### Graywolf
+### 2.2. Graywolf
 Standard Cell Placer
 
 *A Standard Cell Placer takes a given synthesized circuit netlist together with a technology library and produces a valid placement layout. The layout is optimized according to the aforementioned objectives and ready for cell resizing and buffering, a step essential for timing and signal integrity satisfaction. Physical design flow are iterated a number of times until design closure is achieved.*
 
+type:
 ```
 git clone https://github.com/rubund/graywolf
+
 cd graywolf
 mkdir build
 cd build
@@ -162,13 +169,15 @@ make
 sudo make install
 ```
 
-### OpenSTA
+### 2.3. OpenSTA
 Standard Cell Timing-Analizer
 
 *A Standard Cell Timing-Analizer is a simulation method of computing the expected timing of a digital circuit without requiring a simulation of the full circuit. High-performance integrated circuits have traditionally been characterized by the clock frequency at which they operate. Measuring the ability of a circuit to operate at the specified speed requires an ability to measure, during the design process, its delay at numerous steps.*
 
+type:
 ```
 git clone https://github.com/The-OpenROAD-Project/OpenSTA
+
 cd OpenSTA
 mkdir build
 cd build
@@ -177,49 +186,58 @@ make
 sudo make install
 ```
 
-### Qrouter
+### 2.4. Qrouter
 Standard Cell Router
 
 *A Standard Cell Router takes pre-existing polygons consisting of pins on cells, and pre-existing wiring called pre-routes. Each of these polygons are associated with a net. The primary task of the router is to create geometries such that all terminals assigned to the same net are connected, no terminals assigned to different nets are connected, and all design rules are obeyed.*
 
+type:
 ```
 git clone https://github.com/RTimothyEdwards/qrouter
+
 cd qrouter
 ./configure
 make
 sudo make install
 ```
 
-### Irsim
+### 2.5. Irsim
 Standard Cell Simulator
 
 *A Standard Cell Simulator treats transistors as ideal switches. Extracted capacitance and lumped resistance values are used to make the switch a little bit more realistic than the ideal, using the RC time constants to predict the relative timing of events. This simulator represents a circuit in terms of its exact transistor structure but describes the electrical behavior in a highly idealized way.*
 
+type:
 ```
 git clone https://github.com/RTimothyEdwards/irsim
+
 cd irsim
 ./configure
 make
 sudo make install
 ```
 
-### Netgen
+### 2.6. Netgen
 Standard Cell Verifier
 
 *A Standard Cell Verifier compares netlists, a process known as LVS (Layout vs. Schematic). This step ensures that the geometry that has been laid out matches the expected circuit. The greatest need for LVS is in large analog or mixed-signal circuits that cannot be simulated in reasonable time. LVS can be done faster than simulation, and provides feedback that makes it easier to find errors.*
 
+type:
 ```
 git clone https://github.com/RTimothyEdwards/netgen
+
 cd netgen
 ./configure
 make
 sudo make install
 ```
 
-### Qflow
+### 2.7. Qflow
 Back-End Workflow
+
+type:
 ```
 git clone https://github.com/RTimothyEdwards/qflow
+
 cd qflow
 ./configure
 make
@@ -232,11 +250,15 @@ source FLOW-IT
 ```
 
 
-## for WINDOWS users!
+## 3. for WINDOWS users!
 
-open Microsoft Store and install Ubuntu
+1. Settings → Apps → Apps & features → Related settings, Programs and
+Features → Turn Windows features on or off → Windows Subsystem for
+Linux
 
-### Library
+2. Microsoft Store → INSTALL UBUNTU
+
+### 3.1. Library
 type:
 ```
 sudo apt update
@@ -246,7 +268,7 @@ sudo apt install bison cmake flex freeglut3-dev libcairo2-dev libgsl-dev \
 libncurses-dev libx11-dev m4 python-tk python3-tk swig tcl tcl-dev tk-dev tcsh
 ```
 
-### FRONT-END
+### 3.2. FRONT-END
 
 type:
 ```
@@ -266,7 +288,7 @@ source SYNTHESIZE-IT
 ```
 
 
-### BACK-END
+### 3.3. BACK-END
 
 type:
 ```
@@ -287,8 +309,9 @@ cd /mnt/c/../synthesis/qflow
 source FLOW-IT
 ```
 
+## 4. PARAMETERS
 
-## Basic parameters
+### 4.1. Basic parameters
 
 | Parameter            | Description                 | Default      | Values       |
 | -------------------- | --------------------------- | ------------ | -------------|
@@ -297,7 +320,7 @@ source FLOW-IT
 | OPTION_RESET_PC      | Program Counter upon reset  | `0x100`      | N            |
 
 
-## Caching parameters
+### 4.2. Caching parameters
 
 | Parameter                 | Description                       | Default | Values    |
 | ------------------------- | --------------------------------- | ------- | --------- |
@@ -314,7 +337,7 @@ source FLOW-IT
 | OPTION_ICACHE_LIMIT_WIDTH | Maximum address width             | 32      | `n`       |
 
 
-## Memory Management Unit (MMU) parameters
+### 4.3. Memory Management Unit (MMU) parameters
 
 | Parameter                  | Description                    | Default | Values    |
 | -------------------------- | ------------------------------ | ------- | --------- |
@@ -328,7 +351,7 @@ source FLOW-IT
 | OPTION_IMMU_WAYS           | Number of ways per set         | 1       | `n`       |
 
 
-## System bus parameters
+### 4.4. System bus parameters
 
 | Parameter                       | Description                        | Default            |
 | ------------------------------- | ---------------------------------- | ------------------ |
@@ -339,7 +362,7 @@ source FLOW-IT
 | DBUS_WB_TYPE                    | Data bus interface type option     | `CLASSIC`          |
 
 
-## Hardware unit configuration parameters
+### 4.5. Hardware unit configuration parameters
 
 | Parameter                | Description                              | Default   |
 | ------------------------ | ---------------------------------------- | --------- |
@@ -369,7 +392,7 @@ The default (`CPP`) value of OPTION_FTOI_ROUNDING forces `toward zero` rounding 
 in according with `rounding mode` bits of FPCSR.*
 
 
-## Exception handling options
+### 4.6. Exception handling options
 
 | Parameter        | Description                                     | Default   |
 | ---------------- | ----------------------------------------------- | --------- |
@@ -378,7 +401,7 @@ in according with `rounding mode` bits of FPCSR.*
 | FEATURE_OVERFLOW | Enable checking and raising overflow exceptions | `ENABLED` |
 
 
-## ALU configuration options
+### 4.7. ALU configuration options
 
 | Parameter          | Description                                | Default      |
 | ------------------ | ------------------------------------------ | ------------ |
@@ -388,7 +411,7 @@ in according with `rounding mode` bits of FPCSR.*
 | FEATURE_CARRY_FLAG | Enable checking and setting the carry flag | `ENABLED`    |
 
 
-## Instruction enabling options
+### 4.8. Instruction enabling options
 
 | Parameter       | Description                                     | Default   |
 | --------------- | ----------------------------------------------- | --------- |
