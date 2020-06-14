@@ -16,7 +16,7 @@
 #include <argp.h>
 #include <verilator_tb_utils.h>
 
-#include "Vorpsoc_top__Syms.h"
+#include "Vor1k_pu__Syms.h"
 
 static bool done;
 
@@ -84,9 +84,9 @@ int main(int argc, char **argv, char **env)
 
 	Verilated::commandArgs(argc, argv);
 
-	Vorpsoc_top* top = new Vorpsoc_top;
+	Vor1k_pu* top = new Vor1k_pu;
 	VerilatorTbUtils* tbUtils = 0;
-		new VerilatorTbUtils(top->orpsoc_top->wb_bfm_memory0->ram0->mem);
+		//new VerilatorTbUtils(top->or1k_pu->wb_bfm_memory0->ram0->mem);
 
 	parse_args(argc, argv, tbUtils);
 
@@ -107,8 +107,8 @@ int main(int argc, char **argv, char **env)
 
 		tbUtils->doJTAG(&top->tms_pad_i, &top->tdi_pad_i, &top->tck_pad_i, top->tdo_pad_o);
 
-		insn = top->orpsoc_top->mor1kx0->mor1kx_cpu->monitor_execute_insn;
-		ex_pc = top->orpsoc_top->mor1kx0->mor1kx_cpu->monitor_execute_pc;
+		//insn = top->or1k_pu->core->or1k_cpu->monitor_execute_insn;
+		//ex_pc = top->or1k_pu->core->or1k_cpu->monitor_execute_pc;
 
 		if (insn == (0x15000000 | NOP_EXIT) || insn == (0x15000000 | NOP_EXIT_SILENT)) {
 			printf("Success! Got NOP_EXIT. Exiting (%lu)\n",

@@ -1,105 +1,93 @@
 --Mdir .
 --cc
 -LDFLAGS -lelf
-+incdir+../src/adv_debug_sys_3.1.0-r1/Hardware/adv_dbg_if/rtl/verilog
--CFLAGS -I../src/adv_debug_sys_3.1.0-r1/Hardware/adv_dbg_if/rtl/verilog
-+incdir+../src/elf-loader_1.0.2
--CFLAGS -I../src/elf-loader_1.0.2
-+incdir+../src/mor1kx_5.0-r2/rtl/verilog
--CFLAGS -I../src/mor1kx_5.0-r2/rtl/verilog
-+incdir+../src/uart16550_1.5.5-r1/rtl/verilog
--CFLAGS -I../src/uart16550_1.5.5-r1/rtl/verilog
-+incdir+../src/wb_common_1.0.3
--CFLAGS -I../src/wb_common_1.0.3
-+incdir+../src/verilator_tb_utils_0
--CFLAGS -I../src/verilator_tb_utils_0
-+incdir+../src/mor1kx-generic_0/rtl/verilog
--CFLAGS -I../src/mor1kx-generic_0/rtl/verilog
-+incdir+../src/mor1kx-generic_0/bench/verilog/include
--CFLAGS -I../src/mor1kx-generic_0/bench/verilog/include
-../src/adv_debug_sys_3.1.0-r1/Hardware/adv_dbg_if/rtl/verilog/adbg_wb_biu.v
-../src/adv_debug_sys_3.1.0-r1/Hardware/adv_dbg_if/rtl/verilog/adbg_or1k_status_reg.v
-../src/adv_debug_sys_3.1.0-r1/Hardware/adv_dbg_if/rtl/verilog/adbg_jsp_biu.v
-../src/adv_debug_sys_3.1.0-r1/Hardware/adv_dbg_if/rtl/verilog/adbg_or1k_module.v
-../src/adv_debug_sys_3.1.0-r1/Hardware/adv_dbg_if/rtl/verilog/syncflop.v
-../src/adv_debug_sys_3.1.0-r1/Hardware/adv_dbg_if/rtl/verilog/adbg_crc32.v
-../src/adv_debug_sys_3.1.0-r1/Hardware/adv_dbg_if/rtl/verilog/adbg_jsp_module.v
-../src/adv_debug_sys_3.1.0-r1/Hardware/adv_dbg_if/rtl/verilog/adbg_top.v
-../src/adv_debug_sys_3.1.0-r1/Hardware/adv_dbg_if/rtl/verilog/bytefifo.v
-../src/adv_debug_sys_3.1.0-r1/Hardware/adv_dbg_if/rtl/verilog/adbg_or1k_biu.v
-../src/adv_debug_sys_3.1.0-r1/Hardware/adv_dbg_if/rtl/verilog/adbg_or1k_defines.v
-../src/adv_debug_sys_3.1.0-r1/Hardware/adv_dbg_if/rtl/verilog/syncreg.v
-../src/adv_debug_sys_3.1.0-r1/Hardware/adv_dbg_if/rtl/verilog/adbg_wb_module.v
-../src/cdc_utils_0.1/rtl/verilog/sync2_pgen.v
-../src/cdc_utils_0.1/rtl/verilog/cc561.v
-../src/jtag_tap_1.13-r1/tap/rtl/verilog/tap_top.v
-../src/mor1kx_5.0-r2/rtl/verilog/mor1kx_branch_predictor_gshare.v
-../src/mor1kx_5.0-r2/rtl/verilog/mor1kx_branch_predictor_simple.v
-../src/mor1kx_5.0-r2/rtl/verilog/mor1kx_branch_predictor_saturation_counter.v
-../src/mor1kx_5.0-r2/rtl/verilog/mor1kx_branch_prediction.v
-../src/mor1kx_5.0-r2/rtl/verilog/mor1kx_bus_if_wb32.v
-../src/mor1kx_5.0-r2/rtl/verilog/mor1kx_cache_lru.v
-../src/mor1kx_5.0-r2/rtl/verilog/mor1kx_cfgrs.v
-../src/mor1kx_5.0-r2/rtl/verilog/mor1kx_cpu_cappuccino.v
-../src/mor1kx_5.0-r2/rtl/verilog/mor1kx_cpu_espresso.v
-../src/mor1kx_5.0-r2/rtl/verilog/mor1kx_cpu_prontoespresso.v
-../src/mor1kx_5.0-r2/rtl/verilog/mor1kx_cpu.v
-../src/mor1kx_5.0-r2/rtl/verilog/mor1kx_ctrl_cappuccino.v
-../src/mor1kx_5.0-r2/rtl/verilog/mor1kx_ctrl_espresso.v
-../src/mor1kx_5.0-r2/rtl/verilog/mor1kx_ctrl_prontoespresso.v
-../src/mor1kx_5.0-r2/rtl/verilog/mor1kx_dcache.v
-../src/mor1kx_5.0-r2/rtl/verilog/mor1kx_decode_execute_cappuccino.v
-../src/mor1kx_5.0-r2/rtl/verilog/mor1kx_decode.v
-../src/mor1kx_5.0-r2/rtl/verilog/mor1kx_dmmu.v
-../src/mor1kx_5.0-r2/rtl/verilog/mor1kx_execute_alu.v
-../src/mor1kx_5.0-r2/rtl/verilog/mor1kx_execute_ctrl_cappuccino.v
-../src/mor1kx_5.0-r2/rtl/verilog/mor1kx_fetch_cappuccino.v
-../src/mor1kx_5.0-r2/rtl/verilog/mor1kx_fetch_espresso.v
-../src/mor1kx_5.0-r2/rtl/verilog/mor1kx_fetch_prontoespresso.v
-../src/mor1kx_5.0-r2/rtl/verilog/mor1kx_fetch_tcm_prontoespresso.v
-../src/mor1kx_5.0-r2/rtl/verilog/mor1kx_icache.v
-../src/mor1kx_5.0-r2/rtl/verilog/mor1kx_immu.v
-../src/mor1kx_5.0-r2/rtl/verilog/mor1kx_lsu_cappuccino.v
-../src/mor1kx_5.0-r2/rtl/verilog/mor1kx_lsu_espresso.v
-../src/mor1kx_5.0-r2/rtl/verilog/mor1kx_pcu.v
-../src/mor1kx_5.0-r2/rtl/verilog/mor1kx_pic.v
-../src/mor1kx_5.0-r2/rtl/verilog/mor1kx_rf_cappuccino.v
-../src/mor1kx_5.0-r2/rtl/verilog/mor1kx_rf_espresso.v
-../src/mor1kx_5.0-r2/rtl/verilog/mor1kx_simple_dpram_sclk.v
-../src/mor1kx_5.0-r2/rtl/verilog/mor1kx_store_buffer.v
-../src/mor1kx_5.0-r2/rtl/verilog/mor1kx_ticktimer.v
-../src/mor1kx_5.0-r2/rtl/verilog/mor1kx_true_dpram_sclk.v
-../src/mor1kx_5.0-r2/rtl/verilog/mor1kx.v
-../src/mor1kx_5.0-r2/rtl/verilog/mor1kx_wb_mux_cappuccino.v
-../src/mor1kx_5.0-r2/rtl/verilog/mor1kx_wb_mux_espresso.v
-../src/mor1kx_5.0-r2/rtl/verilog/pfpu32/pfpu32_addsub.v
-../src/mor1kx_5.0-r2/rtl/verilog/pfpu32/pfpu32_cmp.v
-../src/mor1kx_5.0-r2/rtl/verilog/pfpu32/pfpu32_f2i.v
-../src/mor1kx_5.0-r2/rtl/verilog/pfpu32/pfpu32_i2f.v
-../src/mor1kx_5.0-r2/rtl/verilog/pfpu32/pfpu32_muldiv.v
-../src/mor1kx_5.0-r2/rtl/verilog/pfpu32/pfpu32_rnd.v
-../src/mor1kx_5.0-r2/rtl/verilog/pfpu32/pfpu32_top.v
-../src/uart16550_1.5.5-r1/rtl/verilog/raminfr.v
-../src/uart16550_1.5.5-r1/rtl/verilog/uart_receiver.v
-../src/uart16550_1.5.5-r1/rtl/verilog/uart_regs.v
-../src/uart16550_1.5.5-r1/rtl/verilog/uart_rfifo.v
-../src/uart16550_1.5.5-r1/rtl/verilog/uart_sync_flops.v
-../src/uart16550_1.5.5-r1/rtl/verilog/uart_tfifo.v
-../src/uart16550_1.5.5-r1/rtl/verilog/uart_top.v
-../src/uart16550_1.5.5-r1/rtl/verilog/uart_transmitter.v
-../src/uart16550_1.5.5-r1/rtl/verilog/uart_wb.v
-../src/verilog-arbiter_0-r3/src/arbiter.v
-../src/wb_intercon_1.2.2-r1/rtl/verilog/wb_cdc.v
-../src/wb_intercon_1.2.2-r1/rtl/verilog/wb_arbiter.v
-../src/wb_intercon_1.2.2-r1/rtl/verilog/wb_data_resize.v
-../src/wb_intercon_1.2.2-r1/rtl/verilog/wb_mux.v
-../src/wb_ram_1.1/rtl/verilog/wb_ram.v
-../src/wb_ram_1.1/rtl/verilog/wb_ram_generic.v
-../src/mor1kx-generic_0/rtl/verilog/or1k_pu.v
-../src/mor1kx-generic_0/rtl/verilog/wb_intercon.v
++incdir+../../../../software/elf-loader
+-CFLAGS -I../../../../software/elf-loader
++incdir+../../../../bench/cpp
+-CFLAGS -I../../../../bench/cpp
++incdir+../../../../dbg/rtl/verilog/pu/or1k/wb/pkg
+-CFLAGS -I../../../../dbg/rtl/verilog/pu/or1k/wb/pkg
++incdir+../../../../msi/rtl/verilog/wb/core
+-CFLAGS -I../../../../msi/rtl/verilog/wb/core
++incdir+../../../../msi/rtl/verilog/wb/pkg
+-CFLAGS -I../../../../msi/rtl/verilog/wb/pkg
++incdir+../../../../rtl/verilog/pkg
+-CFLAGS -I../../../../rtl/verilog/pkg
++incdir+../../../../uart/rtl/verilog/wb/pkg
+-CFLAGS -I../../../../uart/rtl/verilog/wb/pkg
+../../../../dbg/bench/verilog/pu/or1k/wb/debug/jtag_tap/tap_top.sv
+../../../../dbg/rtl/verilog/pu/or1k/wb/pkg/adbg_or1k_defines.sv
+../../../../dbg/rtl/verilog/pu/or1k/wb/core/adbg_bytefifo.sv
+../../../../dbg/rtl/verilog/pu/or1k/wb/core/adbg_crc32.sv
+../../../../dbg/rtl/verilog/pu/or1k/wb/core/adbg_jsp_biu.sv
+../../../../dbg/rtl/verilog/pu/or1k/wb/core/adbg_jsp_module.sv
+../../../../dbg/rtl/verilog/pu/or1k/wb/core/adbg_or1k_biu.sv
+../../../../dbg/rtl/verilog/pu/or1k/wb/core/adbg_or1k_module.sv
+../../../../dbg/rtl/verilog/pu/or1k/wb/core/adbg_or1k_status_reg.sv
+../../../../dbg/rtl/verilog/pu/or1k/wb/core/adbg_syncflop.sv
+../../../../dbg/rtl/verilog/pu/or1k/wb/core/adbg_syncreg.sv
+../../../../dbg/rtl/verilog/pu/or1k/wb/core/adbg_top.sv
+../../../../dbg/rtl/verilog/pu/or1k/wb/core/adbg_wb_biu.sv
+../../../../dbg/rtl/verilog/pu/or1k/wb/core/adbg_wb_module.sv
+../../../../msi/rtl/verilog/wb/arbiter/mpsoc_msi_arbiter.sv
+../../../../msi/rtl/verilog/wb/cdc/mpsoc_msi_wb_cc561.sv
+../../../../msi/rtl/verilog/wb/cdc/mpsoc_msi_wb_cdc.sv
+../../../../msi/rtl/verilog/wb/cdc/mpsoc_msi_wb_sync2_pgen.sv
+../../../../msi/rtl/verilog/wb/core/mpsoc_msi_wb_arbiter.sv
+../../../../msi/rtl/verilog/wb/core/mpsoc_msi_wb_data_resize.sv
+../../../../msi/rtl/verilog/wb/core/mpsoc_msi_wb_interface.sv
+../../../../msi/rtl/verilog/wb/core/mpsoc_msi_wb_mux.sv
+../../../../rtl/verilog/core/control/or1k_cfgrs.sv
+../../../../rtl/verilog/core/control/or1k_ctrl_cappuccino.sv
+../../../../rtl/verilog/core/control/or1k_pcu.sv
+../../../../rtl/verilog/core/control/or1k_pic.sv
+../../../../rtl/verilog/core/control/or1k_ticktimer.sv
+../../../../rtl/verilog/core/decode/or1k_decode.sv
+../../../../rtl/verilog/core/execute/or1k_execute_alu.sv
+../../../../rtl/verilog/core/execute/or1k_execute_ctrl_cappuccino.sv
+../../../../rtl/verilog/core/execute/or1k_rf_cappuccino.sv
+../../../../rtl/verilog/core/execute/or1k_wb_mux_cappuccino.sv
+../../../../rtl/verilog/core/execute/pfpu32/pfpu32_addsub.sv
+../../../../rtl/verilog/core/execute/pfpu32/pfpu32_cmp.sv
+../../../../rtl/verilog/core/execute/pfpu32/pfpu32_f2i.sv
+../../../../rtl/verilog/core/execute/pfpu32/pfpu32_i2f.sv
+../../../../rtl/verilog/core/execute/pfpu32/pfpu32_muldiv.sv
+../../../../rtl/verilog/core/execute/pfpu32/pfpu32_rnd.sv
+../../../../rtl/verilog/core/execute/pfpu32/pfpu32_top.sv
+../../../../rtl/verilog/core/fetch/or1k_cache_lru.sv
+../../../../rtl/verilog/core/fetch/or1k_fetch_cappuccino.sv
+../../../../rtl/verilog/core/fetch/or1k_icache.sv
+../../../../rtl/verilog/core/fetch/or1k_immu.sv
+../../../../rtl/verilog/core/memory/or1k_dcache.sv
+../../../../rtl/verilog/core/memory/or1k_dmmu.sv
+../../../../rtl/verilog/core/memory/or1k_lsu_cappuccino.sv
+../../../../rtl/verilog/core/memory/or1k_store_buffer.sv
+../../../../rtl/verilog/core/or1k_branch_prediction.sv
+../../../../rtl/verilog/core/or1k_branch_predictor_gshare.sv
+../../../../rtl/verilog/core/or1k_branch_predictor_saturation_counter.sv
+../../../../rtl/verilog/core/or1k_branch_predictor_simple.sv
+../../../../rtl/verilog/core/or1k_bus_if_wb32.sv
+../../../../rtl/verilog/core/or1k_core.sv
+../../../../rtl/verilog/core/or1k_cpu_cappuccino.sv
+../../../../rtl/verilog/core/or1k_cpu.sv
+../../../../rtl/verilog/core/or1k_decode_execute_cappuccino.sv
+../../../../rtl/verilog/memory/or1k_simple_dpram_sclk.sv
+../../../../rtl/verilog/memory/or1k_true_dpram_sclk.sv
+../../../../rtl/verilog/pu/or1k_pu.sv
+../../../../spram/rtl/verilog/wb/core/mpsoc_wb_ram_generic.sv
+../../../../spram/rtl/verilog/wb/core/mpsoc_wb_spram.sv
+../../../../uart/rtl/verilog/wb/core/mpsoc_wb_raminfr.sv
+../../../../uart/rtl/verilog/wb/core/mpsoc_wb_uart_peripheral_bridge.sv
+../../../../uart/rtl/verilog/wb/core/mpsoc_wb_uart_receiver.sv
+../../../../uart/rtl/verilog/wb/core/mpsoc_wb_uart_regs.sv
+../../../../uart/rtl/verilog/wb/core/mpsoc_wb_uart_rfifo.sv
+../../../../uart/rtl/verilog/wb/core/mpsoc_wb_uart_sync_flops.sv
+../../../../uart/rtl/verilog/wb/core/mpsoc_wb_uart_tfifo.sv
+../../../../uart/rtl/verilog/wb/core/mpsoc_wb_uart_transmitter.sv
+../../../../uart/rtl/verilog/wb/core/mpsoc_wb_uart.sv
 --top-module or1k_pu
 --exe
-../src/elf-loader_1.0.2/elf-loader.c
-../src/verilator_tb_utils_0/verilator_tb_utils.cpp
-../src/verilator_tb_utils_0/jtagServer.cpp
-../src/mor1kx-generic_0/bench/verilator/tb.cpp
+../../../../software/elf-loader/elf-loader.c
+../../../../bench/cpp/verilator_tb_utils.cpp
+../../../../bench/cpp/jtagServer.cpp
+../../../../bench/cpp/or1k_testbench.cpp
