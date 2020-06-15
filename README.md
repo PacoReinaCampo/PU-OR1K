@@ -94,7 +94,7 @@ in according with `rounding mode` bits of FPCSR.*
 | FEATURE_RANGE    | Enable checking and raising range exceptions    | `ENABLED` |
 | FEATURE_OVERFLOW | Enable checking and raising overflow exceptions | `ENABLED` |
 
-#### 2.1.1.7. ALU configuration options
+#### 2.1.1.7. ALU Configuration Options
 
 | Parameter          | Description                                | Default      |
 | ------------------ | ------------------------------------------ | ------------ |
