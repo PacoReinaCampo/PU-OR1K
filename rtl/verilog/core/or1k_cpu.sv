@@ -206,14 +206,14 @@ module or1k_cpu #(
     input        snoop_en_i
   );
 
-  wire [`OR1K_INSN_WIDTH-1:0]       monitor_execute_insn;
+  wire [`OR1K_INSN_WIDTH-1:0]       monitor_execute_insn /* verilator public */;
   wire                              monitor_execute_advance;
   wire                              monitor_flag_set;
   wire                              monitor_flag_clear;
   wire                              monitor_flag_sr;
   wire                              monitor_flag;
   wire [OPTION_OPERAND_WIDTH-1:0]   monitor_spr_sr;
-  wire [OPTION_OPERAND_WIDTH-1:0]   monitor_execute_pc;
+  wire [OPTION_OPERAND_WIDTH-1:0]   monitor_execute_pc /* verilator public */;
   wire [OPTION_OPERAND_WIDTH-1:0]   monitor_rf_result_in;
   wire                              monitor_clk;
   wire [OPTION_OPERAND_WIDTH-1:0]   monitor_spr_epcr;
