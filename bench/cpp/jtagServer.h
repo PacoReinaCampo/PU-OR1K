@@ -37,7 +37,7 @@
  *
  * =============================================================================
  * Author(s):
- *   Francisco Javier Reina Campo <frareicam@gmail.com>
+ *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
 #ifndef __JTAG_SERVER_H__
