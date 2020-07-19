@@ -1,6 +1,6 @@
 export PATH=/opt/or1k-elf/bin:${PATH}
 
-git clone https://github.com/PacoReinaCampo/linux
+git clone https://github.com/QueenField/linux
 
 cd linux
 export ARCH=openrisc
