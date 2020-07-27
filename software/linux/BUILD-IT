@@ -1,5 +1,7 @@
 export PATH=/opt/or1k-elf/bin:${PATH}
 
+rm -rf vmlinux
+
 git clone https://github.com/QueenField/linux
 
 cd linux
