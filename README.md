@@ -745,7 +745,7 @@ sudo make install
 
 # 4. CONCLUSION
 
-## 4.1. FOR WINDOWS USERS!
+## 4.1. OPEN SOURCE TOOLS FOR WINDOWS USERS!
 
 ### 4.1.0. Install Prerequisites
 
