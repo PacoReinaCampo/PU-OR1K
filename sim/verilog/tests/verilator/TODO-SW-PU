@@ -12,6 +12,10 @@
 ./Vor1k_pu --elf-load=../../../../software/tests/elf/or1k-illegalinsndelayslot
 ./Vor1k_pu --elf-load=../../../../software/tests/elf/or1k-insnfetchalign
 ./Vor1k_pu --elf-load=../../../../software/tests/elf/or1k-insnfetcherror
+#./Vor1k_pu --elf-load=../../../../software/tests/elf/or1k-intloop
+#./Vor1k_pu --elf-load=../../../../software/tests/elf/or1k-intmulticycle
+#./Vor1k_pu --elf-load=../../../../software/tests/elf/or1k-intsyscall
+#./Vor1k_pu --elf-load=../../../../software/tests/elf/or1k-inttickloop
 ./Vor1k_pu --elf-load=../../../../software/tests/elf/or1k-jmp
 ./Vor1k_pu --elf-load=../../../../software/tests/elf/or1k-jr
 ./Vor1k_pu --elf-load=../../../../software/tests/elf/or1k-lsu
