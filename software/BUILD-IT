@@ -1,0 +1,25 @@
+export PATH=/opt/or1k-elf-gcc/bin:${PATH}
+
+rm -rf tests
+rm -rf or1k-tests
+
+mkdir tests
+mkdir tests/elf
+mkdir tests/hex
+
+git clone --recursive https://github.com/openrisc/or1k-tests
+
+cd or1k-tests/native
+make clean
+make
+
+cd build/or1k
+
+source ../../../../elf2hex.sh
+
+mv *.hex ../../../../tests/hex
+mv or1k-* ../../../../tests/elf
+
+cd ../..
+
+make clean

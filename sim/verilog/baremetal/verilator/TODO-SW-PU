@@ -1,0 +1,2 @@
+./Vor1k_pu --elf-load=../../../../software/baremetal/hello/c/hello_c.elf
+./Vor1k_pu --elf-load=../../../../software/baremetal/hello/cpp/hello_cpp.elf
