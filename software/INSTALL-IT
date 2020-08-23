@@ -1,7 +1,7 @@
 git clone git://sourceware.org/git/binutils-gdb.git binutils
 git clone https://github.com/openrisc/or1k-gcc.git gcc
 git clone git://sourceware.org/git/newlib-cygwin.git newlib
-git clone https://github.com/openrisc/binutils-gdb.git gdb
+git clone git://sourceware.org/git/binutils-gdb.git gdb
 
 export PATH=/opt/or1k-elf-gcc/bin:${PATH}
 
