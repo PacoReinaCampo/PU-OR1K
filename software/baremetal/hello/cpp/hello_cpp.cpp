@@ -40,9 +40,9 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-#include <stdio.h>
+#include <iostream>
 
 int main() {
-  printf("Hello QueenField!\n");
+  std::cout << "Hello QueenField!\n";
   return 0;
 }
