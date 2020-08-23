@@ -835,70 +835,55 @@ sudo make install
 
 type:
 ```
-sudo apt install autoconf automake autotools-dev curl python3 libmpc-dev \
-libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf \
-libtool patchutils bc zlib1g-dev libexpat-dev
+sudo apt install git libgmp-dev libmpfr-dev libmpc-dev zlib1g-dev texinfo \
+build-essential flex bison
 ```
 
 #### 3.2.1.1. OpenRISC GNU C/C++
 
 type:
 ```
-git clone --recursive https://github.com/openrisc/or1k-gcc
-git clone --recursive https://github.com/openrisc/or1k-src
-git clone --recursive git://sourceware.org/git/binutils-gdb
-git clone --recursive git://sourceware.org/git/newlib-cygwin
+git clone git://sourceware.org/git/binutils-gdb.git binutils
+git clone https://github.com/openrisc/or1k-gcc.git gcc
+git clone git://sourceware.org/git/newlib-cygwin.git newlib
+git clone https://github.com/openrisc/binutils-gdb.git gdb
 
 export PATH=/opt/or1k-elf-gcc/bin:${PATH}
 
-cd binutils-gdb
-rm -rf build-binutils
-mkdir build-binutils
-cd build-binutils
-../configure --target=or1k-elf --prefix=/opt/or1k-elf-gcc --enable-shared \
+mkdir build-binutils; cd build-binutils
+../binutils/configure --target=or1k-elf --prefix=/opt/or1k-elf-gcc \
 --disable-itcl --disable-tk --disable-tcl --disable-winsup --disable-gdbtk \
---disable-libgui --disable-rda --disable-sid --disable-sim --with-sysroot
+--disable-libgui --disable-rda --disable-sid --disable-sim --disable-gdb \
+--with-sysroot --disable-newlib --disable-libgloss --with-system-zlib
 make
 sudo make install
 cd ..
 
-cd or1k-gcc
-rm -rf build-gcc-stage1
-mkdir build-gcc-stage1
-cd build-gcc-stage1
-../configure --target=or1k-elf --prefix=/opt/or1k-elf-gcc --enable-languages=c \
---disable-shared --disable-libssp
+mkdir build-gcc-stage1; cd build-gcc-stage1
+../gcc/configure --target=or1k-elf --prefix=/opt/or1k-elf-gcc \
+--enable-languages=c --disable-shared --disable-libssp
 make
 sudo make install
 cd ..
 
-cd newlib-cygwin
-rm -rf build-newlib
-mkdir build-newlib
-cd build-newlib
-../configure --target=or1k-elf --prefix=/opt/or1k-elf-gcc
+mkdir build-newlib; cd build-newlib
+../newlib/configure --target=or1k-elf --prefix=/opt/or1k-elf-gcc
 make
 sudo make install
 cd ..
 
-cd or1k-gcc
-rm -rf build-gcc-stage2
-mkdir build-gcc-stage2
-cd build-gcc-stage2
-../configure --target=or1k-elf --prefix=/opt/or1k-elf-gcc \
+mkdir build-gcc-stage2; cd build-gcc-stage2
+../gcc/configure --target=or1k-elf --prefix=/opt/or1k-elf-gcc \
 --enable-languages=c,c++ --disable-shared --disable-libssp --with-newlib
 make
 sudo make install
 cd ..
 
-cd or1k-src
-rm -rf build-gdb
-mkdir build-gdb
-cd build-gdb
-../configure --target=or1k-elf --prefix=/opt/or1k-elf-gcc --enable-shared \
---disable-itcl --disable-tk --disable-tcl --disable-winsup --disable-gdbtk \
---disable-libgui --disable-rda --disable-sid --enable-sim --disable-or1ksim \
---enable-gdb --with-sysroot --disable-newlib --disable-libgloss
+mkdir build-gdb; cd build-gdb
+../gdb/configure --target=or1k-elf --prefix=/opt/or1k-elf-gcc --disable-itcl \
+--disable-tk --disable-tcl --disable-winsup --disable-gdbtk --disable-libgui \
+--disable-rda --disable-sid --with-sysroot --disable-newlib --disable-libgloss \
+--disable-gas --disable-ld --disable-binutils --disable-gprof --with-system-zlib
 make
 sudo make install
 cd ..
@@ -1105,7 +1090,8 @@ type:
 ```
 export PATH=/opt/or1k-elf-gcc/bin:${PATH}
 
-qemu-system-or1k -cpu or1200 -M or1k-sim -kernel vminux -serial stdio -nographic -monitor none
+qemu-system-or1k -cpu or1200 -M or1k-sim -kernel vminux -serial stdio -nographic \
+-monitor none
 ```
 
 **Running Linux (Multi-Core)**
@@ -1114,7 +1100,8 @@ type:
 ```
 export PATH=/opt/or1k-elf-gcc/bin:${PATH}
 
-qemu-system-or1k -cpu or1200 -M or1k-sim -kernel vminux-smp -serial stdio -nographic -monitor none -smp cpus=2
+qemu-system-or1k -cpu or1200 -M or1k-sim -kernel vminux-smp -serial stdio \
+-nographic -monitor none -smp cpus=2
 ```
 
 #### 4.2.3.2. GNU Hurd
