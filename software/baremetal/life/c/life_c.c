@@ -67,8 +67,7 @@ void printworld(world_t *world, FILE *pOutput) {
   fflush(pOutput);
 }
 
-void randomizeworld(world_t *world)
-{
+void randomizeworld(world_t *world) {
   int x, y;
 
   for(y = 0; y < world->height; y++) {
@@ -104,8 +103,7 @@ void updateworld(world_t *world) {
   }
 }
 
-void destroyworld(world_t *world)
-{
+void destroyworld(world_t *world) {
   free(world->mem);
 }
 

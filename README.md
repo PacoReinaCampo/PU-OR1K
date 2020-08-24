@@ -1084,7 +1084,7 @@ cd ..
 rm -rf linux
 ```
 
-**Running Linux for a OpenRISC Core**
+**Running Linux in a OpenRISC Core**
 
 type:
 ```
@@ -1094,7 +1094,7 @@ qemu-system-or1k -cpu or1200 -M or1k-sim -kernel vmlinux-core -serial stdio -nog
 -monitor none
 ```
 
-**Running Linux a OpenRISC Tile**
+**Running Linux in a OpenRISC Tile**
 
 type:
 ```
