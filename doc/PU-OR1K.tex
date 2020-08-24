@@ -1839,25 +1839,25 @@ cd ..
 rm -rf linux
 \end{verbatim}
 
-\textbf{Running Linux (Single-Core)}
+\textbf{Running Linux for a OpenRISC Core}
 
 type:
 
 \begin{verbatim}
 export PATH=/opt/or1k-elf-gcc/bin:${PATH}
 
-qemu-system-or1k -cpu or1200 -M or1k-sim -kernel vminux -serial stdio -nographic \
+qemu-system-or1k -cpu or1200 -M or1k-sim -kernel vmlinux-core -serial stdio -nographic \
 -monitor none
 \end{verbatim}
 
-\textbf{Running Linux (Multi-Core)}
+\textbf{Running Linux a OpenRISC Tile}
 
 type:
 
 \begin{verbatim}
 export PATH=/opt/or1k-elf-gcc/bin:${PATH}
 
-qemu-system-or1k -cpu or1200 -M or1k-sim -kernel vminux-smp -serial stdio \
+qemu-system-or1k -cpu or1200 -M or1k-sim -kernel vmlinux-tile -serial stdio \
 -nographic -monitor none -smp cpus=2
 \end{verbatim}
 

@@ -1084,23 +1084,23 @@ cd ..
 rm -rf linux
 ```
 
-**Running Linux (Single-Core)**
+**Running Linux for a OpenRISC Core**
 
 type:
 ```
 export PATH=/opt/or1k-elf-gcc/bin:${PATH}
 
-qemu-system-or1k -cpu or1200 -M or1k-sim -kernel vminux -serial stdio -nographic \
+qemu-system-or1k -cpu or1200 -M or1k-sim -kernel vmlinux-core -serial stdio -nographic \
 -monitor none
 ```
 
-**Running Linux (Multi-Core)**
+**Running Linux a OpenRISC Tile**
 
 type:
 ```
 export PATH=/opt/or1k-elf-gcc/bin:${PATH}
 
-qemu-system-or1k -cpu or1200 -M or1k-sim -kernel vminux-smp -serial stdio \
+qemu-system-or1k -cpu or1200 -M or1k-sim -kernel vmlinux-tile -serial stdio \
 -nographic -monitor none -smp cpus=2
 ```
 
