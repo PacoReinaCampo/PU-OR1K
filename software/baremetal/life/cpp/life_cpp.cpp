@@ -112,16 +112,16 @@ int createworld(world_t *world, int width, int height) {
   unsigned long base   = sizeof(cell_t *) * height;
   unsigned long rowlen = sizeof(cell_t)   * width;
 
-  //if(!(world->mem = calloc(base + (rowlen * height), 1)))
-    //return 0;
+  if(!(world->mem = calloc(base + (rowlen * height), 1)))
+    return 0;
 
   //world->array  = world->mem;
-  //world->width  = width;
-  //world->height = height;
+  world->width  = width;
+  world->height = height;
 
-  //for(i = 0; i < height; i++) {
+  for(i = 0; i < height; i++) {
     //world->array[i] = world->mem + base + (i * rowlen);
-  //}
+  }
 
   for(i = 0; i < height; i++) {
     for(j = 0; j < width; j++) {

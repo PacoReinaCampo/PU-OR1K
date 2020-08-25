@@ -235,7 +235,7 @@ In a Harvard architecture, there is no need to make the two memories share chara
 
 ### 2.1.6. Data Inputs/Outputs Bus
 
-## 2.2. PU-RISCV
+## 2.2. PU-OR1K
 
 ### 2.2.1. Definition
 
@@ -534,17 +534,17 @@ git clone --recursive https://github.com/QueenField/UVM
 ```
 
 ```
-cd sim/verilog/pu/riscv/wb/msim
+cd sim/verilog/pu/or1k/wb/msim
 source SIMULATE-IT
 ```
 
 ```
-cd sim/verilog/pu/riscv/ahb3/msim
+cd sim/verilog/pu/or1k/ahb3/msim
 source SIMULATE-IT
 ```
 
 ```
-cd sim/verilog/pu/riscv/axi4/msim
+cd sim/verilog/pu/or1k/axi4/msim
 source SIMULATE-IT
 ```
 
