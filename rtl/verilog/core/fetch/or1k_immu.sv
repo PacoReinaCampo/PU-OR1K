@@ -40,7 +40,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-`include "or1k-defines.sv"
+`include "or1k_defines.sv"
 
 module or1k_immu #(
   parameter FEATURE_IMMU_HW_TLB_RELOAD = "NONE",

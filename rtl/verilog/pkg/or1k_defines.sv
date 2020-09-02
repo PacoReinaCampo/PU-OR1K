@@ -276,7 +276,7 @@
 
 
 // OR1K SPR defines
-`include "or1k-sprs.sv"
+`include "or1k_sprs.sv"
 
 /* Exception addresses */
 `define OR1K_RESET_VECTOR    5'h01

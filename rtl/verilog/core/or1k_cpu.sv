@@ -40,7 +40,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-`include "or1k-defines.sv"
+`include "or1k_defines.sv"
 
 module or1k_cpu #(
   parameter OPTION_OPERAND_WIDTH = 32,
@@ -225,7 +225,7 @@ module or1k_cpu #(
   generate
     if (OPTION_CPU=="CAPPUCCINO") begin : monitor_cappuccino
 
-      `include "or1k-utils.sv"
+      `include "or1k_utils.sv"
       localparam RF_ADDR_WIDTH = OPTION_RF_ADDR_WIDTH;
 
       function [OPTION_OPERAND_WIDTH-1:0] get_gpr;

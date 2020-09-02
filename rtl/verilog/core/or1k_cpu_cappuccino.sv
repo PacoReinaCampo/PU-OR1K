@@ -40,7 +40,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-`include "or1k-defines.sv"
+`include "or1k_defines.sv"
 
 module or1k_cpu_cappuccino #(
   parameter OPTION_OPERAND_WIDTH = 32,
@@ -938,7 +938,7 @@ module or1k_cpu_cappuccino #(
   `ifndef SYNTHESIS
   // Debug signals required for the debug monitor
 
-  `include "or1k-utils.sv"
+  `include "or1k_utils.sv"
   localparam RF_ADDR_WIDTH = calc_rf_addr_width(OPTION_RF_ADDR_WIDTH, OPTION_RF_NUM_SHADOW_GPR);
 
   function [OPTION_OPERAND_WIDTH-1:0] get_gpr;

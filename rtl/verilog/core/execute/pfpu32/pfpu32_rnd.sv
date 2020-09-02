@@ -40,7 +40,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-`include "or1k-defines.sv"
+`include "or1k_defines.sv"
 
 module pfpu32_rnd #(
   parameter OPTION_FTOI_ROUNDING = "CPP" // "CPP" / "IEEE"

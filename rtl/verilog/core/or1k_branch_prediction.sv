@@ -40,7 +40,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-`include "or1k-defines.sv"
+`include "or1k_defines.sv"
 
 module or1k_branch_prediction #(
   parameter [95:0] FEATURE_BRANCH_PREDICTOR = "SIMPLE",

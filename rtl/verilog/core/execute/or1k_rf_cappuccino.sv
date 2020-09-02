@@ -40,7 +40,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-`include "or1k-defines.sv"
+`include "or1k_defines.sv"
 
 module or1k_rf_cappuccino #(
   parameter FEATURE_FASTCONTEXTS = "NONE",
@@ -100,7 +100,7 @@ module or1k_rf_cappuccino #(
     output [OPTION_OPERAND_WIDTH-1:0] execute_rfb_o
   );
 
-  `include "or1k-utils.sv"
+  `include "or1k_utils.sv"
 
   localparam RF_ADDR_WIDTH = calc_rf_addr_width(OPTION_RF_ADDR_WIDTH, OPTION_RF_NUM_SHADOW_GPR);
 

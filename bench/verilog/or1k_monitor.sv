@@ -59,7 +59,7 @@
 `define GPR_GET(x) `CPU_WRAPPER.monitor_cappuccino.get_gpr(x)
 `define GPR_SET(x, y) `CPU_WRAPPER.monitor_cappuccino.set_gpr(x, y)
 
-`include "or1k-defines.sv"
+`include "or1k_defines.sv"
 
 // Pull in an ORPSoC-specific file
 `include "test-defines.sv" // indicate if we should trace or not

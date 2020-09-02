@@ -40,7 +40,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-`include "or1k-defines.sv"
+`include "or1k_defines.sv"
 
 module or1k_dmmu #(
   parameter FEATURE_DMMU_HW_TLB_RELOAD = "NONE",
