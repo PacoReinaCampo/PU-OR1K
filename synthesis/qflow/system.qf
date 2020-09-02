@@ -44,7 +44,6 @@ cp ../../rtl/verilog/memory/or1k_simple_dpram_sclk.sv                 synthesis/
 cp ../../rtl/verilog/memory/or1k_true_dpram_sclk.sv                   synthesis/or1k_core/source
 
 cp ../../rtl/verilog/pkg/or1k_defines.sv                              synthesis/or1k_core/source
-cp ../../rtl/verilog/pkg/or1k_sprs.sv                                 synthesis/or1k_core/source
 cp ../../rtl/verilog/pkg/or1k_utils.sv                                synthesis/or1k_core/source
 
 cd synthesis/or1k_core
