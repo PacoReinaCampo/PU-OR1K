@@ -40,141 +40,87 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-#include <iostream>
+#include <stdio.h>
 #include <stdlib.h>
 
-typedef struct cell_t_ {
-  struct cell_t_ *neighbours[8];
-  int on;
-} cell_t;
+#define ROWS 20
+#define COLS 20
 
-typedef struct world_t_ {
-  cell_t **array;
-  int width;
-  int height;
-  void *mem;
-} world_t;
+#define GETCOL(c) (c%COLS)
+#define GETROW(c) (c/COLS)
 
-void printworld(world_t *world, FILE *pOutput) {
-  int x, y;
+#define D_LEFT(c)   ((GETCOL(c) == 0) ? (COLS-1) :  -1)
+#define D_RIGHT(c)  ((GETCOL(c) == COLS-1) ? (-COLS+1) :  1)
+#define D_TOP(c)    ((GETROW(c) == 0) ? ((ROWS-1) * COLS) : -COLS)
+#define D_BOTTOM(c) ((GETROW(c) == ROWS-1) ? (-(ROWS-1) * COLS) : COLS)
 
-  for(y = 0; y < world->height; y++) {
-    for(x = 0; x < world->width; x++) {
-      fprintf(pOutput, "%c", (world->array[y][x]).on ? 254 : ' ');
-    }
-    fputc((int)'\n', pOutput);
+
+
+typedef struct _cell {
+  struct _cell* neighbour[8];
+  char curr_state;
+  char next_state;
+} cell;
+
+typedef struct {
+  int rows;
+  int cols;
+  cell* cells;
+} world;
+
+void evolve_cell(cell* c) {
+  int count=0, i;
+  for (i=0; i<8; i++) {
+    if (c->neighbour[i]->curr_state) count++;
   }
-  fflush(pOutput);
+  if (count == 3 || (c->curr_state && count == 2)) c->next_state = 1;
+  else c->next_state = 0;
 }
 
-void randomizeworld(world_t *world) {
-  int x, y;
-
-  for(y = 0; y < world->height; y++) {
-    for(x = 0; x < world->width; x++) {
-      (world->array[y][x]).on = rand() & 1;
-    }
+void update_world(world* w) {
+  int nrcells = w->rows * w->cols, i;
+  for (i=0; i<nrcells; i++) {
+    evolve_cell(w->cells+i);
   }
-}
-
-void updateworld(world_t *world) {
-  int x, y, i, neighbours;
-
-  for(y = 0; y < world->height; y++) {
-    for(x = 0; x < world->width; x++, neighbours = 0) {
-      for(i = 0; i < 8; i++)
-        if((world->array[y][x].neighbours[i]) && ((world->array[y][x]).neighbours[i]->on & 1))
-          neighbours++;
-
-      if((neighbours < 2) || (neighbours > 3))
-        (world->array[y][x]).on |= 2;
-      else if(neighbours == 3)
-        (world->array[y][x]).on |= 4;
-    }
-  }
-
-  for(y = 0; y < world->height; y++) {
-    for(x = 0; x < world->width; x++) {
-      if(world->array[y][x].on & 4)
-        world->array[y][x].on = 1;
-      else if(world->array[y][x].on & 2)
-        world->array[y][x].on = 0;
-    }
+  for (i=0; i<nrcells; i++) {
+    w->cells[i].curr_state = w->cells[i].next_state;
+    if (!(i%COLS)) printf("\n");
+    printf("%c",w->cells[i].curr_state ? '*' : ' ');
   }
 }
 
-void destroyworld(world_t *world) {
-  free(world->mem);
+world* init_world() {
+  world* result = (world*)malloc(sizeof(world));
+  result->rows = ROWS;
+  result->cols = COLS;
+  result->cells = (cell*)malloc(sizeof(cell) * COLS * ROWS);
+
+  int nrcells = result->rows * result->cols, i;
+
+  for (i = 0; i < nrcells; i++) {
+    cell* c = result->cells + i;
+
+    c->neighbour[0] = c+D_LEFT(i);
+    c->neighbour[1] = c+D_RIGHT(i);
+    c->neighbour[2] = c+D_TOP(i);
+    c->neighbour[3] = c+D_BOTTOM(i);
+    c->neighbour[4] = c+D_LEFT(i)   + D_TOP(i);
+    c->neighbour[5] = c+D_LEFT(i)   + D_BOTTOM(i);
+    c->neighbour[6] = c+D_RIGHT(i)  + D_TOP(i);
+    c->neighbour[7] = c+D_RIGHT(i)  + D_BOTTOM(i);
+
+    c->curr_state = rand() % 2;
+  }
+  return result;
 }
 
-int createworld(world_t *world, int width, int height) {
-  int i, j;
-  unsigned long base   = sizeof(cell_t *) * height;
-  unsigned long rowlen = sizeof(cell_t)   * width;
-
-  if(!(world->mem = calloc(base + (rowlen * height), 1)))
-    return 0;
-
-  //world->array  = world->mem;
-  world->width  = width;
-  world->height = height;
-
-  for(i = 0; i < height; i++) {
-    //world->array[i] = world->mem + base + (i * rowlen);
+int main() {
+  srand(3);
+  world* w = init_world();
+  
+  while (1) {
+    system("clear");
+    update_world(w);
+    getchar();
   }
-
-  for(i = 0; i < height; i++) {
-    for(j = 0; j < width; j++) {
-      if(j != 0) {
-        (world->array[i][j]).neighbours[3] = &(world->array[i][j - 1]);
-      }
-
-      if(i != 0) {
-        (world->array[i][j]).neighbours[1] = &(world->array[i - 1][j]);
-      }
-
-      if(j != (width - 1)) {
-        (world->array[i][j]).neighbours[4] = &(world->array[i][j + 1]);
-      }
-
-      if(i != (height - 1)) {
-        (world->array[i][j]).neighbours[6] = &(world->array[i + 1][j]);
-      }
-
-      if((i != 0) && (j != 0)) {
-        (world->array[i][j]).neighbours[0] = &(world->array[i - 1][j - 1]);
-      }
-
-      if((i != (height - 1)) && (j != (width - 1))) {
-        (world->array[i][j]).neighbours[7] = &(world->array[i + 1][j + 1]);
-      }
-
-      if((i != (height - 1)) && (j != 0)) {
-        (world->array[i][j]).neighbours[5] = &(world->array[i + 1][j - 1]);
-      }
-
-      if((i != 0) && (j != (width - 1))) {
-        (world->array[i][j]).neighbours[2] = &(world->array[i - 1][j + 1]);
-      }
-    }
-  }
-
-  return 1;
-}
-
-int main(int argc, char *argv[]) {
-  world_t gameoflife;
-
-  if(createworld(&gameoflife, 79, 24)) {
-    randomizeworld(&gameoflife);
-    do {
-      printworld(&gameoflife, stdout);
-      getchar();
-      fflush(stdin);
-      updateworld(&gameoflife);
-    } while(1);
-    destroyworld(&gameoflife);
-  }
-
-  return 0;
 }
