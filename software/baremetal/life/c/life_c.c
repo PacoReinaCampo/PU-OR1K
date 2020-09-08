@@ -9,7 +9,7 @@
 //                  |_|                                                       //
 //                                                                            //
 //                                                                            //
-//              OR1K CPU                                                      //
+//              OpenRISC CPU                                                  //
 //              Hello World                                                   //
 //              Software                                                      //
 //                                                                            //
