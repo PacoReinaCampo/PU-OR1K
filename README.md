@@ -237,6 +237,10 @@ In computer science, instruction pipelining is a technique for implementing inst
 
 #### 2.1.2.2. Data Inputs/Outputs Bus
 
+### 2.1.3. Registers
+
+### 2.1.4. Interruptions
+
 ## 2.2. PU-OR1K
 
 ### 2.2.1. Processing Unit
