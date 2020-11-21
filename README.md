@@ -247,6 +247,16 @@ In computer science, instruction pipelining is a technique for implementing inst
 
 The OpenRISC implementation has a 32/64 bit Microarchitecture, 5 stages data pipeline and an Instruction Set Architecture based on Reduced Instruction Set Computer. Compatible with Wishbone Bus. Only For Researching.
 
+| Processing Unit                 | Module description                          |
+| ------------------------------- | ------------------------------------------- |
+| `or1k_pu`                       | Processing Unit                             |
+| `...or1k_core`                  | Core                                        |
+| `...mpsoc_msi_wb_interface`     | Master Slave Interface                      |
+| `...tap_top`                    | Test Access Port                            |
+| `...adbg_top`                   | Debugger on Chip                            |
+| `...mpsoc_wb_spram`             | Single-Port RAM for Instruction & Data      |
+| `...mpsoc_wb_uart`              | Universal Asynchronous Receiver-Transmitter |
+
 A PU cache is a hardware cache used by the PU to reduce the average cost (time or energy) to access instruction/data from the main memory. A cache is a smaller, faster memory, closer to a core, which stores copies of the data from frequently used main memory locations. Most CPUs have different independent caches, including instruction and data caches.
 
 ### 2.2.2. Instruction Cache

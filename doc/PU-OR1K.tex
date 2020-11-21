@@ -613,6 +613,24 @@ data pipeline and an Instruction Set Architecture based on Reduced
 Instruction Set Computer. Compatible with Wishbone Bus. Only For
 Researching.
 
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+Processing Unit & Module description\tabularnewline
+\midrule
+\endhead
+\texttt{or1k\_pu} & Processing Unit\tabularnewline
+\texttt{...or1k\_core} & Core\tabularnewline
+\texttt{...mpsoc\_msi\_wb\_interface} & Master Slave
+Interface\tabularnewline
+\texttt{...tap\_top} & Test Access Port\tabularnewline
+\texttt{...adbg\_top} & Debugger on Chip\tabularnewline
+\texttt{...mpsoc\_wb\_spram} & Single-Port RAM for Instruction \&
+Data\tabularnewline
+\texttt{...mpsoc\_wb\_uart} & Universal Asynchronous
+Receiver-Transmitter\tabularnewline
+\bottomrule
+\end{longtable}
+
 A PU cache is a hardware cache used by the PU to reduce the average cost
 (time or energy) to access instruction/data from the main memory. A
 cache is a smaller, faster memory, closer to a core, which stores copies
