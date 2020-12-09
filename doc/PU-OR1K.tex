@@ -1,6 +1,3 @@
-\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
-\PassOptionsToPackage{hyphens}{url}
-%
 \documentclass[]{article}
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
@@ -9,9 +6,12 @@
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
-  \usepackage{textcomp} % provides euro and other symbols
 \else % if luatex or xelatex
-  \usepackage{unicode-math}
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
   \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
 \fi
 % use upquote if available, for straight quotes in verbatim environments
@@ -21,13 +21,8 @@
 \usepackage[]{microtype}
 \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\IfFileExists{parskip.sty}{%
-\usepackage{parskip}
-}{% else
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
-}
-\usepackage{hyperref}
+\PassOptionsToPackage{hyphens}{url} % url is loaded by hyperref
+\usepackage[unicode=true]{hyperref}
 \hypersetup{
             pdftitle={Processing Unit with OR1K},
             pdfauthor={QueenField},
@@ -42,40 +37,46 @@
 \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
 % Add ',fontsize=\small' for more characters per line
 \newenvironment{Shaded}{}{}
-\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
-\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
-\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{#1}}
-\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
-\newcommand{\BuiltInTok}[1]{#1}
-\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
-\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{#1}}}
-\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
-\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{#1}}
-\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
 \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{#1}}
 \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
-\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{#1}}}
-\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
-\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
 \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
-\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{#1}}
-\newcommand{\ImportTok}[1]{#1}
-\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
-\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
-\newcommand{\NormalTok}[1]{#1}
-\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{#1}}
-\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{#1}}
-\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{#1}}
-\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
 \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
-\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{#1}}
 \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
-\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{#1}}
 \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{#1}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{#1}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
 \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
 \usepackage{longtable,booktabs}
 % Fix footnotes in tables (requires footnote package)
-\IfFileExists{footnote.sty}{\usepackage{footnote}\makesavenoteenv{longtable}}{}
+\IfFileExists{footnote.sty}{\usepackage{footnote}\makesavenoteenv{long table}}{}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
@@ -103,11 +104,9 @@
 \begin{document}
 \maketitle
 
-\hypertarget{introduction}{%
-\section{1. INTRODUCTION}\label{introduction}}
+\section{1. INTRODUCTION}\label{introduction}
 
-\hypertarget{open-source-philosophy}{%
-\subsection{1.1. OPEN SOURCE PHILOSOPHY}\label{open-source-philosophy}}
+\subsection{1.1. OPEN SOURCE PHILOSOPHY}\label{open-source-philosophy}
 
 \textbf{For Windows Users!}
 
@@ -128,80 +127,57 @@ sudo apt update
 sudo apt upgrade
 \end{verbatim}
 
-\hypertarget{open-source-hardware}{%
-\subsubsection{1.2.1. Open Source Hardware}\label{open-source-hardware}}
+\subsubsection{1.2.1. Open Source Hardware}\label{open-source-hardware}
 
-\hypertarget{msp430-processing-unit}{%
 \paragraph{1.2.1.1. MSP430 Processing
-Unit}\label{msp430-processing-unit}}
+Unit}\label{msp430-processing-unit}
 
-\hypertarget{openrisc-processing-unit}{%
 \paragraph{1.2.1.2. OpenRISC Processing
-Unit}\label{openrisc-processing-unit}}
+Unit}\label{openrisc-processing-unit}
 
-\hypertarget{risc-v-processing-unit}{%
 \paragraph{1.2.1.3. RISC-V Processing
-Unit}\label{risc-v-processing-unit}}
+Unit}\label{risc-v-processing-unit}
 
-\hypertarget{open-source-software}{%
-\subsubsection{1.2.2. Open Source Software}\label{open-source-software}}
+\subsubsection{1.2.2. Open Source Software}\label{open-source-software}
 
-\hypertarget{msp430-gnu-compiler-collection}{%
 \paragraph{1.2.2.1. MSP430 GNU Compiler
-Collection}\label{msp430-gnu-compiler-collection}}
+Collection}\label{msp430-gnu-compiler-collection}
 
-\hypertarget{openrisc-gnu-compiler-collection}{%
 \paragraph{1.2.2.2. OpenRISC GNU Compiler
-Collection}\label{openrisc-gnu-compiler-collection}}
+Collection}\label{openrisc-gnu-compiler-collection}
 
-\hypertarget{risc-v-gnu-compiler-collection}{%
 \paragraph{1.2.2.3. RISC-V GNU Compiler
-Collection}\label{risc-v-gnu-compiler-collection}}
+Collection}\label{risc-v-gnu-compiler-collection}
 
-\hypertarget{risc-v-isa}{%
-\subsection{1.2. RISC-V ISA}\label{risc-v-isa}}
+\subsection{1.2. RISC-V ISA}\label{risc-v-isa}
 
-\hypertarget{isa-bases}{%
-\subsubsection{1.2.1. ISA Bases}\label{isa-bases}}
+\subsubsection{1.2.1. ISA Bases}\label{isa-bases}
 
-\hypertarget{risc-v-32}{%
-\paragraph{1.2.2.1. RISC-V 32}\label{risc-v-32}}
+\paragraph{1.2.2.1. RISC-V 32}\label{risc-v-32}
 
-\hypertarget{risc-v-64}{%
-\paragraph{1.2.2.2. RISC-V 64}\label{risc-v-64}}
+\paragraph{1.2.2.2. RISC-V 64}\label{risc-v-64}
 
-\hypertarget{risc-v-128}{%
-\paragraph{1.2.2.3. RISC-V 128}\label{risc-v-128}}
+\paragraph{1.2.2.3. RISC-V 128}\label{risc-v-128}
 
-\hypertarget{isa-extensions}{%
-\subsubsection{1.2.2. ISA Extensions}\label{isa-extensions}}
+\subsubsection{1.2.2. ISA Extensions}\label{isa-extensions}
 
-\hypertarget{isa-modes}{%
-\subsubsection{1.2.3. ISA Modes}\label{isa-modes}}
+\subsubsection{1.2.3. ISA Modes}\label{isa-modes}
 
-\hypertarget{risc-v-user}{%
-\paragraph{1.2.3.1. RISC-V User}\label{risc-v-user}}
+\paragraph{1.2.3.1. RISC-V User}\label{risc-v-user}
 
-\hypertarget{risc-v-supervisor}{%
-\paragraph{1.2.3.2. RISC-V Supervisor}\label{risc-v-supervisor}}
+\paragraph{1.2.3.2. RISC-V Supervisor}\label{risc-v-supervisor}
 
-\hypertarget{risc-v-hypervisor}{%
-\paragraph{1.2.3.3. RISC-V Hypervisor}\label{risc-v-hypervisor}}
+\paragraph{1.2.3.3. RISC-V Hypervisor}\label{risc-v-hypervisor}
 
-\hypertarget{risc-v-machine}{%
-\paragraph{1.2.3.4. RISC-V Machine}\label{risc-v-machine}}
+\paragraph{1.2.3.4. RISC-V Machine}\label{risc-v-machine}
 
-\hypertarget{projects}{%
-\section{2. PROJECTS}\label{projects}}
+\section{2. PROJECTS}\label{projects}
 
-\hypertarget{core-or1k}{%
-\subsection{2.1. CORE-OR1K}\label{core-or1k}}
+\subsection{2.1. CORE-OR1K}\label{core-or1k}
 
-\hypertarget{functionality}{%
-\subsubsection{2.1.1. Functionality}\label{functionality}}
+\subsubsection{2.1.1. Functionality}\label{functionality}
 
-\hypertarget{organization}{%
-\paragraph{2.1.1.1. Organization}\label{organization}}
+\paragraph{2.1.1.1. Organization}\label{organization}
 
 The CORE-OR1K is based on the Harvard architecture, which is a computer
 architecture with separate storage and signal pathways for instructions
@@ -213,71 +189,71 @@ implementations.
 
 \begin{longtable}[]{@{}ll@{}}
 \toprule
-\begin{minipage}[b]{0.28\columnwidth}\raggedright
+\begin{minipage}[b]{0.29\columnwidth}\raggedright\strut
 Core\strut
-\end{minipage} & \begin{minipage}[b]{0.66\columnwidth}\raggedright
+\end{minipage} & \begin{minipage}[b]{0.65\columnwidth}\raggedright\strut
 Module description\strut
 \end{minipage}\tabularnewline
 \midrule
 \endhead
-\begin{minipage}[t]{0.28\columnwidth}\raggedright
+\begin{minipage}[t]{0.29\columnwidth}\raggedright\strut
 \texttt{or1k\_core}\strut
-\end{minipage} & \begin{minipage}[t]{0.66\columnwidth}\raggedright
+\end{minipage} & \begin{minipage}[t]{0.65\columnwidth}\raggedright\strut
 Top-level, instantiatng bus interfaces, data cache and CPU\strut
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.28\columnwidth}\raggedright
+\begin{minipage}[t]{0.29\columnwidth}\raggedright\strut
 \texttt{...or1k\_dcache}\strut
-\end{minipage} & \begin{minipage}[t]{0.66\columnwidth}\raggedright
+\end{minipage} & \begin{minipage}[t]{0.65\columnwidth}\raggedright\strut
 Data cache implementation\strut
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.28\columnwidth}\raggedright
+\begin{minipage}[t]{0.29\columnwidth}\raggedright\strut
 \texttt{...or1k\_bus\_if\_xx}\strut
-\end{minipage} & \begin{minipage}[t]{0.66\columnwidth}\raggedright
+\end{minipage} & \begin{minipage}[t]{0.65\columnwidth}\raggedright\strut
 Bus interface, depending on desired bus standard\strut
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.28\columnwidth}\raggedright
+\begin{minipage}[t]{0.29\columnwidth}\raggedright\strut
 \texttt{...or1k\_cpu}\strut
-\end{minipage} & \begin{minipage}[t]{0.66\columnwidth}\raggedright
+\end{minipage} & \begin{minipage}[t]{0.65\columnwidth}\raggedright\strut
 Pipeline implementation wrapper\strut
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.28\columnwidth}\raggedright
+\begin{minipage}[t]{0.29\columnwidth}\raggedright\strut
 \texttt{.....or1k\_cpu\_xx}\strut
-\end{minipage} & \begin{minipage}[t]{0.66\columnwidth}\raggedright
+\end{minipage} & \begin{minipage}[t]{0.65\columnwidth}\raggedright\strut
 Pipeline implementation, depending on configuration\strut
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.28\columnwidth}\raggedright
+\begin{minipage}[t]{0.29\columnwidth}\raggedright\strut
 \texttt{.......or1k\_fetch\_xx}\strut
-\end{minipage} & \begin{minipage}[t]{0.66\columnwidth}\raggedright
+\end{minipage} & \begin{minipage}[t]{0.65\columnwidth}\raggedright\strut
 Pipeline-implementation-dependent fetch stage\strut
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.28\columnwidth}\raggedright
+\begin{minipage}[t]{0.29\columnwidth}\raggedright\strut
 \texttt{.......or1k\_decode}\strut
-\end{minipage} & \begin{minipage}[t]{0.66\columnwidth}\raggedright
+\end{minipage} & \begin{minipage}[t]{0.65\columnwidth}\raggedright\strut
 Generic decode stage\strut
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.28\columnwidth}\raggedright
+\begin{minipage}[t]{0.29\columnwidth}\raggedright\strut
 \texttt{.......or1k\_execute\_alu}\strut
-\end{minipage} & \begin{minipage}[t]{0.66\columnwidth}\raggedright
+\end{minipage} & \begin{minipage}[t]{0.65\columnwidth}\raggedright\strut
 Generic ALU for execute stage\strut
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.28\columnwidth}\raggedright
+\begin{minipage}[t]{0.29\columnwidth}\raggedright\strut
 \texttt{.......or1k\_lsu\_xx}\strut
-\end{minipage} & \begin{minipage}[t]{0.66\columnwidth}\raggedright
+\end{minipage} & \begin{minipage}[t]{0.65\columnwidth}\raggedright\strut
 Pipeline-implementation-dependent load/store unit\strut
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.28\columnwidth}\raggedright
+\begin{minipage}[t]{0.29\columnwidth}\raggedright\strut
 \texttt{.......or1k\_wb\_mux\_xx}\strut
-\end{minipage} & \begin{minipage}[t]{0.66\columnwidth}\raggedright
+\end{minipage} & \begin{minipage}[t]{0.65\columnwidth}\raggedright\strut
 Pipeline-implementation-dependent writeback stage mux\strut
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.28\columnwidth}\raggedright
+\begin{minipage}[t]{0.29\columnwidth}\raggedright\strut
 \texttt{.......or1k\_rf\_xx}\strut
-\end{minipage} & \begin{minipage}[t]{0.66\columnwidth}\raggedright
+\end{minipage} & \begin{minipage}[t]{0.65\columnwidth}\raggedright\strut
 Pipeline-implementation-dependent register file\strut
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.28\columnwidth}\raggedright
+\begin{minipage}[t]{0.29\columnwidth}\raggedright\strut
 \texttt{.......or1k\_ctrl\_xx}\strut
-\end{minipage} & \begin{minipage}[t]{0.66\columnwidth}\raggedright
+\end{minipage} & \begin{minipage}[t]{0.65\columnwidth}\raggedright\strut
 Pipeline-implementation-dependent control stage\strut
 \end{minipage}\tabularnewline
 \bottomrule
@@ -291,240 +267,7 @@ read-only memory while data memory generally requires read-write memory.
 In some systems, there is much more instruction memory than data memory
 so instruction addresses are wider than data addresses.
 
-\hypertarget{parameters}{%
-\paragraph{2.1.1.2. Parameters}\label{parameters}}
-
-\hypertarget{basic-parameters}{%
-\subparagraph{2.1.1.2.1. Basic Parameters}\label{basic-parameters}}
-
-\begin{longtable}[]{@{}llcc@{}}
-\toprule
-Parameter & Description & Default & Values\tabularnewline
-\midrule
-\endhead
-OPTION\_OPERAND\_WIDTH & CPU data and address widths & 32 & 32,
-64\tabularnewline
-OPTION\_CPU0 & CPU pipeline core & \texttt{CAPPUCCINO} &
-\texttt{CAPPUCCINO}\tabularnewline
-OPTION\_RESET\_PC & Program Counter upon reset & \texttt{0x100} &
-N\tabularnewline
-\bottomrule
-\end{longtable}
-
-\hypertarget{caching-parameters}{%
-\subparagraph{2.1.1.2.2. Caching Parameters}\label{caching-parameters}}
-
-\begin{longtable}[]{@{}llcc@{}}
-\toprule
-Parameter & Description & Default & Values\tabularnewline
-\midrule
-\endhead
-FEATURE\_DATACACHE & Enable memory access data caching & \texttt{NONE} &
-\texttt{ENABLED}\tabularnewline
-OPTION\_DCACHE\_BLOCK\_WIDTH & Address width of a cache block & 5 &
-\texttt{n}\tabularnewline
-OPTION\_DCACHE\_SET\_WIDTH & Set address width & 9 &
-\texttt{n}\tabularnewline
-OPTION\_DCACHE\_WAYS & Number of blocks per set & 2 &
-\texttt{n}\tabularnewline
-OPTION\_DCACHE\_LIMIT\_WIDTH & Maximum address width & 32 &
-\texttt{n}\tabularnewline
-OPTION\_DCACHE\_SNOOP & Bus snooping for cache coherency & \texttt{NONE}
-& \texttt{ENABLED}\tabularnewline
-FEATURE\_INSTRUCTIONCACHE & Memory access instruction caching &
-\texttt{NONE} & \texttt{ENABLED}\tabularnewline
-OPTION\_ICACHE\_BLOCK\_WIDTH & Address width of a cache block & 5 &
-\texttt{n}\tabularnewline
-OPTION\_ICACHE\_SET\_WIDTH & Set address width & 9 &
-\texttt{n}\tabularnewline
-OPTION\_ICACHE\_WAYS & Number of blocks per set & 2 &
-\texttt{n}\tabularnewline
-OPTION\_ICACHE\_LIMIT\_WIDTH & Maximum address width & 32 &
-\texttt{n}\tabularnewline
-\bottomrule
-\end{longtable}
-
-\hypertarget{memory-management-unit-mmu-parameters}{%
-\subparagraph{2.1.1.2.3. Memory Management Unit (MMU)
-Parameters}\label{memory-management-unit-mmu-parameters}}
-
-\begin{longtable}[]{@{}llcc@{}}
-\toprule
-Parameter & Description & Default & Values\tabularnewline
-\midrule
-\endhead
-FEATURE\_DMMU & Enable the data bus MMU & \texttt{NONE} &
-\texttt{ENABLED}\tabularnewline
-FEATURE\_DMMU\_HW\_TLB\_RELOAD & Enable hardware TLB reload &
-\texttt{NONE} & \texttt{ENABLED}\tabularnewline
-OPTION\_DMMU\_SET\_WIDTH & Set address width & 6 &
-\texttt{n}\tabularnewline
-OPTION\_DMMU\_WAYS & Number of ways per set & 1 &
-\texttt{n}\tabularnewline
-FEATURE\_IMMU & Enable the instruction bus MMU & \texttt{NONE} &
-\texttt{ENABLED}\tabularnewline
-FEATURE\_IMMU\_HW\_TLB\_RELOAD & Enable hardware TLB reload &
-\texttt{NONE} & \texttt{ENABLED}\tabularnewline
-OPTION\_IMMU\_SET\_WIDTH & Set address width & 6 &
-\texttt{n}\tabularnewline
-OPTION\_IMMU\_WAYS & Number of ways per set & 1 &
-\texttt{n}\tabularnewline
-\bottomrule
-\end{longtable}
-
-\hypertarget{system-bus-parameters}{%
-\subparagraph{2.1.1.2.4. System Bus
-Parameters}\label{system-bus-parameters}}
-
-\begin{longtable}[]{@{}llc@{}}
-\toprule
-Parameter & Description & Default\tabularnewline
-\midrule
-\endhead
-FEATURE\_STORE\_BUFFER & Load store unit store buffer &
-\texttt{ENABLED}\tabularnewline
-OPTION\_STORE\_BUFFER\_DEPTH\_WIDTH & Load store unit store buffer depth
-& 8\tabularnewline
-BUS\_IF\_TYPE & Bus interface type & \texttt{WISHBONE32}\tabularnewline
-IBUS\_WB\_TYPE & Instruction bus interface &
-\texttt{B3\_READ\_BURSTING}\tabularnewline
-DBUS\_WB\_TYPE & Data bus interface type option &
-\texttt{CLASSIC}\tabularnewline
-\bottomrule
-\end{longtable}
-
-\hypertarget{hardware-unit-configuration-parameters}{%
-\subparagraph{2.1.1.2.5. Hardware Unit Configuration
-Parameters}\label{hardware-unit-configuration-parameters}}
-
-\begin{longtable}[]{@{}llc@{}}
-\toprule
-Parameter & Description & Default\tabularnewline
-\midrule
-\endhead
-FEATURE\_TRACEPORT\_EXEC & Traceport hardware interface &
-\texttt{NONE}\tabularnewline
-FEATURE\_DEBUGUNIT & Hardware breakpoints and debug unit &
-\texttt{NONE}\tabularnewline
-FEATURE\_PERFCOUNTERS & Performance counters unit &
-\texttt{NONE}\tabularnewline
-OPTION\_PERFCOUNTERS\_NUM & Performance counters to generate &
-0\tabularnewline
-FEATURE\_TIMER & Internal OpenRISC timer &
-\texttt{ENABLED}\tabularnewline
-FEATURE\_PIC & Internal OpenRISC PIC & \texttt{ENABLED}\tabularnewline
-OPTION\_PIC\_TRIGGER & PIC trigger mode & \texttt{LEVEL}\tabularnewline
-OPTION\_PIC\_NMI\_WIDTH & Non maskable interrupts width &
-0\tabularnewline
-OPTION\_RF\_CLEAR\_ON\_INIT & clearing all registers on initialization &
-0\tabularnewline
-OPTION\_RF\_NUM\_SHADOW\_GPR & Number of shadow register files &
-0\tabularnewline
-OPTION\_RF\_ADDR\_WIDTH & Address width of the register file &
-5\tabularnewline
-OPTION\_RF\_WORDS & Number of registers in the register file &
-32\tabularnewline
-FEATURE\_FASTCONTEXTS & Fast context switching of register sets &
-\texttt{NONE}\tabularnewline
-FEATURE\_MULTICORE & \texttt{coreid} and \texttt{numcores} SPR registers
-& \texttt{NONE}\tabularnewline
-FEATURE\_FPU & FPU, for cappuccino pipeline only &
-\texttt{NONE}\tabularnewline
-OPTION\_FTOI\_ROUNDING & Rounding behavior for \texttt{lf.ftoi.s} &
-\texttt{CPP}\tabularnewline
-FEATURE\_BRANCH\_PREDICTOR & Branch predictor implementation &
-\texttt{SIMPLE}\tabularnewline
-\bottomrule
-\end{longtable}
-
-\hypertarget{exception-handling-options}{%
-\subparagraph{2.1.1.2.6. Exception Handling
-Options}\label{exception-handling-options}}
-
-\begin{longtable}[]{@{}llc@{}}
-\toprule
-Parameter & Description & Default\tabularnewline
-\midrule
-\endhead
-FEATURE\_DSX & Enable setting the \texttt{SR{[}DSX{]}} flag &
-\texttt{ENABLED}\tabularnewline
-FEATURE\_RANGE & Enable checking and raising range exceptions &
-\texttt{ENABLED}\tabularnewline
-FEATURE\_OVERFLOW & Enable checking and raising overflow exceptions &
-\texttt{ENABLED}\tabularnewline
-\bottomrule
-\end{longtable}
-
-\hypertarget{alu-configuration-options}{%
-\subparagraph{2.1.1.2.7. ALU Configuration
-Options}\label{alu-configuration-options}}
-
-\begin{longtable}[]{@{}llc@{}}
-\toprule
-Parameter & Description & Default\tabularnewline
-\midrule
-\endhead
-FEATURE\_MULTIPLIER & Specify the multiplier implementation &
-\texttt{THREESTAGE}\tabularnewline
-FEATURE\_DIVIDER & Specify the divider implementation &
-\texttt{SERIAL}\tabularnewline
-OPTION\_SHIFTER & Specify the shifter implementation &
-\texttt{BARREL}\tabularnewline
-FEATURE\_CARRY\_FLAG & Enable checking and setting the carry flag &
-\texttt{ENABLED}\tabularnewline
-\bottomrule
-\end{longtable}
-
-\hypertarget{instruction-enabling-options}{%
-\subparagraph{2.1.1.2.8. Instruction Enabling
-Options}\label{instruction-enabling-options}}
-
-\begin{longtable}[]{@{}llc@{}}
-\toprule
-Parameter & Description & Default\tabularnewline
-\midrule
-\endhead
-FEATURE\_MAC & \texttt{l.mac*} multiply accumulate instructions &
-\texttt{NONE}\tabularnewline
-FEATURE\_SYSCALL & \texttt{l.sys} OS syscall instruction &
-\texttt{ENABLED}\tabularnewline
-FEATURE\_TRAP & \texttt{l.trap} instruction &
-\texttt{ENABLED}\tabularnewline
-FEATURE\_ADDC & \texttt{l.addc} add with \texttt{carry} flag instruction
-& \texttt{ENABLED}\tabularnewline
-FEATURE\_SRA & \texttt{l.sra} shirt right arithmetic instruction &
-\texttt{ENABLED}\tabularnewline
-FEATURE\_ROR & \texttt{l.ror*} rotate right instructions &
-\texttt{NONE}\tabularnewline
-FEATURE\_EXT & \texttt{l.ext*} sign extend instructions &
-\texttt{NONE}\tabularnewline
-FEATURE\_CMOV & \texttt{l.cmov} conditional move instruction &
-\texttt{ENABLED}\tabularnewline
-FEATURE\_FFL1 & \texttt{l.f{[}fl{]}1} find first/last set bit
-instructions & \texttt{ENABLED}\tabularnewline
-FEATURE\_ATOMIC & \texttt{l.lwa} and \texttt{l.swa} atomic instructions
-& \texttt{ENABLED}\tabularnewline
-FEATURE\_CUST1 & \texttt{l.cust*} custom instruction &
-\texttt{NONE}\tabularnewline
-FEATURE\_CUST2 & \texttt{l.cust*} custom instruction &
-\texttt{NONE}\tabularnewline
-FEATURE\_CUST3 & \texttt{l.cust*} custom instruction &
-\texttt{NONE}\tabularnewline
-FEATURE\_CUST4 & \texttt{l.cust*} custom instruction &
-\texttt{NONE}\tabularnewline
-FEATURE\_CUST5 & \texttt{l.cust*} custom instruction &
-\texttt{NONE}\tabularnewline
-FEATURE\_CUST6 & \texttt{l.cust*} custom instruction &
-\texttt{NONE}\tabularnewline
-FEATURE\_CUST7 & \texttt{l.cust*} custom instruction &
-\texttt{NONE}\tabularnewline
-FEATURE\_CUST8 & \texttt{l.cust*} custom instruction &
-\texttt{NONE}\tabularnewline
-\bottomrule
-\end{longtable}
-
-\hypertarget{pipeline}{%
-\paragraph{2.1.1.3. Pipeline}\label{pipeline}}
+\paragraph{2.1.1.2. Pipeline}\label{pipeline}
 
 In computer science, instruction pipelining is a technique for
 implementing instruction-level parallelism within a PU. Pipelining
@@ -585,28 +328,246 @@ WRITE-BACK & CONTROL & \texttt{or1k\_cfgrs}\tabularnewline
   whether it comes from the memory system or from the ALU.
 \end{itemize}
 
-\hypertarget{interface}{%
-\subsubsection{2.1.2. Interface}\label{interface}}
+\subsubsection{2.1.2. Interface}\label{interface}
 
-\hypertarget{instruction-inputsoutputs-bus}{%
-\paragraph{2.1.2.1. Instruction Inputs/Outputs
-Bus}\label{instruction-inputsoutputs-bus}}
+\paragraph{2.1.2.1. Constants}\label{constants}
 
-\hypertarget{data-inputsoutputs-bus}{%
-\paragraph{2.1.2.2. Data Inputs/Outputs
-Bus}\label{data-inputsoutputs-bus}}
+\subparagraph{2.1.1.2.1. Basic Constants}\label{basic-constants}
 
-\hypertarget{registers}{%
-\subsubsection{2.1.3. Registers}\label{registers}}
+\begin{longtable}[]{@{}llcc@{}}
+\toprule
+Parameter & Description & Default & Values\tabularnewline
+\midrule
+\endhead
+OPTION\_OPERAND\_WIDTH & CPU data and address widths & 32 & 32,
+64\tabularnewline
+OPTION\_CPU0 & CPU pipeline core & \texttt{CAPPUCCINO} &
+\texttt{CAPPUCCINO}\tabularnewline
+OPTION\_RESET\_PC & Program Counter upon reset & \texttt{0x100} &
+N\tabularnewline
+\bottomrule
+\end{longtable}
 
-\hypertarget{interruptions}{%
-\subsubsection{2.1.4. Interruptions}\label{interruptions}}
+\subparagraph{2.1.1.2.2. Caching Constants}\label{caching-constants}
 
-\hypertarget{pu-or1k}{%
-\subsection{2.2. PU-OR1K}\label{pu-or1k}}
+\begin{longtable}[]{@{}llcc@{}}
+\toprule
+Parameter & Description & Default & Values\tabularnewline
+\midrule
+\endhead
+FEATURE\_DATACACHE & Enable memory access data caching & \texttt{NONE} &
+\texttt{ENABLED}\tabularnewline
+OPTION\_DCACHE\_BLOCK\_WIDTH & Address width of a cache block & 5 &
+\texttt{n}\tabularnewline
+OPTION\_DCACHE\_SET\_WIDTH & Set address width & 9 &
+\texttt{n}\tabularnewline
+OPTION\_DCACHE\_WAYS & Number of blocks per set & 2 &
+\texttt{n}\tabularnewline
+OPTION\_DCACHE\_LIMIT\_WIDTH & Maximum address width & 32 &
+\texttt{n}\tabularnewline
+OPTION\_DCACHE\_SNOOP & Bus snooping for cache coherency & \texttt{NONE}
+& \texttt{ENABLED}\tabularnewline
+FEATURE\_INSTRUCTIONCACHE & Memory access instruction caching &
+\texttt{NONE} & \texttt{ENABLED}\tabularnewline
+OPTION\_ICACHE\_BLOCK\_WIDTH & Address width of a cache block & 5 &
+\texttt{n}\tabularnewline
+OPTION\_ICACHE\_SET\_WIDTH & Set address width & 9 &
+\texttt{n}\tabularnewline
+OPTION\_ICACHE\_WAYS & Number of blocks per set & 2 &
+\texttt{n}\tabularnewline
+OPTION\_ICACHE\_LIMIT\_WIDTH & Maximum address width & 32 &
+\texttt{n}\tabularnewline
+\bottomrule
+\end{longtable}
 
-\hypertarget{processing-unit}{%
-\subsubsection{2.2.1. Processing Unit}\label{processing-unit}}
+\subparagraph{2.1.1.2.3. Memory Management Unit (MMU)
+Constants}\label{memory-management-unit-mmu-constants}
+
+\begin{longtable}[]{@{}llcc@{}}
+\toprule
+Parameter & Description & Default & Values\tabularnewline
+\midrule
+\endhead
+FEATURE\_DMMU & Enable the data bus MMU & \texttt{NONE} &
+\texttt{ENABLED}\tabularnewline
+FEATURE\_DMMU\_HW\_TLB\_RELOAD & Enable hardware TLB reload &
+\texttt{NONE} & \texttt{ENABLED}\tabularnewline
+OPTION\_DMMU\_SET\_WIDTH & Set address width & 6 &
+\texttt{n}\tabularnewline
+OPTION\_DMMU\_WAYS & Number of ways per set & 1 &
+\texttt{n}\tabularnewline
+FEATURE\_IMMU & Enable the instruction bus MMU & \texttt{NONE} &
+\texttt{ENABLED}\tabularnewline
+FEATURE\_IMMU\_HW\_TLB\_RELOAD & Enable hardware TLB reload &
+\texttt{NONE} & \texttt{ENABLED}\tabularnewline
+OPTION\_IMMU\_SET\_WIDTH & Set address width & 6 &
+\texttt{n}\tabularnewline
+OPTION\_IMMU\_WAYS & Number of ways per set & 1 &
+\texttt{n}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subparagraph{2.1.1.2.4. System Bus
+Constants}\label{system-bus-constants}
+
+\begin{longtable}[]{@{}llc@{}}
+\toprule
+Parameter & Description & Default\tabularnewline
+\midrule
+\endhead
+FEATURE\_STORE\_BUFFER & Load store unit store buffer &
+\texttt{ENABLED}\tabularnewline
+OPTION\_STORE\_BUFFER\_DEPTH\_WIDTH & Load store unit store buffer depth
+& 8\tabularnewline
+BUS\_IF\_TYPE & Bus interface type & \texttt{WISHBONE32}\tabularnewline
+IBUS\_WB\_TYPE & Instruction bus interface &
+\texttt{B3\_READ\_BURSTING}\tabularnewline
+DBUS\_WB\_TYPE & Data bus interface type option &
+\texttt{CLASSIC}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subparagraph{2.1.1.2.5. Hardware Unit Configuration
+Constants}\label{hardware-unit-configuration-constants}
+
+\begin{longtable}[]{@{}llc@{}}
+\toprule
+Parameter & Description & Default\tabularnewline
+\midrule
+\endhead
+FEATURE\_TRACEPORT\_EXEC & Traceport hardware interface &
+\texttt{NONE}\tabularnewline
+FEATURE\_DEBUGUNIT & Hardware breakpoints and debug unit &
+\texttt{NONE}\tabularnewline
+FEATURE\_PERFCOUNTERS & Performance counters unit &
+\texttt{NONE}\tabularnewline
+OPTION\_PERFCOUNTERS\_NUM & Performance counters to generate &
+0\tabularnewline
+FEATURE\_TIMER & Internal OpenRISC timer &
+\texttt{ENABLED}\tabularnewline
+FEATURE\_PIC & Internal OpenRISC PIC & \texttt{ENABLED}\tabularnewline
+OPTION\_PIC\_TRIGGER & PIC trigger mode & \texttt{LEVEL}\tabularnewline
+OPTION\_PIC\_NMI\_WIDTH & Non maskable interrupts width &
+0\tabularnewline
+OPTION\_RF\_CLEAR\_ON\_INIT & clearing all registers on initialization &
+0\tabularnewline
+OPTION\_RF\_NUM\_SHADOW\_GPR & Number of shadow register files &
+0\tabularnewline
+OPTION\_RF\_ADDR\_WIDTH & Address width of the register file &
+5\tabularnewline
+OPTION\_RF\_WORDS & Number of registers in the register file &
+32\tabularnewline
+FEATURE\_FASTCONTEXTS & Fast context switching of register sets &
+\texttt{NONE}\tabularnewline
+FEATURE\_MULTICORE & \texttt{coreid} and \texttt{numcores} SPR registers
+& \texttt{NONE}\tabularnewline
+FEATURE\_FPU & FPU, for cappuccino pipeline only &
+\texttt{NONE}\tabularnewline
+OPTION\_FTOI\_ROUNDING & Rounding behavior for \texttt{lf.ftoi.s} &
+\texttt{CPP}\tabularnewline
+FEATURE\_BRANCH\_PREDICTOR & Branch predictor implementation &
+\texttt{SIMPLE}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subparagraph{2.1.1.2.6. Exception Handling
+Options}\label{exception-handling-options}
+
+\begin{longtable}[]{@{}llc@{}}
+\toprule
+Parameter & Description & Default\tabularnewline
+\midrule
+\endhead
+FEATURE\_DSX & Enable setting the \texttt{SR{[}DSX{]}} flag &
+\texttt{ENABLED}\tabularnewline
+FEATURE\_RANGE & Enable checking and raising range exceptions &
+\texttt{ENABLED}\tabularnewline
+FEATURE\_OVERFLOW & Enable checking and raising overflow exceptions &
+\texttt{ENABLED}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subparagraph{2.1.1.2.7. ALU Configuration
+Options}\label{alu-configuration-options}
+
+\begin{longtable}[]{@{}llc@{}}
+\toprule
+Parameter & Description & Default\tabularnewline
+\midrule
+\endhead
+FEATURE\_MULTIPLIER & Specify the multiplier implementation &
+\texttt{THREESTAGE}\tabularnewline
+FEATURE\_DIVIDER & Specify the divider implementation &
+\texttt{SERIAL}\tabularnewline
+OPTION\_SHIFTER & Specify the shifter implementation &
+\texttt{BARREL}\tabularnewline
+FEATURE\_CARRY\_FLAG & Enable checking and setting the carry flag &
+\texttt{ENABLED}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subparagraph{2.1.1.2.8. Instruction Enabling
+Options}\label{instruction-enabling-options}
+
+\begin{longtable}[]{@{}llc@{}}
+\toprule
+Parameter & Description & Default\tabularnewline
+\midrule
+\endhead
+FEATURE\_MAC & \texttt{l.mac*} multiply accumulate instructions &
+\texttt{NONE}\tabularnewline
+FEATURE\_SYSCALL & \texttt{l.sys} OS syscall instruction &
+\texttt{ENABLED}\tabularnewline
+FEATURE\_TRAP & \texttt{l.trap} instruction &
+\texttt{ENABLED}\tabularnewline
+FEATURE\_ADDC & \texttt{l.addc} add with \texttt{carry} flag instruction
+& \texttt{ENABLED}\tabularnewline
+FEATURE\_SRA & \texttt{l.sra} shirt right arithmetic instruction &
+\texttt{ENABLED}\tabularnewline
+FEATURE\_ROR & \texttt{l.ror*} rotate right instructions &
+\texttt{NONE}\tabularnewline
+FEATURE\_EXT & \texttt{l.ext*} sign extend instructions &
+\texttt{NONE}\tabularnewline
+FEATURE\_CMOV & \texttt{l.cmov} conditional move instruction &
+\texttt{ENABLED}\tabularnewline
+FEATURE\_FFL1 & \texttt{l.f{[}fl{]}1} find first/last set bit
+instructions & \texttt{ENABLED}\tabularnewline
+FEATURE\_ATOMIC & \texttt{l.lwa} and \texttt{l.swa} atomic instructions
+& \texttt{ENABLED}\tabularnewline
+FEATURE\_CUST1 & \texttt{l.cust*} custom instruction &
+\texttt{NONE}\tabularnewline
+FEATURE\_CUST2 & \texttt{l.cust*} custom instruction &
+\texttt{NONE}\tabularnewline
+FEATURE\_CUST3 & \texttt{l.cust*} custom instruction &
+\texttt{NONE}\tabularnewline
+FEATURE\_CUST4 & \texttt{l.cust*} custom instruction &
+\texttt{NONE}\tabularnewline
+FEATURE\_CUST5 & \texttt{l.cust*} custom instruction &
+\texttt{NONE}\tabularnewline
+FEATURE\_CUST6 & \texttt{l.cust*} custom instruction &
+\texttt{NONE}\tabularnewline
+FEATURE\_CUST7 & \texttt{l.cust*} custom instruction &
+\texttt{NONE}\tabularnewline
+FEATURE\_CUST8 & \texttt{l.cust*} custom instruction &
+\texttt{NONE}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\paragraph{2.1.2.2. Signals}\label{signals}
+
+\subparagraph{2.1.2.2.1. Instruction Inputs/Outputs
+Bus}\label{instruction-inputsoutputs-bus}
+
+\subparagraph{2.1.2.2.2. Data Inputs/Outputs
+Bus}\label{data-inputsoutputs-bus}
+
+\subsubsection{2.1.3. Registers}\label{registers}
+
+\subsubsection{2.1.4. Interruptions}\label{interruptions}
+
+\subsection{2.2. PU-OR1K}\label{pu-or1k}
+
+\subsubsection{2.2.1. Processing Unit}\label{processing-unit}
 
 The OpenRISC implementation has a 32/64 bit Microarchitecture, 5 stages
 data pipeline and an Instruction Set Architecture based on Reduced
@@ -637,11 +598,9 @@ cache is a smaller, faster memory, closer to a core, which stores copies
 of the data from frequently used main memory locations. Most CPUs have
 different independent caches, including instruction and data caches.
 
-\hypertarget{instruction-cache}{%
-\subsubsection{2.2.2. Instruction Cache}\label{instruction-cache}}
+\subsubsection{2.2.2. Instruction Cache}\label{instruction-cache}
 
-\hypertarget{functionality-1}{%
-\paragraph{2.2.2.1. Functionality}\label{functionality-1}}
+\paragraph{2.2.2.1. Functionality}\label{functionality-1}
 
 \begin{longtable}[]{@{}ll@{}}
 \toprule
@@ -670,12 +629,10 @@ Generic\tabularnewline
 \bottomrule
 \end{longtable}
 
-\hypertarget{interface-1}{%
-\paragraph{2.2.2.2. Interface}\label{interface-1}}
+\paragraph{2.2.2.2. Interface}\label{interface-1}
 
-\hypertarget{instruction-inputsoutputs-amba4-axi-lite-bus}{%
 \subparagraph{2.2.2.2.1. Instruction INPUTS/OUTPUTS AMBA4 AXI-Lite
-Bus}\label{instruction-inputsoutputs-amba4-axi-lite-bus}}
+Bus}\label{instruction-inputsoutputs-amba4-axi-lite-bus}
 
 2.2.2.2.1.1. Signals of the Read and Write Address channels
 
@@ -757,9 +714,8 @@ data\tabularnewline
 \bottomrule
 \end{longtable}
 
-\hypertarget{instruction-inputsoutputs-amba3-ahb-lite-bus}{%
 \subparagraph{2.2.2.2.2. Instruction INPUTS/OUTPUTS AMBA3 AHB-Lite
-Bus}\label{instruction-inputsoutputs-amba3-ahb-lite-bus}}
+Bus}\label{instruction-inputsoutputs-amba3-ahb-lite-bus}
 
 \begin{longtable}[]{@{}lccl@{}}
 \toprule
@@ -793,9 +749,8 @@ Response\tabularnewline
 \bottomrule
 \end{longtable}
 
-\hypertarget{instruction-inputsoutputs-wishbone-bus}{%
 \subparagraph{2.2.2.2.3. Instruction INPUTS/OUTPUTS Wishbone
-Bus}\label{instruction-inputsoutputs-wishbone-bus}}
+Bus}\label{instruction-inputsoutputs-wishbone-bus}
 
 \begin{longtable}[]{@{}lccl@{}}
 \toprule
@@ -823,11 +778,9 @@ Input\tabularnewline
 \bottomrule
 \end{longtable}
 
-\hypertarget{data-cache}{%
-\subsubsection{2.2.3. Data Cache}\label{data-cache}}
+\subsubsection{2.2.3. Data Cache}\label{data-cache}
 
-\hypertarget{functionality-2}{%
-\paragraph{2.2.3.1. Functionality}\label{functionality-2}}
+\paragraph{2.2.3.1. Functionality}\label{functionality-2}
 
 \begin{longtable}[]{@{}ll@{}}
 \toprule
@@ -853,12 +806,10 @@ Generic\tabularnewline
 \bottomrule
 \end{longtable}
 
-\hypertarget{interface-2}{%
-\paragraph{2.2.3.2. Interface}\label{interface-2}}
+\paragraph{2.2.3.2. Interface}\label{interface-2}
 
-\hypertarget{data-inputsoutputs-amba4-axi-lite-bus}{%
 \subparagraph{2.2.3.2.1. Data INPUTS/OUTPUTS AMBA4 AXI-Lite
-Bus}\label{data-inputsoutputs-amba4-axi-lite-bus}}
+Bus}\label{data-inputsoutputs-amba4-axi-lite-bus}
 
 2.2.3.2.1.1. Signals of the Read and Write Address channels
 
@@ -940,9 +891,8 @@ data\tabularnewline
 \bottomrule
 \end{longtable}
 
-\hypertarget{data-inputsoutputs-amba3-ahb-lite-bus}{%
 \paragraph{2.2.3.2.2. Data INPUTS/OUTPUTS AMBA3 AHB-Lite
-Bus}\label{data-inputsoutputs-amba3-ahb-lite-bus}}
+Bus}\label{data-inputsoutputs-amba3-ahb-lite-bus}
 
 \begin{longtable}[]{@{}lccl@{}}
 \toprule
@@ -973,9 +923,8 @@ Lock\tabularnewline
 \bottomrule
 \end{longtable}
 
-\hypertarget{data-inputsoutputs-wishbone-bus}{%
 \paragraph{2.2.3.2.3. Data INPUTS/OUTPUTS Wishbone
-Bus}\label{data-inputsoutputs-wishbone-bus}}
+Bus}\label{data-inputsoutputs-wishbone-bus}
 
 \begin{longtable}[]{@{}lccl@{}}
 \toprule
@@ -1000,11 +949,9 @@ Input\tabularnewline
 \bottomrule
 \end{longtable}
 
-\hypertarget{workflow}{%
-\section{3. WORKFLOW}\label{workflow}}
+\section{3. WORKFLOW}\label{workflow}
 
-\hypertarget{hardware}{%
-\subsection{3.1. HARDWARE}\label{hardware}}
+\subsection{3.1. HARDWARE}\label{hardware}
 
 \textbf{1. System Level (SystemC/SystemVerilog)}
 
@@ -1063,13 +1010,11 @@ VHDL, but is seldom used in modern designs, as in modern digital ASIC or
 FPGA flows the physical gates are considered the atomic build blocks of
 the logic circuit.
 
-\hypertarget{front-end-open-source-tools}{%
 \subsubsection{3.1.1. Front-End Open Source
-Tools}\label{front-end-open-source-tools}}
+Tools}\label{front-end-open-source-tools}
 
-\hypertarget{modeling-system-level-of-hardware}{%
 \paragraph{3.1.1.1. Modeling System Level of
-Hardware}\label{modeling-system-level-of-hardware}}
+Hardware}\label{modeling-system-level-of-hardware}
 
 \emph{A System Description Language Editor is a computer tool allows to
 generate software code. A System Description Language is a formal
@@ -1092,9 +1037,8 @@ make
 sudo make install
 \end{verbatim}
 
-\hypertarget{simulating-system-level-of-hardware}{%
 \paragraph{3.1.1.2. Simulating System Level of
-Hardware}\label{simulating-system-level-of-hardware}}
+Hardware}\label{simulating-system-level-of-hardware}
 
 \emph{A System Description Language Simulator (translator) is a computer
 program that translates computer code written in a Programming Language
@@ -1132,9 +1076,8 @@ cd sim/verilog/regression/axi4/verilator
 source SIMULATE-IT
 \end{verbatim}
 
-\hypertarget{verifying-system-level-of-hardware}{%
 \paragraph{3.1.1.3. Verifying System Level of
-Hardware}\label{verifying-system-level-of-hardware}}
+Hardware}\label{verifying-system-level-of-hardware}
 
 \emph{A UVM standard improves interoperability and reduces the cost of
 repurchasing and rewriting IP for each new project or Electronic Design
@@ -1167,9 +1110,8 @@ cd sim/verilog/pu/or1k/axi4/msim
 source SIMULATE-IT
 \end{verbatim}
 
-\hypertarget{describing-register-transfer-level-of-hardware}{%
 \paragraph{3.1.1.4. Describing Register Transfer Level of
-Hardware}\label{describing-register-transfer-level-of-hardware}}
+Hardware}\label{describing-register-transfer-level-of-hardware}
 
 \emph{A Hardware Description Language Editor is any editor that allows
 to generate hardware code. Hardware Description Language is a
@@ -1191,9 +1133,8 @@ make
 sudo make install
 \end{verbatim}
 
-\hypertarget{simulating-register-transfer-level-of-hardware}{%
 \paragraph{3.1.1.5. Simulating Register Transfer Level of
-Hardware}\label{simulating-register-transfer-level-of-hardware}}
+Hardware}\label{simulating-register-transfer-level-of-hardware}
 
 \emph{A Hardware Description Language Simulator uses mathematical models
 to replicate the behavior of an actual hardware device. Simulation
@@ -1260,9 +1201,8 @@ cd sim/vhdl/regression/axi4/ghdl
 source SIMULATE-IT
 \end{verbatim}
 
-\hypertarget{synthesizing-register-transfer-level-of-hardware}{%
 \paragraph{3.1.1.6. Synthesizing Register Transfer Level of
-Hardware}\label{synthesizing-register-transfer-level-of-hardware}}
+Hardware}\label{synthesizing-register-transfer-level-of-hardware}
 
 \emph{A Hardware Description Language Synthesizer turns a RTL
 implementation into a Logical Gate Level implementation. Logical design
@@ -1296,9 +1236,8 @@ sudo yosys-config --exec mkdir -p --datdir/plugins
 sudo yosys-config --exec cp "ghdl.so" --datdir/plugins/ghdl.so
 \end{verbatim}
 
-\hypertarget{optimizing-register-transfer-level-of-hardware}{%
 \paragraph{3.1.1.7. Optimizing Register Transfer Level of
-Hardware}\label{optimizing-register-transfer-level-of-hardware}}
+Hardware}\label{optimizing-register-transfer-level-of-hardware}
 
 \emph{A Hardware Description Language Optimizer finds an equivalent
 representation of the specified logic circuit under specified
@@ -1320,9 +1259,8 @@ make
 sudo make install
 \end{verbatim}
 
-\hypertarget{verifying-register-transfer-level-of-hardware}{%
 \paragraph{3.1.1.8. Verifying Register Transfer Level of
-Hardware}\label{verifying-register-transfer-level-of-hardware}}
+Hardware}\label{verifying-register-transfer-level-of-hardware}
 
 \emph{A Hardware Description Language Verifier proves or disproves the
 correctness of intended algorithms underlying a hardware system with
@@ -1340,9 +1278,8 @@ type:
 git clone --recursive https://github.com/YosysHQ/SymbiYosys
 \end{verbatim}
 
-\hypertarget{back-end-open-source-tools}{%
 \subsubsection{3.1.2. Back-End Open Source
-Tools}\label{back-end-open-source-tools}}
+Tools}\label{back-end-open-source-tools}
 
 \textbf{I. Back-End Workflow Qflow for ASICs}
 
@@ -1364,9 +1301,8 @@ make
 sudo make install
 \end{verbatim}
 
-\hypertarget{planning-switch-level-of-hardware}{%
 \paragraph{3.1.2.1. Planning Switch Level of
-Hardware}\label{planning-switch-level-of-hardware}}
+Hardware}\label{planning-switch-level-of-hardware}
 
 \emph{A Floor-Planner of an Integrated Circuit (IC) is a schematic
 representation of tentative placement of its major functional blocks. In
@@ -1388,9 +1324,8 @@ make
 sudo make install
 \end{verbatim}
 
-\hypertarget{placing-switch-level-of-hardware}{%
 \paragraph{3.1.2.2. Placing Switch Level of
-Hardware}\label{placing-switch-level-of-hardware}}
+Hardware}\label{placing-switch-level-of-hardware}
 
 \emph{A Standard Cell Placer takes a given synthesized circuit netlist
 together with a technology library and produces a valid placement
@@ -1414,9 +1349,8 @@ make
 sudo make install
 \end{verbatim}
 
-\hypertarget{timing-switch-level-of-hardware}{%
 \paragraph{3.1.2.3. Timing Switch Level of
-Hardware}\label{timing-switch-level-of-hardware}}
+Hardware}\label{timing-switch-level-of-hardware}
 
 \emph{A Standard Cell Timing-Analizer is a simulation method of
 computing the expected timing of a digital circuit without requiring a
@@ -1441,9 +1375,8 @@ make
 sudo make install
 \end{verbatim}
 
-\hypertarget{routing-switch-level-of-hardware}{%
 \paragraph{3.1.2.4. Routing Switch Level of
-Hardware}\label{routing-switch-level-of-hardware}}
+Hardware}\label{routing-switch-level-of-hardware}
 
 \emph{A Standard Cell Router takes pre-existing polygons consisting of
 pins on cells, and pre-existing wiring called pre-routes. Each of these
@@ -1465,9 +1398,8 @@ make
 sudo make install
 \end{verbatim}
 
-\hypertarget{simulating-switch-level-of-hardware}{%
 \paragraph{3.1.2.5. Simulating Switch Level of
-Hardware}\label{simulating-switch-level-of-hardware}}
+Hardware}\label{simulating-switch-level-of-hardware}
 
 \emph{A Standard Cell Simulator treats transistors as ideal switches.
 Extracted capacitance and lumped resistance values are used to make the
@@ -1489,9 +1421,8 @@ make
 sudo make install
 \end{verbatim}
 
-\hypertarget{verifying-switch-level-of-hardware-lvs}{%
 \paragraph{3.1.2.6. Verifying Switch Level of Hardware
-LVS}\label{verifying-switch-level-of-hardware-lvs}}
+LVS}\label{verifying-switch-level-of-hardware-lvs}
 
 \emph{A Standard Cell Verifier compares netlists, a process known as LVS
 (Layout vs.~Schematic). This step ensures that the geometry that has
@@ -1513,9 +1444,8 @@ make
 sudo make install
 \end{verbatim}
 
-\hypertarget{checking-switch-level-of-hardware-drc}{%
 \paragraph{3.1.2.7. Checking Switch Level of Hardware
-DRC}\label{checking-switch-level-of-hardware-drc}}
+DRC}\label{checking-switch-level-of-hardware-drc}
 
 \emph{A Standard Cell Checker is a geometric constraint imposed on
 Printed Circuit Board (PCB) and Integrated Circuit (IC) designers to
@@ -1538,9 +1468,8 @@ make
 sudo make install
 \end{verbatim}
 
-\hypertarget{printing-switch-level-of-hardware-gds}{%
 \paragraph{3.1.2.8. Printing Switch Level of Hardware
-GDS}\label{printing-switch-level-of-hardware-gds}}
+GDS}\label{printing-switch-level-of-hardware-gds}
 
 \emph{A Standard Cell Editor allows to print a set of standard cells.
 The standard cell methodology is an abstraction, whereby a low-level
@@ -1564,11 +1493,9 @@ sudo make install
 
 \textbf{II. Back-End Workflow Symbiflow for FPGAs}
 
-\hypertarget{software}{%
-\subsection{3.2. SOFTWARE}\label{software}}
+\subsection{3.2. SOFTWARE}\label{software}
 
-\hypertarget{compilers}{%
-\subsubsection{3.2.1. Compilers}\label{compilers}}
+\subsubsection{3.2.1. Compilers}\label{compilers}
 
 type:
 
@@ -1577,8 +1504,7 @@ sudo apt install git libgmp-dev libmpfr-dev libmpc-dev zlib1g-dev texinfo \
 build-essential flex bison
 \end{verbatim}
 
-\hypertarget{openrisc-gnu-cc}{%
-\paragraph{3.2.1.1. OpenRISC GNU C/C++}\label{openrisc-gnu-cc}}
+\paragraph{3.2.1.1. OpenRISC GNU C/C++}\label{openrisc-gnu-cc}
 
 type:
 
@@ -1629,8 +1555,7 @@ sudo make install
 cd ..
 \end{verbatim}
 
-\hypertarget{openrisc-gnu-go}{%
-\paragraph{3.2.1.2. OpenRISC GNU Go}\label{openrisc-gnu-go}}
+\paragraph{3.2.1.2. OpenRISC GNU Go}\label{openrisc-gnu-go}
 
 type:
 
@@ -1642,12 +1567,10 @@ cd ../..
 sudo mv riscv-go /opt
 \end{verbatim}
 
-\hypertarget{simulators}{%
-\subsubsection{3.2.2. Simulators}\label{simulators}}
+\subsubsection{3.2.2. Simulators}\label{simulators}
 
-\hypertarget{or1ksim-for-hardware-engineers}{%
 \paragraph{3.2.2.1. Or1ksim (For Hardware
-Engineers)}\label{or1ksim-for-hardware-engineers}}
+Engineers)}\label{or1ksim-for-hardware-engineers}
 
 type:
 
@@ -1662,9 +1585,8 @@ make
 sudo make install
 \end{verbatim}
 
-\hypertarget{qemu-for-software-engineers}{%
 \paragraph{3.2.2.2. QEMU (For Software
-Engineers)}\label{qemu-for-software-engineers}}
+Engineers)}\label{qemu-for-software-engineers}
 
 type:
 
@@ -1680,19 +1602,16 @@ make
 sudo make install
 \end{verbatim}
 
-\hypertarget{conclusion}{%
-\section{4. CONCLUSION}\label{conclusion}}
+\section{4. CONCLUSION}\label{conclusion}
 
-\hypertarget{hardware-1}{%
-\subsection{4.1. HARDWARE}\label{hardware-1}}
+\subsection{4.1. HARDWARE}\label{hardware-1}
 
 \begin{verbatim}
 cd synthesis/yosys
 source SYNTHESIZE-IT
 \end{verbatim}
 
-\hypertarget{gscl-45-nm-asic}{%
-\subsubsection{4.1.1. GSCL 45 nm ASIC}\label{gscl-45-nm-asic}}
+\subsubsection{4.1.1. GSCL 45 nm ASIC}\label{gscl-45-nm-asic}
 
 type:
 
@@ -1701,8 +1620,7 @@ cd synthesis/qflow
 source FLOW-IT
 \end{verbatim}
 
-\hypertarget{lattice-ice40-fpga}{%
-\subsubsection{4.1.2. Lattice iCE40 FPGA}\label{lattice-ice40-fpga}}
+\subsubsection{4.1.2. Lattice iCE40 FPGA}\label{lattice-ice40-fpga}
 
 type:
 
@@ -1711,11 +1629,9 @@ cd synthesis/symbiflow
 source FLOW-IT
 \end{verbatim}
 
-\hypertarget{software-1}{%
-\subsection{4.2. SOFTWARE}\label{software-1}}
+\subsection{4.2. SOFTWARE}\label{software-1}
 
-\hypertarget{openrisc-tests}{%
-\subsubsection{4.2.1. OpenRISC Tests}\label{openrisc-tests}}
+\subsubsection{4.2.1. OpenRISC Tests}\label{openrisc-tests}
 
 type:
 
@@ -1767,8 +1683,7 @@ or1k-sim or1k-backtoback_jmp
 or1k-sim or1k-trapdelayslot
 \end{verbatim}
 
-\hypertarget{openrisc-bare-metal}{%
-\subsubsection{4.2.2. OpenRISC Bare Metal}\label{openrisc-bare-metal}}
+\subsubsection{4.2.2. OpenRISC Bare Metal}\label{openrisc-bare-metal}
 
 type:
 
@@ -1834,12 +1749,10 @@ export PATH=/opt/or1ksim/bin:${PATH}
 or1k-sim hello_cpp.elf
 \end{verbatim}
 
-\hypertarget{openrisc-operating-system}{%
 \subsubsection{4.2.3. OpenRISC Operating
-System}\label{openrisc-operating-system}}
+System}\label{openrisc-operating-system}
 
-\hypertarget{gnu-linux}{%
-\paragraph{4.2.3.1. GNU Linux}\label{gnu-linux}}
+\paragraph{4.2.3.1. GNU Linux}\label{gnu-linux}
 
 \textbf{Building Linux}
 
@@ -1881,17 +1794,13 @@ qemu-system-or1k -cpu or1200 -M or1k-sim -kernel vmlinux-tile -serial stdio \
 -nographic -monitor none -smp cpus=2
 \end{verbatim}
 
-\hypertarget{gnu-hurd}{%
-\paragraph{4.2.3.2. GNU Hurd}\label{gnu-hurd}}
+\paragraph{4.2.3.2. GNU Hurd}\label{gnu-hurd}
 
-\hypertarget{openrisc-distribution}{%
 \subsubsection{4.2.4. OpenRISC
-Distribution}\label{openrisc-distribution}}
+Distribution}\label{openrisc-distribution}
 
-\hypertarget{gnu-debian}{%
-\paragraph{4.2.4.1. GNU Debian}\label{gnu-debian}}
+\paragraph{4.2.4.1. GNU Debian}\label{gnu-debian}
 
-\hypertarget{gnu-fedora}{%
-\paragraph{4.2.4.2. GNU Fedora}\label{gnu-fedora}}
+\paragraph{4.2.4.2. GNU Fedora}\label{gnu-fedora}
 
 \end{document}

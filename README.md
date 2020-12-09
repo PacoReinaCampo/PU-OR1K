@@ -85,9 +85,46 @@ The CORE-OR1K is based on the Harvard architecture, which is a computer architec
 
 In a Harvard architecture, there is no need to make the two memories share characteristics. In particular, the word width, timing, implementation technology, and memory address structure can differ. In some systems, instructions for pre-programmed tasks can be stored in read-only memory while data memory generally requires read-write memory. In some systems, there is much more instruction memory than data memory so instruction addresses are wider than data addresses.
 
-#### 2.1.1.2. Parameters
+#### 2.1.1.2. Pipeline
 
-##### 2.1.1.2.1. Basic Parameters
+In computer science, instruction pipelining is a technique for implementing instruction-level parallelism within a PU. Pipelining attempts to keep every part of the processor busy with some instruction by dividing incoming instructions into a series of sequential steps performed by different PUs with different parts of instructions processed in parallel. It allows faster PU throughput than would otherwise be possible at a given clock rate.
+
+| Typical           | Modified             | Module                         |
+| ----------------- | -------------------- | ------------------------------ |
+| FETCH             | FETCH                | `or1k_cache_lru`               |
+|                   |                      | `or1k_fetch_cappuccino`        |
+|                   |                      | `or1k_icache`                  |
+|                   |                      | `or1k_immu`                    |
+| DECODE            | DECODE               | `or1k_decode`                  |
+| EXECUTE & CONTROL | EXECUTE & WRITE-BACK | `or1k_execute_alu`             |
+|                   |                      | `or1k_execute_ctrl_cappuccino` |
+|                   |                      | `or1k_rf_cappuccino`           |
+|                   |                      | `or1k_wb_mux_cappuccino`       |
+| MEMORY            | MEMORY               | `or1k_dcache`                  |
+|                   |                      | `or1k_dmmu`                    |
+|                   |                      | `or1k_lsu_cappuccino`          |
+|                   |                      | `or1k_store_buffer`            |
+| WRITE-BACK        | CONTROL              | `or1k_cfgrs`                   |
+|                   |                      | `or1k_ctrl_cappuccino`         |
+|                   |                      | `or1k_pcu`                     |
+|                   |                      | `or1k_pic`                     |
+|                   |                      | `or1k_ticktimer`               |
+
+- IF – Instruction Fetch Unit : Send out the PC and fetch the instruction from memory into the Instruction Register (IR); increment the PC to address the next sequential instruction. The IR is used to hold the next instruction that will be needed on subsequent clock cycles; likewise the register NPC is used to hold the next sequential PC.
+
+- ID – Instruction Decode Unit : Decode the instruction and access the register file to read the registers. This unit gets instruction from IF, and extracts opcode and operand from that instruction. It also retrieves register values if requested by the operation.
+
+- EX – Execution Unit : The ALU operates on the operands prepared in prior cycle, performing one functions depending on instruction type.
+
+- MEM – Memory Access Unit : Instructions active in this unit are loads, stores and branches.
+
+- WB – WriteBack Unit : Write the result into the register file, whether it comes from the memory system or from the ALU.
+
+### 2.1.2. Interface
+
+#### 2.1.2.1. Constants
+
+##### 2.1.1.2.1. Basic Constants
 
 | Parameter            | Description                 | Default      | Values       |
 | -------------------- | --------------------------- |:------------:|:------------:|
@@ -95,7 +132,7 @@ In a Harvard architecture, there is no need to make the two memories share chara
 | OPTION_CPU0          | CPU pipeline core           | `CAPPUCCINO` | `CAPPUCCINO` |
 | OPTION_RESET_PC      | Program Counter upon reset  | `0x100`      | N            |
 
-##### 2.1.1.2.2. Caching Parameters
+##### 2.1.1.2.2. Caching Constants
 
 | Parameter                 | Description                       | Default | Values    |
 | ------------------------- | --------------------------------- |:-------:|:---------:|
@@ -111,7 +148,7 @@ In a Harvard architecture, there is no need to make the two memories share chara
 | OPTION_ICACHE_WAYS        | Number of blocks per set          | 2       | `n`       |
 | OPTION_ICACHE_LIMIT_WIDTH | Maximum address width             | 32      | `n`       |
 
-##### 2.1.1.2.3. Memory Management Unit (MMU) Parameters
+##### 2.1.1.2.3. Memory Management Unit (MMU) Constants
 
 | Parameter                  | Description                    | Default | Values    |
 | -------------------------- | ------------------------------ |:-------:|:---------:|
@@ -124,7 +161,7 @@ In a Harvard architecture, there is no need to make the two memories share chara
 | OPTION_IMMU_SET_WIDTH      | Set address width              | 6       | `n`       |
 | OPTION_IMMU_WAYS           | Number of ways per set         | 1       | `n`       |
 
-##### 2.1.1.2.4. System Bus Parameters
+##### 2.1.1.2.4. System Bus Constants
 
 | Parameter                       | Description                        | Default            |
 | ------------------------------- | ---------------------------------- |:------------------:|
@@ -134,7 +171,7 @@ In a Harvard architecture, there is no need to make the two memories share chara
 | IBUS_WB_TYPE                    | Instruction bus interface          | `B3_READ_BURSTING` |
 | DBUS_WB_TYPE                    | Data bus interface type option     | `CLASSIC`          |
 
-##### 2.1.1.2.5. Hardware Unit Configuration Parameters
+##### 2.1.1.2.5. Hardware Unit Configuration Constants
 
 | Parameter                | Description                              | Default   |
 | ------------------------ | ---------------------------------------- |:---------:|
@@ -196,46 +233,11 @@ In a Harvard architecture, there is no need to make the two memories share chara
 | FEATURE_CUST7   | `l.cust*` custom instruction                    | `NONE`    |
 | FEATURE_CUST8   | `l.cust*` custom instruction                    | `NONE`    |
 
-#### 2.1.1.3. Pipeline
+#### 2.1.2.2. Signals
 
-In computer science, instruction pipelining is a technique for implementing instruction-level parallelism within a PU. Pipelining attempts to keep every part of the processor busy with some instruction by dividing incoming instructions into a series of sequential steps performed by different PUs with different parts of instructions processed in parallel. It allows faster PU throughput than would otherwise be possible at a given clock rate.
+##### 2.1.2.2.1. Instruction Inputs/Outputs Bus
 
-| Typical           | Modified             | Module                         |
-| ----------------- | -------------------- | ------------------------------ |
-| FETCH             | FETCH                | `or1k_cache_lru`               |
-|                   |                      | `or1k_fetch_cappuccino`        |
-|                   |                      | `or1k_icache`                  |
-|                   |                      | `or1k_immu`                    |
-| DECODE            | DECODE               | `or1k_decode`                  |
-| EXECUTE & CONTROL | EXECUTE & WRITE-BACK | `or1k_execute_alu`             |
-|                   |                      | `or1k_execute_ctrl_cappuccino` |
-|                   |                      | `or1k_rf_cappuccino`           |
-|                   |                      | `or1k_wb_mux_cappuccino`       |
-| MEMORY            | MEMORY               | `or1k_dcache`                  |
-|                   |                      | `or1k_dmmu`                    |
-|                   |                      | `or1k_lsu_cappuccino`          |
-|                   |                      | `or1k_store_buffer`            |
-| WRITE-BACK        | CONTROL              | `or1k_cfgrs`                   |
-|                   |                      | `or1k_ctrl_cappuccino`         |
-|                   |                      | `or1k_pcu`                     |
-|                   |                      | `or1k_pic`                     |
-|                   |                      | `or1k_ticktimer`               |
-
-- IF – Instruction Fetch Unit : Send out the PC and fetch the instruction from memory into the Instruction Register (IR); increment the PC to address the next sequential instruction. The IR is used to hold the next instruction that will be needed on subsequent clock cycles; likewise the register NPC is used to hold the next sequential PC.
-
-- ID – Instruction Decode Unit : Decode the instruction and access the register file to read the registers. This unit gets instruction from IF, and extracts opcode and operand from that instruction. It also retrieves register values if requested by the operation.
-
-- EX – Execution Unit : The ALU operates on the operands prepared in prior cycle, performing one functions depending on instruction type.
-
-- MEM – Memory Access Unit : Instructions active in this unit are loads, stores and branches.
-
-- WB – WriteBack Unit : Write the result into the register file, whether it comes from the memory system or from the ALU.
-
-### 2.1.2. Interface
-
-#### 2.1.2.1. Instruction Inputs/Outputs Bus
-
-#### 2.1.2.2. Data Inputs/Outputs Bus
+##### 2.1.2.2.2. Data Inputs/Outputs Bus
 
 ### 2.1.3. Registers
 
