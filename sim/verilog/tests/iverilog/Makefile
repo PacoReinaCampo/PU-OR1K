@@ -225,19 +225,12 @@ run-trap: $(VPI_MODULES) $(TARGET)
 run-trapdelayslot: $(VPI_MODULES) $(TARGET)
 	vvp -n -M. -l log/or1k-trapdelayslot.log $(patsubst %.vpi,-m%,$(VPI_MODULES)) $(TARGET) $(TRAPDELAYSLOT)
 
-
-clean:
-	$(RM) $(VPI_MODULES) $(TARGET)
-
 elf-loader_LIBS := -lelf
 elf-loader_INCS := -I../../../../software/elf-loader/
 elf-loader_SRCS := ../../../../software/elf-loader/elf-loader.c ../../../../software/elf-loader/vpi_wrapper.c
 
 elf-loader.vpi: $(elf-loader_SRCS)
 	iverilog-vpi --name=elf-loader $(elf-loader_LIBS) $(elf-loader_INCS) $?
-
-clean_elf-loader:
-	$(RM) elf-loader.vpi
 
 jtag_vpi_LIBS := 
 jtag_vpi_INCS := -I../../../../dbg/software/or1k/debug/
@@ -246,5 +239,8 @@ jtag_vpi_SRCS := ../../../../dbg/software/or1k/debug/jtag_common.c ../../../../d
 jtag_vpi.vpi: $(jtag_vpi_SRCS)
 	iverilog-vpi --name=jtag_vpi $(jtag_vpi_LIBS) $(jtag_vpi_INCS) $?
 
-clean_jtag_vpi:
-	$(RM) jtag_vpi.vpi
+clean:
+	rm -rf $(VPI_MODULES) $(TARGET)
+	rm -rf *.log
+	rm -rf *.o
+	rm -rf *.vpi

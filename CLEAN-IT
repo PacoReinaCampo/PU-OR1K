@@ -7,26 +7,14 @@ rm -rf sim/verilog/os/verilator/Vor1k_pu
 cd sim/verilog/tests/iverilog
 
 make clean
-make clean_elf-loader
-make clean_jtag_vpi
-
-rm -rf *.o *.log
 rm -rf log
 
 cd ../../baremetal/iverilog
 
 make clean
-make clean_elf-loader
-make clean_jtag_vpi
-
-rm -rf *.o *.log
 rm -rf log
 
 cd ../../os/iverilog
 
 make clean
-make clean_elf-loader
-make clean_jtag_vpi
-
-rm -rf *.o *.log
 rm -rf log
