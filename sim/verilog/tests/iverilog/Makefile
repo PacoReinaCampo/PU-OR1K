@@ -241,7 +241,7 @@ clean_elf-loader:
 
 jtag_vpi_LIBS := 
 jtag_vpi_INCS := -I../../../../dbg/software/or1k/debug/
-jtag_vpi_SRCS := ../../../../dbg/software/or1k/debug/jtag_common.c ../../../../dbg/software/or1k/debug/jtag_vpi.c ../../../../dbg/bench/verilog/pu/or1k/wb/debug/jtag_vpi/jtag_vpi.sv
+jtag_vpi_SRCS := ../../../../dbg/software/or1k/debug/jtag_common.c ../../../../dbg/software/or1k/debug/jtag_vpi.c ../../../../dbg/bench/pu/or1k/verilog/tests/wb/debug/jtag_vpi/jtag_vpi.sv
 
 jtag_vpi.vpi: $(jtag_vpi_SRCS)
 	iverilog-vpi --name=jtag_vpi $(jtag_vpi_LIBS) $(jtag_vpi_INCS) $?
