@@ -9,56 +9,62 @@
 //                  |_|                                                       //
 //                                                                            //
 //                                                                            //
-//              MSP430 CPU                                                    //
-//              Processing Unit                                               //
+//              MPSoC-RISCV CPU                                               //
+//              Master Slave Interface Tesbench                               //
+//              AMBA3 AHB-Lite Bus Interface                                  //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
-/* Copyright (c) 2015-2016 by the author(s)
+/* Copyright (c) 2018-2019 by the author(s)
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the authors nor the names of its contributors
- *       may be used to endorse or promote products derived from this software
- *       without specific prior written permission.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
- * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
- * THE POSSIBILITY OF SUCH DAMAGE
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  *
  * =============================================================================
  * Author(s):
- *   Olivier Girard <olgirard@gmail.com>
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
 module mpsoc_spram_synthesis #(
-  parameter AW       =   6,  // Address bus
-  parameter DW       =  16,  // Data bus
-  parameter MEM_SIZE = 256   // Memory size in bytes
+  //Memory parameters
+  parameter DEPTH   = 256,
+  parameter MEMFILE = "",
+
+  //Wishbone parameters
+  parameter DW = 32,
+  parameter AW = $clog2(DEPTH)
 )
   (
-    input              ram_clk,        // RAM clock
+    input           wb_clk_i,
+    input           wb_rst_i,
 
-    input     [AW-1:0] ram_addr,       // RAM address
-    output    [DW-1:0] ram_dout,       // RAM data output
-    input     [DW-1:0] ram_din,        // RAM data input
-    input              ram_cen,        // RAM chip enable (low active)
-    input        [1:0] ram_wen         // RAM write enable (low active)
+    input  [AW-1:0] wb_adr_i,
+    input  [DW-1:0] wb_dat_i,
+    input  [   3:0] wb_sel_i,
+    input           wb_we_i,
+    input  [   1:0] wb_bte_i,
+    input  [   2:0] wb_cti_i,
+    input           wb_cyc_i,
+    input           wb_stb_i,
+
+    output reg      wb_ack_o,
+    output          wb_err_o,
+    output [DW-1:0] wb_dat_o
   );
 
   //////////////////////////////////////////////////////////////////
@@ -66,19 +72,30 @@ module mpsoc_spram_synthesis #(
   // Module Body
   //
 
-  //DUT AHB3
-  msp430_ram #(
-    .AW       ( AW ),
-    .DW       ( DW ),
-    .MEM_SIZE ( MEM_SIZE )
-  )
-  ram (
-    .ram_clk   ( ram_clk ),
+  //DUT WB
+  mpsoc_wb_spram #(
+    //Memory parameters
+    .DEPTH   ( DEPTH   ),
+    .MEMFILE ( MEMFILE ),
 
-    .ram_addr ( ram_addr ),
-    .ram_dout ( ram_dout ),
-    .ram_din  ( ram_din  ),
-    .ram_cen  ( ram_cen  ),
-    .ram_wen  ( ram_wen  )
+    //Wishbone parameters
+    .AW ( AW ),
+    .DW ( DW )
+  )
+  wb_spram (
+    .wb_clk_i ( wb_clk_i ),
+    .wb_rst_i ( wb_rst_i ),
+
+    .wb_adr_i ( wb_adr_i ),
+    .wb_dat_i ( wb_dat_i ),
+    .wb_sel_i ( wb_sel_i ),
+    .wb_we_i  ( wb_we_i  ),
+    .wb_bte_i ( wb_bte_i ),
+    .wb_cti_i ( wb_cti_i ),
+    .wb_cyc_i ( wb_cyc_i ),
+    .wb_stb_i ( wb_stb_i ),
+    .wb_ack_o ( wb_ack_o ),
+    .wb_err_o ( wb_err_o ),
+    .wb_dat_o ( wb_dat_o )
   );
-endmodule // msp430_ram
+endmodule
