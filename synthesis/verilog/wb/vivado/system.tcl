@@ -100,9 +100,6 @@ read_verilog -sv ../../../../rtl/verilog/core/or1k_cpu.sv
 read_verilog -sv ../../../../rtl/verilog/core/or1k_decode_execute_cappuccino.sv
 read_verilog -sv ../../../../rtl/verilog/memory/or1k_simple_dpram_sclk.sv
 read_verilog -sv ../../../../rtl/verilog/memory/or1k_true_dpram_sclk.sv
-read_verilog -sv ../../../../rtl/verilog/pu/or1k_pu.sv
-read_verilog -sv ../../../../spram/rtl/verilog/wb/core/mpsoc_wb_ram_generic.sv
-read_verilog -sv ../../../../spram/rtl/verilog/wb/core/mpsoc_wb_spram.sv
 read_verilog -sv ../../../../uart/rtl/verilog/wb/core/mpsoc_wb_raminfr.sv
 read_verilog -sv ../../../../uart/rtl/verilog/wb/core/mpsoc_wb_uart_peripheral_bridge.sv
 read_verilog -sv ../../../../uart/rtl/verilog/wb/core/mpsoc_wb_uart_receiver.sv
@@ -113,9 +110,14 @@ read_verilog -sv ../../../../uart/rtl/verilog/wb/core/mpsoc_wb_uart_tfifo.sv
 read_verilog -sv ../../../../uart/rtl/verilog/wb/core/mpsoc_wb_uart_transmitter.sv
 read_verilog -sv ../../../../uart/rtl/verilog/wb/core/mpsoc_wb_uart.sv
 
+read_verilog -sv spram/core/mpsoc_wb_ram_generic.sv
+read_verilog -sv spram/core/mpsoc_wb_spram.sv
+
+read_verilog -sv or1k_synthesis.sv
+
 read_xdc system.xdc
 
-synth_design -part xc7z020-clg484-1 -top or1k_pu \
+synth_design -part xc7z020-clg484-1 -top or1k_synthesis \
 -include_dirs ../../../../bench/verilog \
 -include_dirs ../../../../dbg/bench/pu/or1k/verilog/tests/wb/debug/jtag_vpi \
 -include_dirs ../../../../dbg/rtl/pu/or1k/verilog/wb/pkg \
