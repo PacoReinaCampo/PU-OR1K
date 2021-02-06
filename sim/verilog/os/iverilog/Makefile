@@ -76,6 +76,5 @@ jtag_vpi.vpi: $(jtag_vpi_SRCS)
 
 clean:
 	rm -rf $(VPI_MODULES) $(TARGET)
-	rm -rf *.log
-	rm -rf *.o
-	rm -rf *.vpi
+	rm -rf log
+	rm -rf *.log *.o *.vpi

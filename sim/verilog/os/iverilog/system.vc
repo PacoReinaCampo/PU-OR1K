@@ -26,10 +26,10 @@
 ../../../../dbg/rtl/pu/or1k/verilog/wb/core/adbg_wb_biu.sv
 ../../../../dbg/rtl/pu/or1k/verilog/wb/core/adbg_wb_module.sv
 ../../../../msi/rtl/verilog/wb/arbiter/mpsoc_msi_arbiter.sv
-../../../../msi/bench/verilog/bfm/wb/mpsoc_msi_wb_bfm_master.sv
-../../../../msi/bench/verilog/bfm/wb/mpsoc_msi_wb_bfm_memory.sv
-../../../../msi/bench/verilog/bfm/wb/mpsoc_msi_wb_bfm_slave.sv
-../../../../msi/bench/verilog/bfm/wb/mpsoc_msi_wb_bfm_transactor.sv
+../../../../msi/bench/verilog/tests/bfm/wb/mpsoc_msi_wb_bfm_master.sv
+../../../../msi/bench/verilog/tests/bfm/wb/mpsoc_msi_wb_bfm_memory.sv
+../../../../msi/bench/verilog/tests/bfm/wb/mpsoc_msi_wb_bfm_slave.sv
+../../../../msi/bench/verilog/tests/bfm/wb/mpsoc_msi_wb_bfm_transactor.sv
 ../../../../msi/rtl/verilog/wb/cdc/mpsoc_msi_wb_cc561.sv
 ../../../../msi/rtl/verilog/wb/cdc/mpsoc_msi_wb_cdc.sv
 ../../../../msi/rtl/verilog/wb/cdc/mpsoc_msi_wb_sync2_pgen.sv

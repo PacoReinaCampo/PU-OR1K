@@ -4,7 +4,7 @@ hardware:
 	verilator -f system.vc --trace -Wno-fatal -Wno-lint -Wno-UNOPTFLAT -Wno-COMBDLY -CFLAGS "-std=c++11" -LDFLAGS "-pthread"
 	make -f Vor1k_pu.mk
 
-software:
+software: clear
 	./Vor1k_pu --elf-load=../../../../software/tests/elf/or1k-alignillegalinsn
 	./Vor1k_pu --elf-load=../../../../software/tests/elf/or1k-backtoback_jmp
 	./Vor1k_pu --elf-load=../../../../software/tests/elf/or1k-basic
@@ -49,5 +49,8 @@ software:
 	./Vor1k_pu --elf-load=../../../../software/tests/elf/or1k-trap
 	./Vor1k_pu --elf-load=../../../../software/tests/elf/or1k-trapdelayslot
 
+clear:
+	rm -rf *.a *.cpp *.d *.dat *.h *.o *.mk
+
 clean:
-	rm -rf *.a *.cpp *.d *.dat *.h *.o *.mk Vor1k_* stdout.*
+	rm -rf *.a *.cpp *.d *.dat *.h *.o *.mk Vor1k_*
