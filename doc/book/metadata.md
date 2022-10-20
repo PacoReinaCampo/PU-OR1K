@@ -1,6 +1,6 @@
 ---
 title: 'PU-OR1K'
-subtitle: 'QueenField ![](../../pu-or1k.svg){width=17cm}'
+subtitle: 'QueenField ![](../../icon.jpg)'
 
 author: Paco Reina Campo
 
