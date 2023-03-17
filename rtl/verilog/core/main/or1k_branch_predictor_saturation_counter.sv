@@ -47,24 +47,24 @@ module or1k_branch_predictor_saturation_counter (
   input rst,
 
   // Signals belonging to the stage where the branch is predicted.
-  output predicted_flag_o,     //result of predictor
+  output predicted_flag_o,  //result of predictor
 
-  input execute_op_bf_i,       // prev insn was bf
-  input execute_op_bnf_i,      // prev insn was bnf
-  input op_bf_i,               // cur insn is bf
-  input op_bnf_i,              // cur insn is bnf
-  input padv_decode_i,         // pipeline is moved
-  input flag_i,                // prev predicted flag
+  input execute_op_bf_i,   // prev insn was bf
+  input execute_op_bnf_i,  // prev insn was bnf
+  input op_bf_i,           // cur insn is bf
+  input op_bnf_i,          // cur insn is bnf
+  input padv_decode_i,     // pipeline is moved
+  input flag_i,            // prev predicted flag
 
   // Signals belonging to the stage where the branch is resolved.
-  input prev_op_brcond_i,      // prev op was cond brn
-  input branch_mispredict_i    // prev brn was mispredicted
+  input prev_op_brcond_i,    // prev op was cond brn
+  input branch_mispredict_i  // prev brn was mispredicted
 );
 
   localparam [1:0] STATE_STRONGLY_NOT_TAKEN = 2'b00;
-  localparam [1:0] STATE_WEAKLY_NOT_TAKEN   = 2'b01;
-  localparam [1:0] STATE_WEAKLY_TAKEN       = 2'b10;
-  localparam [1:0] STATE_STRONGLY_TAKEN     = 2'b11;
+  localparam [1:0] STATE_WEAKLY_NOT_TAKEN = 2'b01;
+  localparam [1:0] STATE_WEAKLY_TAKEN = 2'b10;
+  localparam [1:0] STATE_STRONGLY_TAKEN = 2'b11;
 
   reg [1:0] state = STATE_WEAKLY_TAKEN;
 
@@ -75,8 +75,7 @@ module or1k_branch_predictor_saturation_counter (
   always @(posedge clk) begin
     if (rst) begin
       state <= STATE_WEAKLY_TAKEN;
-    end
-    else begin
+    end else begin
       if (prev_op_brcond_i && padv_decode_i) begin
         if (!brn_taken) begin
           // change fsm state:
@@ -85,23 +84,22 @@ module or1k_branch_predictor_saturation_counter (
           //   STATE_WEAKLY_NOT_TAKEN   -> STATE_STRONGLY_NOT_TAKEN
           //   STATE_STRONGLY_NOT_TAKEN -> STATE_STRONGLY_NOT_TAKEN
           case (state)
-            STATE_STRONGLY_TAKEN     : state <= STATE_WEAKLY_TAKEN;
-            STATE_WEAKLY_TAKEN       : state <= STATE_WEAKLY_NOT_TAKEN;
-            STATE_WEAKLY_NOT_TAKEN   : state <= STATE_STRONGLY_NOT_TAKEN;
-            STATE_STRONGLY_NOT_TAKEN : state <= STATE_STRONGLY_NOT_TAKEN;
+            STATE_STRONGLY_TAKEN:     state <= STATE_WEAKLY_TAKEN;
+            STATE_WEAKLY_TAKEN:       state <= STATE_WEAKLY_NOT_TAKEN;
+            STATE_WEAKLY_NOT_TAKEN:   state <= STATE_STRONGLY_NOT_TAKEN;
+            STATE_STRONGLY_NOT_TAKEN: state <= STATE_STRONGLY_NOT_TAKEN;
           endcase
-        end
-        else begin
+        end else begin
           // change fsm state:
           //   STATE_STRONGLY_NOT_TAKEN -> STATE_WEAKLY_NOT_TAKEN
           //   STATE_WEAKLY_NOT_TAKEN   -> STATE_WEAKLY_TAKEN
           //   STATE_WEAKLY_TAKEN       -> STATE_STRONGLY_TAKEN
           //   STATE_STRONGLY_TAKEN     -> STATE_STRONGLY_TAKEN
           case (state)
-            STATE_STRONGLY_NOT_TAKEN : state <= STATE_WEAKLY_NOT_TAKEN;
-            STATE_WEAKLY_NOT_TAKEN   : state <= STATE_WEAKLY_TAKEN;
-            STATE_WEAKLY_TAKEN       : state <= STATE_STRONGLY_TAKEN;
-            STATE_STRONGLY_TAKEN     : state <= STATE_STRONGLY_TAKEN;
+            STATE_STRONGLY_NOT_TAKEN: state <= STATE_WEAKLY_NOT_TAKEN;
+            STATE_WEAKLY_NOT_TAKEN:   state <= STATE_WEAKLY_TAKEN;
+            STATE_WEAKLY_TAKEN:       state <= STATE_STRONGLY_TAKEN;
+            STATE_STRONGLY_TAKEN:     state <= STATE_STRONGLY_TAKEN;
           endcase
         end
       end

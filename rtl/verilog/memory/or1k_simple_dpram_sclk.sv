@@ -45,25 +45,24 @@ module or1k_simple_dpram_sclk #(
   parameter DATA_WIDTH    = 32,
   parameter CLEAR_ON_INIT = 0,
   parameter ENABLE_BYPASS = 1
-)
-  (
-    input                   clk,
-    input  [ADDR_WIDTH-1:0] raddr,
-    input                   re,
-    input  [ADDR_WIDTH-1:0] waddr,
-    input                   we,
-    input  [DATA_WIDTH-1:0] din,
-    output [DATA_WIDTH-1:0] dout
-  );
+) (
+  input                   clk,
+  input  [ADDR_WIDTH-1:0] raddr,
+  input                   re,
+  input  [ADDR_WIDTH-1:0] waddr,
+  input                   we,
+  input  [DATA_WIDTH-1:0] din,
+  output [DATA_WIDTH-1:0] dout
+);
 
-  reg [DATA_WIDTH-1:0]     mem[(1<<ADDR_WIDTH)-1:0];
-  reg [DATA_WIDTH-1:0]     rdata;
+  reg [DATA_WIDTH-1:0] mem   [(1<<ADDR_WIDTH)-1:0];
+  reg [DATA_WIDTH-1:0] rdata;
 
   generate
-    if(CLEAR_ON_INIT) begin :clear_on_init
+    if (CLEAR_ON_INIT) begin : clear_on_init
       integer idx;
       initial
-        for(idx=0; idx < (1<<ADDR_WIDTH); idx=idx+1) begin
+        for (idx = 0; idx < (1 << ADDR_WIDTH); idx = idx + 1) begin
           mem[idx] = {DATA_WIDTH{1'b0}};
         end
     end
@@ -77,26 +76,20 @@ module or1k_simple_dpram_sclk #(
       assign dout = bypass ? din_r : rdata;
 
       always @(posedge clk) begin
-        if (re)
-          din_r <= din;
+        if (re) din_r <= din;
       end
 
       always @(posedge clk) begin
-        if (waddr == raddr && we && re)
-          bypass <= 1;
-        else if (re)
-          bypass <= 0;
+        if (waddr == raddr && we && re) bypass <= 1;
+        else if (re) bypass <= 0;
       end
-    end
-    else begin
+    end else begin
       assign dout = rdata;
     end
   endgenerate
 
   always @(posedge clk) begin
-    if (we)
-      mem[waddr] <= din;
-    if (re)
-      rdata <= mem[raddr];
+    if (we) mem[waddr] <= din;
+    if (re) rdata <= mem[raddr];
   end
 endmodule

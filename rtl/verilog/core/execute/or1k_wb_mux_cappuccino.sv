@@ -44,35 +44,31 @@
 
 module or1k_wb_mux_cappuccino #(
   parameter OPTION_OPERAND_WIDTH = 32
-)
-  (
-    input 			      clk,
-    input 			      rst,
+) (
+  input clk,
+  input rst,
 
-    input  [OPTION_OPERAND_WIDTH-1:0] alu_result_i,
-    input  [OPTION_OPERAND_WIDTH-1:0] lsu_result_i,
-    input  [OPTION_OPERAND_WIDTH-1:0] mul_result_i,
-    input  [OPTION_OPERAND_WIDTH-1:0] spr_i,
+  input [OPTION_OPERAND_WIDTH-1:0] alu_result_i,
+  input [OPTION_OPERAND_WIDTH-1:0] lsu_result_i,
+  input [OPTION_OPERAND_WIDTH-1:0] mul_result_i,
+  input [OPTION_OPERAND_WIDTH-1:0] spr_i,
 
-    output [OPTION_OPERAND_WIDTH-1:0] rf_result_o,
+  output [OPTION_OPERAND_WIDTH-1:0] rf_result_o,
 
-    input 			      op_mul_i,
-    input 			      op_lsu_load_i,
-    input 			      op_mfspr_i
-  );
+  input op_mul_i,
+  input op_lsu_load_i,
+  input op_mfspr_i
+);
 
-  reg      [OPTION_OPERAND_WIDTH-1:0] rf_result;
-  reg 				      wb_op_mul;
+  reg [OPTION_OPERAND_WIDTH-1:0] rf_result;
+  reg                            wb_op_mul;
 
   assign rf_result_o = wb_op_mul ? mul_result_i : rf_result;
 
   always @(posedge clk) begin
-    if (op_mfspr_i)
-      rf_result <= spr_i;
-    else if (op_lsu_load_i)
-      rf_result <= lsu_result_i;
-    else
-      rf_result <= alu_result_i;
+    if (op_mfspr_i) rf_result <= spr_i;
+    else if (op_lsu_load_i) rf_result <= lsu_result_i;
+    else rf_result <= alu_result_i;
   end
 
   always @(posedge clk) begin

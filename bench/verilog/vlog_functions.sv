@@ -47,8 +47,7 @@ module vlog_functions;
     input integer current;
     input integer total;
     begin
-      if(!(current%(total/10)))
-        $display("%0s %0d/%0d", msg, current, total);
+      if (!(current % (total / 10))) $display("%0s %0d/%0d", msg, current, total);
     end
   endtask
 endmodule

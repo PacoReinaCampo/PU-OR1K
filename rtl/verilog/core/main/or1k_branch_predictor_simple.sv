@@ -44,10 +44,10 @@
 
 module or1k_branch_predictor_simple (
   // Signals belonging to the stage where the branch is predicted.
-  input       op_bf_i,          // branch if flag
-  input       op_bnf_i,         // branch if not flag
-  input [9:0] immjbr_upper_i,   // branch offset
-  output      predicted_flag_o  //result of predictor
+  input        op_bf_i,          // branch if flag
+  input        op_bnf_i,         // branch if not flag
+  input  [9:0] immjbr_upper_i,   // branch offset
+  output       predicted_flag_o  //result of predictor
 );
 
   // Static branch prediction - backward branches are predicted as taken,

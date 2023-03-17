@@ -47,29 +47,28 @@ module mpsoc_wb_ram_generic #(
 
   parameter AW = $clog2(DEPTH),
   parameter DW = 32
-)
-  (
-    input               clk,
-    input      [   3:0] we,
-    input      [DW-1:0] din,
-    input      [AW-1:0] waddr,
-    input      [AW-1:0] raddr,
-    output reg [DW-1:0] dout
-  );
+) (
+  input               clk,
+  input      [   3:0] we,
+  input      [DW-1:0] din,
+  input      [AW-1:0] waddr,
+  input      [AW-1:0] raddr,
+  output reg [DW-1:0] dout
+);
 
   //////////////////////////////////////////////////////////////////
   //
   // Variables
   //
-  reg [DW-1:0] mem [0:DEPTH-1] /* verilator public */;
+  reg [DW-1:0] mem[0:DEPTH-1]  /* verilator public */;
 
   //////////////////////////////////////////////////////////////////
   //
   // Module Body
   //
   always @(posedge clk) begin
-    if (we[0]) mem[waddr][7:0]   <= din[7:0];
-    if (we[1]) mem[waddr][15:8]  <= din[15:8];
+    if (we[0]) mem[waddr][7:0] <= din[7:0];
+    if (we[1]) mem[waddr][15:8] <= din[15:8];
     if (we[2]) mem[waddr][23:16] <= din[23:16];
     if (we[3]) mem[waddr][31:24] <= din[31:24];
     dout <= mem[raddr];
@@ -77,7 +76,7 @@ module mpsoc_wb_ram_generic #(
 
   generate
     initial
-      if(MEMFILE != "") begin
+      if (MEMFILE != "") begin
         $display("Preloading %m from %s", MEMFILE);
         $readmemh(MEMFILE, mem);
       end

@@ -44,18 +44,17 @@ module or1k_cache_lru #(
   parameter NUMWAYS = 2,
 
   // Triangular number
-  parameter WIDTH = NUMWAYS*(NUMWAYS-1) >> 1
-)
-  (
-    input      [WIDTH-1:0] current,
-    output reg [WIDTH-1:0] update,
+  parameter WIDTH = NUMWAYS * (NUMWAYS - 1) >> 1
+) (
+  input      [WIDTH-1:0] current,
+  output reg [WIDTH-1:0] update,
 
-    input      [NUMWAYS-1:0] access,
-    output reg [NUMWAYS-1:0] lru_pre,
-    output reg [NUMWAYS-1:0] lru_post
-  );
+  input      [NUMWAYS-1:0] access,
+  output reg [NUMWAYS-1:0] lru_pre,
+  output reg [NUMWAYS-1:0] lru_post
+);
 
-  reg [NUMWAYS-1:0] expand [0:NUMWAYS-1];
+  reg [NUMWAYS-1:0] expand[0:NUMWAYS-1];
 
   integer i, j;
   integer offset;
