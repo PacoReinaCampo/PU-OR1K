@@ -47,9 +47,10 @@ verilog
 ├── module
 │   └── pu_or1k_module.sv
 ├── pkg
+│   ├── peripheral_wb_pkg.sv
 │   ├── pu_or1k_defines.sv
 │   └── pu_or1k_utils.sv
 └── pu
     └── pu_or1k_wb.sv
 
-12 directories, 40 files
+12 directories, 41 files

@@ -937,9 +937,9 @@ module pu_or1k_cpu_cappuccino #(
     input [RF_ADDR_WIDTH-1:0] gpr_num;
     begin
       // TODO: handle load ops
-      if ((pu_or1k_rf_cappuccino.execute_rfd_adr_i == gpr_num[4:0]) & or1k_rf_cappuccino.execute_rf_wb_i) get_gpr = alu_result_o;
-      else if ((pu_or1k_rf_cappuccino.ctrl_rfd_adr_i == gpr_num[4:0]) & or1k_rf_cappuccino.ctrl_rf_wb_i) get_gpr = ctrl_alu_result_o;
-      else if ((pu_or1k_rf_cappuccino.wb_rfd_adr_i == gpr_num[4:0]) & or1k_rf_cappuccino.wb_rf_wb_i) get_gpr = or1k_rf_cappuccino.result_i;
+      if ((pu_or1k_rf_cappuccino.execute_rfd_adr_i == gpr_num[4:0]) & pu_or1k_rf_cappuccino.execute_rf_wb_i) get_gpr = alu_result_o;
+      else if ((pu_or1k_rf_cappuccino.ctrl_rfd_adr_i == gpr_num[4:0]) & pu_or1k_rf_cappuccino.ctrl_rf_wb_i) get_gpr = ctrl_alu_result_o;
+      else if ((pu_or1k_rf_cappuccino.wb_rfd_adr_i == gpr_num[4:0]) & pu_or1k_rf_cappuccino.wb_rf_wb_i) get_gpr = pu_or1k_rf_cappuccino.result_i;
       else get_gpr = pu_or1k_rf_cappuccino.rfa.mem[gpr_num];
     end
   endfunction

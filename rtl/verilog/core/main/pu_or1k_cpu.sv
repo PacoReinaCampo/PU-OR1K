@@ -386,7 +386,7 @@ module pu_or1k_cpu #(
       assign monitor_flag_set          = cappuccino.pu_or1k_cpu.pu_or1k_execute_ctrl_cappuccino.flag_set_i;
       assign monitor_flag_clear        = cappuccino.pu_or1k_cpu.pu_or1k_execute_ctrl_cappuccino.flag_clear_i;
       assign monitor_flag_sr           = cappuccino.pu_or1k_cpu.pu_or1k_ctrl_cappuccino.ctrl_flag_o;
-      assign monitor_spr_sr            = {16'd0, cappuccino.pu_or1k_cpu.pu_or1k_ctrl_cappuccino.spr_sr[15:`OR1K_SPR_SR_F+1], cappuccino.or1k_cpu.or1k_ctrl_cappuccino.ctrl_flag_o, cappuccino.or1k_cpu.or1k_ctrl_cappuccino.spr_sr[`OR1K_SPR_SR_F-1:0]};
+      assign monitor_spr_sr            = {16'd0, cappuccino.pu_or1k_cpu.pu_or1k_ctrl_cappuccino.spr_sr[15:`OR1K_SPR_SR_F+1], cappuccino.pu_or1k_cpu.pu_or1k_ctrl_cappuccino.ctrl_flag_o, cappuccino.pu_or1k_cpu.pu_or1k_ctrl_cappuccino.spr_sr[`OR1K_SPR_SR_F-1:0]};
       assign monitor_execute_pc        = cappuccino.pu_or1k_cpu.pc_decode_to_execute;
       assign monitor_rf_result_in      = cappuccino.pu_or1k_cpu.pu_or1k_rf_cappuccino.result_i;
       assign monitor_spr_esr           = {16'd0, cappuccino.pu_or1k_cpu.pu_or1k_ctrl_cappuccino.spr_esr};
@@ -396,7 +396,7 @@ module pu_or1k_cpu #(
 
       reg [`OR1K_INSN_WIDTH-1:0] monitor_execute_insn_reg;
       always @(posedge clk) begin
-        if (cappuccino.pu_or1k_cpu.padv_decode_o) monitor_execute_insn_reg <= cappuccino.or1k_cpu.pu_or1k_decode.decode_insn_i;
+        if (cappuccino.pu_or1k_cpu.padv_decode_o) monitor_execute_insn_reg <= cappuccino.pu_or1k_cpu.pu_or1k_decode.decode_insn_i;
       end
       assign monitor_execute_insn = monitor_execute_insn_reg;
 `endif
