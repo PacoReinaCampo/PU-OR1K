@@ -127,7 +127,7 @@ module pu_or1k_wb #(
   wire          wb_s2m_uart_err;
   wire          wb_s2m_uart_rty;
 
-  peripheral_msi_interface_wb wb_interface0 (
+  peripheral_msi_interface_wb wb_interface_0 (
     .wb_clk_i(wb_clk),
     .wb_rst_i(wb_rst),
 
@@ -210,7 +210,7 @@ module pu_or1k_wb #(
   wire jtag_tap_update_dr;
   wire jtag_tap_capture_dr;
 
-  peripheral_dbg_tap_top jtag_tap0 (
+  tap_top jtag_tap_0 (
     .tdo_pad_o (tdo_pad_o),
     .tms_pad_i (tms_pad_i),
     .tck_pad_i (tck_pad_i),
@@ -257,7 +257,7 @@ module pu_or1k_wb #(
   wire          or1k_dbg_bp_o;
   wire          or1k_dbg_rst;
 
-  peripheral_dbg_pu_or1k_top dbg_if0 (
+  peripheral_dbg_pu_or1k_top dbg_if_0 (
     // OR1K interface
     .cpu0_clk_i(wb_clk),
     .cpu0_rst_o(or1k_dbg_rst),

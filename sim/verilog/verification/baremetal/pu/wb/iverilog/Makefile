@@ -42,10 +42,10 @@
 ##                                                                               ##
 ###################################################################################
 
-TARGET               := or1k-pu
+TARGET               := pu_or1k_wb
 VPI_MODULES          := elf-loader.vpi jtag_vpi.vpi
 TOPLEVEL             := pu_or1k_testbench_wb
-IVERILOG_OPTIONS     := -DSIM
+IVERILOG_OPTIONS     := -DSIM -g2012
 HELLO_C              ?= +elf_load=../../../../../../../software/baremetal/hello/c/hello_c.elf
 HELLO_CPP            ?= +elf_load=../../../../../../../software/baremetal/hello/cpp/hello_cpp.elf
 
@@ -53,7 +53,7 @@ all:
 	$(VPI_MODULES) $(TARGET)
 
 $(TARGET):
-	iverilog -g2012 -s$(TOPLEVEL) -c system.vc -o $@ $(IVERILOG_OPTIONS)
+	iverilog -s$(TOPLEVEL) -c system.vc -o $@ $(IVERILOG_OPTIONS)
 
 run-hello_c: $(VPI_MODULES) $(TARGET)
 	vvp -n -M. -l log/or1k-hello_c.log $(patsubst %.vpi,-m%,$(VPI_MODULES)) $(TARGET) $(HELLO_C)
@@ -73,7 +73,7 @@ jtag_vpi_LIBS :=
 jtag_vpi_INCS := -I../../../../../../../dbg/software/or1k/debug/
 jtag_vpi_SRCS := ../../../../../../../dbg/software/or1k/debug/jtag_common.c \
                  ../../../../../../../dbg/software/or1k/debug/jtag_vpi.c \
-                 ../../../../../../../dbg/bench/pu/or1k/verilog/code/tests/wb/debug/jtag_vpi/peripheral_dbg_jtag_vpi.sv
+                 ../../../../../../../dbg/bench/pu/or1k/verilog/code/tests/wb/debug/jtag_vpi/jtag_vpi.sv
 
 jtag_vpi.vpi: $(jtag_vpi_SRCS)
 	iverilog-vpi --name=jtag_vpi $(jtag_vpi_LIBS) $(jtag_vpi_INCS) $?
