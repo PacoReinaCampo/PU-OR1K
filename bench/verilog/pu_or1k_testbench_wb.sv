@@ -57,15 +57,15 @@ module pu_or1k_testbench_wb;
   wire tdi;
   wire tdo;
 
-  reg  enable_jtag_vpi;
-  initial enable_jtag_vpi = $test$plusargs("enable_jtag_vpi");
+  reg  enable_peripheral_dbg_jtag_vpi;
+  initial enable_peripheral_dbg_jtag_vpi = $test$plusargs("enable_peripheral_dbg_jtag_vpi");
 
-  jtag_vpi jtag_vpi0 (
+  peripheral_dbg_jtag_vpi dbg_jtag_vpi (
     .tms      (tms),
     .tck      (tck),
     .tdi      (tdi),
     .tdo      (tdo),
-    .enable   (enable_jtag_vpi),
+    .enable   (enable_peripheral_dbg_jtag_vpi),
     .init_done(pu_or1k_testbench_wb.dut.wb_rst)
   );
 
