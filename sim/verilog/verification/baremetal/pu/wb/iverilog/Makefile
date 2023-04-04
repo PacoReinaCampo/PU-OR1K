@@ -79,6 +79,11 @@ jtag_vpi.vpi: $(jtag_vpi_SRCS)
 	iverilog-vpi --name=jtag_vpi $(jtag_vpi_LIBS) $(jtag_vpi_INCS) $?
 
 clean:
-	rm -rf $(VPI_MODULES) $(TARGET)
-	rm -rf log
-	rm -rf *.log *.o *.vpi
+	$(RM) $(VPI_MODULES) $(TARGET)
+	$(RM) elf-loader.vpi
+	$(RM) jtag_vpi.vpi
+
+clean-all:
+	$(RM) $(VPI_MODULES) $(TARGET)
+	$(RM) -rf log
+	$(RM) *.log *.o *.vpi
