@@ -40,7 +40,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-import opensocdebug::mor1kx_trace_exec;
+import opensocdebug::peripheral_dbg_soc_mor1kx_trace_exec;
 
 module pu_or1k_module #(
   parameter ID                   = 0,
@@ -101,7 +101,7 @@ module pu_or1k_module #(
   input        snoop_enable_i,
   input [31:0] snoop_adr_i,
 
-  output mor1kx_trace_exec trace_exec
+  output peripheral_dbg_soc_mor1kx_trace_exec trace_exec
 );
 
   wire dbg_stall_o;
