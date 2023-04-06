@@ -42,11 +42,16 @@
 ##                                                                               ##
 ###################################################################################
 
+# Remove Submodule
 git rm -rf dbg
 git rm -rf msi
 git rm -rf spram
 git rm -rf uart
 
+# Update Submodule
+git submodule update --init --recursive
+
+# Add Submodule
 git submodule add --force https://github.com/PacoReinaCampo/MPSoC-DBG.git dbg
 git submodule add --force https://github.com/PacoReinaCampo/MPSoC-MSI.git msi
 git submodule add --force https://github.com/PacoReinaCampo/MPSoC-SPRAM.git spram
