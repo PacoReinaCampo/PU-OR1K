@@ -38,7 +38,7 @@
 //   Paco Reina Campo <pacoreinacampo@queenfield.tech>
 
 interface peripheral_adder_if (
-  input logic clk
+  input logic clk,
   input logic rst
 );
 

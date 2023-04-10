@@ -80,6 +80,6 @@ module peripheral_uvm_testbench;
   end
 
   initial begin
-    run_test("base test");
+    run_test("base_test");
   end
 endmodule
