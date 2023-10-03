@@ -94,7 +94,7 @@ all:
 	$(VPI_MODULES) $(TARGET)
 
 $(TARGET):
-	iverilog -s$(TOPLEVEL) -c system.vc -o $@ $(IVERILOG_OPTIONS)
+	iverilog -s$(TOPLEVEL) -c system.s -o $@ $(IVERILOG_OPTIONS)
 
 run-alignillegalinsn: $(VPI_MODULES) $(TARGET)
 	vvp -n -M. -l log/or1k-alignillegalinsn.log $(patsubst %.vpi,-m%,$(VPI_MODULES)) $(TARGET) $(ALIGNILLEGALINSN)
