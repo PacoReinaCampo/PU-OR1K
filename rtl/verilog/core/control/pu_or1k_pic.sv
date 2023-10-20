@@ -92,10 +92,11 @@ module pu_or1k_pic #(
       wire [31:0] irq_unmasked_edge;
 
       always @(posedge clk `OR_ASYNC_RST) begin
-        if (rst)
+        if (rst) begin
           irq_unmasked_r <= 0;
-        else
+        end else begin
           irq_unmasked_r <= irq_unmasked;
+        end
       end
 
       for(irqline=0;irqline<32;irqline=irqline+1)  begin: picgenerate
@@ -103,39 +104,39 @@ module pu_or1k_pic #(
 
         // PIC status register
         always @(posedge clk `OR_ASYNC_RST) begin
-          if (rst)
+          if (rst) begin
             spr_picsr[irqline] <= 0;
           // Set
-          else if (irq_unmasked_edge[irqline])
+          end else if (irq_unmasked_edge[irqline]) begin
             spr_picsr[irqline] <= 1;
           // Clear
-          else if (spr_we_i & spr_picsr_access & spr_dat_i[irqline])
+          end else if (spr_we_i & spr_picsr_access & spr_dat_i[irqline]) begin
             spr_picsr[irqline] <= 0;
+          end
         end
       end
     end
     else if (OPTION_PIC_TRIGGER=="LEVEL") begin : level_triggered
       for(irqline=0;irqline<32;irqline=irqline+1) begin: picsrlevelgenerate
-          // PIC status register
-          always @(*)
-            spr_picsr[irqline] = irq_unmasked[irqline];
+        // PIC status register
+        always @(*) begin
+          spr_picsr[irqline] = irq_unmasked[irqline];
         end
-    end
-
-    else if (OPTION_PIC_TRIGGER=="LATCHED_LEVEL") begin : latched_level
+      end
+    end else if (OPTION_PIC_TRIGGER=="LATCHED_LEVEL") begin : latched_level
       for(irqline=0;irqline<32;irqline=irqline+1) begin : piclatchedlevelgenerate
-          // PIC status register
-          always @(posedge clk `OR_ASYNC_RST) begin
-            if (rst)
-              spr_picsr[irqline] <= 0;
-            else if (spr_we_i && spr_picsr_access)
-              spr_picsr[irqline] <= irq_unmasked[irqline] | spr_dat_i[irqline];
-            else
-              spr_picsr[irqline] <= spr_picsr[irqline] | irq_unmasked[irqline];
+        // PIC status register
+        always @(posedge clk `OR_ASYNC_RST) begin
+          if (rst) begin
+            spr_picsr[irqline] <= 0;
+          end else if (spr_we_i && spr_picsr_access) begin
+            spr_picsr[irqline] <= irq_unmasked[irqline] | spr_dat_i[irqline];
+          end else begin
+            spr_picsr[irqline] <= spr_picsr[irqline] | irq_unmasked[irqline];
           end
         end
-    end
-    else begin : invalid
+      end
+    end else begin : invalid
       initial begin
         $display("Error - invalid PIC level detection option %s", OPTION_PIC_TRIGGER);
         $finish;
@@ -145,9 +146,10 @@ module pu_or1k_pic #(
 
   // PIC (un)mask register
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       spr_picmr <= {{(32-OPTION_PIC_NMI_WIDTH){1'b0}}, {OPTION_PIC_NMI_WIDTH{1'b1}}};
-    else if (spr_we_i && spr_picmr_access)
+    end else if (spr_we_i && spr_picmr_access) begin
       spr_picmr <= {spr_dat_i[31:OPTION_PIC_NMI_WIDTH], {OPTION_PIC_NMI_WIDTH{1'b1}}};
+    end
   end
 endmodule

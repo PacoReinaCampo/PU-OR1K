@@ -144,12 +144,13 @@ module pu_or1k_immu #(
   genvar                             i;
 
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       spr_bus_ack <= 0;
-    else if (spr_bus_stb_i & spr_bus_addr_i[15:11] == 5'd2)
+    end else if (spr_bus_stb_i & spr_bus_addr_i[15:11] == 5'd2) begin
       spr_bus_ack <= 1;
-    else
+    end else begin
       spr_bus_ack <= 0;
+    end
   end
 
   always @(posedge clk) begin
@@ -157,12 +158,12 @@ module pu_or1k_immu #(
   end
 
   always @(posedge clk) begin
-    if (spr_bus_ack & !spr_bus_ack_r)
+    if (spr_bus_ack & !spr_bus_ack_r) begin
       spr_bus_dat_r <= spr_bus_dat;
+    end
   end
 
-  assign spr_bus_ack_o = spr_bus_ack & spr_bus_stb_i &
-    spr_bus_addr_i[15:11] == 5'd2;
+  assign spr_bus_ack_o = spr_bus_ack & spr_bus_stb_i & spr_bus_addr_i[15:11] == 5'd2;
 
   generate
     for (i = 0; i < OPTION_IMMU_WAYS; i=i+1) begin : ways
@@ -192,8 +193,7 @@ module pu_or1k_immu #(
         sxe = itlb_trans_huge_dout[j][6];
         uxe = itlb_trans_huge_dout[j][7];
         cache_inhibit_o = itlb_trans_huge_dout[j][1];
-      end
-      else if (!way_huge[j] & way_hit[j])begin
+      end else if (!way_huge[j] & way_hit[j])begin
         phys_addr_o = {itlb_trans_dout[j][31:13], virt_addr_match_i[12:0]};
         sxe = itlb_trans_dout[j][6];
         uxe = itlb_trans_dout[j][7];
@@ -201,16 +201,23 @@ module pu_or1k_immu #(
       end
 
       itlb_match_we[j] = 0;
-      if (itlb_match_reload_we & !tlb_reload_huge)
+      if (itlb_match_reload_we & !tlb_reload_huge) begin
         itlb_match_we[j] = 1;
-      if (j[WAYS_WIDTH-1:0] == spr_way_idx)
+      end
+
+      if (j[WAYS_WIDTH-1:0] == spr_way_idx) begin
         itlb_match_we[j] = itlb_match_spr_cs & spr_bus_we_i & !spr_bus_ack;
+      end
 
       itlb_trans_we[j] = 0;
-      if (itlb_trans_reload_we & !tlb_reload_huge)
+
+      if (itlb_trans_reload_we & !tlb_reload_huge) begin
         itlb_trans_we[j] = 1;
-      if (j[WAYS_WIDTH-1:0] == spr_way_idx)
+      end
+
+      if (j[WAYS_WIDTH-1:0] == spr_way_idx) begin
         itlb_trans_we[j] = itlb_trans_spr_cs & spr_bus_we_i & !spr_bus_ack;
+      end
     end
   end
 
@@ -230,8 +237,7 @@ module pu_or1k_immu #(
       itlb_trans_spr_cs_r <= 0;
       immucr_spr_cs_r     <= 0;
       spr_way_idx_r       <= 0;
-    end
-    else begin
+    end else begin
       itlb_match_spr_cs_r <= itlb_match_spr_cs;
       itlb_trans_spr_cs_r <= itlb_trans_spr_cs;
       immucr_spr_cs_r     <= immucr_spr_cs;
@@ -244,13 +250,13 @@ module pu_or1k_immu #(
       assign immucr_spr_cs = spr_bus_stb_i & spr_bus_addr_i == `OR1K_SPR_IMMUCR_ADDR;
 
       always @(posedge clk `OR_ASYNC_RST) begin
-        if (rst)
+        if (rst) begin
           immucr <= 0;
-        else if (immucr_spr_cs & spr_bus_we_i)
+        end else if (immucr_spr_cs & spr_bus_we_i) begin
           immucr <= spr_bus_dat_i;
+        end
       end
-    end
-    else begin
+    end else begin
       assign immucr_spr_cs = 0;
       always @(posedge clk) begin
         immucr <= 0;
@@ -258,10 +264,8 @@ module pu_or1k_immu #(
     end
   endgenerate
 
-  assign itlb_match_spr_cs = spr_bus_stb_i & (spr_bus_addr_i[15:11] == 5'd2) &
-    |spr_bus_addr_i[10:9] & !spr_bus_addr_i[7];
-  assign itlb_trans_spr_cs = spr_bus_stb_i & (spr_bus_addr_i[15:11] == 5'd2) &
-    |spr_bus_addr_i[10:9] & spr_bus_addr_i[7];
+  assign itlb_match_spr_cs = spr_bus_stb_i & (spr_bus_addr_i[15:11] == 5'd2) & |spr_bus_addr_i[10:9] & !spr_bus_addr_i[7];
+  assign itlb_trans_spr_cs = spr_bus_stb_i & (spr_bus_addr_i[15:11] == 5'd2) & |spr_bus_addr_i[10:9] & spr_bus_addr_i[7];
 
   assign itlb_match_addr = itlb_match_spr_cs & !spr_bus_ack ?
     spr_bus_addr_i[OPTION_IMMU_SET_WIDTH-1:0] :
@@ -270,10 +274,8 @@ module pu_or1k_immu #(
     spr_bus_addr_i[OPTION_IMMU_SET_WIDTH-1:0] :
     virt_addr_i[13+(OPTION_IMMU_SET_WIDTH-1):13];
 
-  assign itlb_match_din = itlb_match_spr_cs & spr_bus_we_i & !spr_bus_ack ?
-    spr_bus_dat_i : itlb_match_reload_din;
-  assign itlb_trans_din = itlb_trans_spr_cs & spr_bus_we_i & !spr_bus_ack ?
-    spr_bus_dat_i : itlb_trans_reload_din;
+  assign itlb_match_din = itlb_match_spr_cs & spr_bus_we_i & !spr_bus_ack ? spr_bus_dat_i : itlb_match_reload_din;
+  assign itlb_trans_din = itlb_trans_spr_cs & spr_bus_we_i & !spr_bus_ack ? spr_bus_dat_i : itlb_trans_reload_din;
 
   assign itlb_match_huge_addr = virt_addr_i[24+(OPTION_IMMU_SET_WIDTH-1):24];
   assign itlb_trans_huge_addr = virt_addr_i[24+(OPTION_IMMU_SET_WIDTH-1):24];
@@ -286,8 +288,7 @@ module pu_or1k_immu #(
     immucr_spr_cs_r ? immucr : 0;
 
   // Use registered value on all but the first cycle spr_bus_ack is asserted
-  assign spr_bus_dat_o = spr_bus_ack & !spr_bus_ack_r ? spr_bus_dat :
-    spr_bus_dat_r;
+  assign spr_bus_dat_o = spr_bus_ack & !spr_bus_ack_r ? spr_bus_dat : spr_bus_dat_r;
 
   localparam TLB_IDLE            = 2'd0;
   localparam TLB_GET_PTE_POINTER = 2'd1;
@@ -322,10 +323,12 @@ module pu_or1k_immu #(
         !tlb_reload_pagefault_clear_i;
 
       always @(posedge clk `OR_ASYNC_RST) begin
-        if (rst)
+        if (rst) begin
           tlb_reload_pagefault <= 0;
-        else if(tlb_reload_pagefault_clear_i)
+        end else if(tlb_reload_pagefault_clear_i) begin
           tlb_reload_pagefault <= 0;
+        end
+
         itlb_trans_reload_we <= 0;
         itlb_trans_reload_din <= 0;
         itlb_match_reload_we <= 0;
@@ -355,13 +358,11 @@ module pu_or1k_immu #(
                 tlb_reload_pagefault <= 1;
                 tlb_reload_req_o <= 0;
                 tlb_reload_state <= TLB_IDLE;
-              end
-              else if (tlb_reload_data_i[9]) begin
+              end else if (tlb_reload_data_i[9]) begin
                 tlb_reload_huge <= 1;
                 tlb_reload_req_o <= 0;
                 tlb_reload_state <= TLB_GET_PTE;
-              end
-              else begin
+              end else begin
                 tlb_reload_addr_o <= {tlb_reload_data_i[31:13],
                                       virt_addr_match_i[23:13], 2'b00};
                 tlb_reload_state <= TLB_GET_PTE;
@@ -378,8 +379,7 @@ module pu_or1k_immu #(
               if (!tlb_reload_data_i[10]) begin
                 tlb_reload_pagefault <= 1;
                 tlb_reload_state <= TLB_IDLE;
-              end
-              else begin
+              end else begin
                 // Translate register generation.
                 // PPN
                 itlb_trans_reload_din[31:13] <= tlb_reload_data_i[31:13];
@@ -412,9 +412,9 @@ module pu_or1k_immu #(
             tlb_reload_state <= TLB_IDLE;
           end
 
-          default:
+          default: begin
             tlb_reload_state <= TLB_IDLE;
-
+          end
         endcase
       end
     end

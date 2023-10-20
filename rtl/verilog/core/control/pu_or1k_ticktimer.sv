@@ -15,7 +15,7 @@
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
-/* Copyright (c) 2015-2016 by the author(s)
+/* Copyright (c) 2015-2016 by the author(s) begin
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -84,12 +84,13 @@ module pu_or1k_ticktimer (
 
   // Timer SPR control
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       spr_ttmr <= 0;
-    else if (spr_we_i & spr_ttmr_access)
+    end else if (spr_we_i & spr_ttmr_access) begin
       spr_ttmr <= spr_dat_i[31:0];
-    else if (ttcr_match & spr_ttmr[29])
+    end else if (ttcr_match & spr_ttmr[29]) begin
       spr_ttmr[28] <= 1; // Generate interrupt
+    end
   end
 
   // Modes (spr_ttmr[31:30]):
@@ -98,17 +99,17 @@ module pu_or1k_ticktimer (
   // 10 Timer stops when ttcr_match is true.
   // 11 Timer does not stop when ttcr_match is true
   assign ttcr_clear = (spr_ttmr[31:30] == 2'b01) & ttcr_match;
-  assign ttcr_run = (spr_ttmr[31:30] != 2'b00) & !ttcr_match |
-    (spr_ttmr[31:30] == 2'b11);
+  assign ttcr_run = (spr_ttmr[31:30] != 2'b00) & !ttcr_match | (spr_ttmr[31:30] == 2'b11);
 
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       spr_ttcr <= 0;
-    else if (spr_we_i & spr_ttcr_access)
+    end else if (spr_we_i & spr_ttcr_access) begin
       spr_ttcr <= spr_dat_i[31:0];
-    else if (ttcr_clear)
+    end else if (ttcr_clear) begin
       spr_ttcr <= 0;
-    else if (ttcr_run)
+    end else if (ttcr_run) begin
       spr_ttcr <= spr_ttcr + 1;
+    end
   end
 endmodule

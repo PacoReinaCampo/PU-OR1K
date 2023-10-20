@@ -84,10 +84,7 @@ module pu_or1k_pfpu32_f2i (
   // check overflow
   wire s1t_is_shl_gt8 = s1t_shl[3] & (|s1t_shl[2:0]);
   wire s1t_is_shl_eq8 = s1t_shl[3] & (~(|s1t_shl[2:0]));
-  wire s1t_is_shl_ovf =
-       s1t_is_shl_gt8 |
-       (s1t_is_shl_eq8 & (~signa_i)) |
-       (s1t_is_shl_eq8 &   signa_i & (|fract24a_i[22:0]));
+  wire s1t_is_shl_ovf = s1t_is_shl_gt8 | (s1t_is_shl_eq8 & (~signa_i)) | (s1t_is_shl_eq8 & signa_i & (|fract24a_i[22:0]));
 
   // registering output
   always @(posedge clk) begin
@@ -105,11 +102,12 @@ module pu_or1k_pfpu32_f2i (
 
   // ready is special case
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       f2i_rdy_o <= 1'b0;
-    else if(flush_i)
+    end else if(flush_i) begin
       f2i_rdy_o <= 1'b0;
-    else if(adv_i)
+    end else if(adv_i) begin
       f2i_rdy_o <= start_i;
+    end
   end
 endmodule

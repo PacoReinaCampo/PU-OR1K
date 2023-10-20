@@ -68,11 +68,11 @@ module pu_or1k_pfpu32_muldiv (
   // MUL/DIV common outputs
   output reg        muldiv_rdy_o,       // ready
   output reg        muldiv_sign_o,      // signum
-  output reg  [4:0] muldiv_shr_o,       // do right shift in align stage
-  output reg  [9:0] muldiv_exp10shr_o,  // exponent for right shift align
+  output reg [ 4:0] muldiv_shr_o,       // do right shift in align stage
+  output reg [ 9:0] muldiv_exp10shr_o,  // exponent for right shift align
   output reg        muldiv_shl_o,       // do left shift in align stage
-  output reg  [9:0] muldiv_exp10shl_o,  // exponent for left shift align
-  output reg  [9:0] muldiv_exp10sh0_o,  // exponent for no shift in align
+  output reg [ 9:0] muldiv_exp10shl_o,  // exponent for left shift align
+  output reg [ 9:0] muldiv_exp10sh0_o,  // exponent for no shift in align
   output reg [27:0] muldiv_fract28_o,   // fractional with appended {r,s} bits
   output reg        muldiv_inv_o,       // invalid operation flag
   output reg        muldiv_inf_o,       // infinity output reg
@@ -211,12 +211,13 @@ module pu_or1k_pfpu32_muldiv (
   // route ready through side back
   reg s0o_ready;
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       s0o_ready <= 0;
-    else if(flush_i)
+    end else if(flush_i) begin
       s0o_ready <= 0;
-    else if(adv_i)
+    end else if(adv_i) begin
       s0o_ready <= start_i;
+    end
   end
 
   // left-shift the dividend and divisor
@@ -243,14 +244,15 @@ module pu_or1k_pfpu32_muldiv (
   wire itr_Proc = |itr_state;
   // iteration control state machine
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       itr_state <= 11'd0;
-    else if(flush_i)
+    end else if(flush_i) begin
       itr_state <= 11'd0;
-    else if(adv_i & s0o_ready & s0o_is_div)
+    end else if(adv_i & s0o_ready & s0o_is_div) begin
       itr_state <= 11'd1;
-    else if(adv_i)
+    end else if(adv_i) begin
       itr_state <= {itr_state[9:0],1'b0};
+    end
   end
 
   // Multiplication operation flag
@@ -524,12 +526,13 @@ module pu_or1k_pfpu32_muldiv (
   // stage 3 ready makes sense for division only
   reg s3o_div_ready;
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       s3o_div_ready <= 1'b0;
-    else if(flush_i)
+    end else if(flush_i) begin
       s3o_div_ready <= 1'b0;
-    else if(adv_i)
+    end else if(adv_i) begin
       s3o_div_ready <= s2o_div_ready;
+    end
   end
 
   // Feedback from multiplier's output with various rounding tecqs.
@@ -634,12 +637,13 @@ module pu_or1k_pfpu32_muldiv (
 
   // ready is special case
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       muldiv_rdy_o <= 0;
-    else if(flush_i)
+    end else if(flush_i) begin
       muldiv_rdy_o <= 0;
-    else if(adv_i)
+    end else if(adv_i) begin
       muldiv_rdy_o <= s2o_mul_ready | s3o_div_ready;
+    end
   end
 endmodule
 

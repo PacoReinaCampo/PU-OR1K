@@ -200,12 +200,13 @@ module pu_or1k_fetch_cappuccino #(
 
   // Signal to indicate that the ongoing bus access should be flushed
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       flush <= 0;
-    else if (bus_access_done & padv_i | du_restart_i)
+    end else if (bus_access_done & padv_i | du_restart_i) begin
       flush <= 0;
-    else if (pipeline_flush_i)
+    end else if (pipeline_flush_i)begin
       flush <= 1;
+    end
   end
 
   // pipeline_flush_i comes on the same edge as branch_except_occur during
@@ -215,136 +216,149 @@ module pu_or1k_fetch_cappuccino #(
 
   // Branch misprediction stall logic
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       fetching_brcond <= 0;
-    else if (pipeline_flush_i)
+    end else if (pipeline_flush_i) begin
       fetching_brcond <= 0;
-    else if (decode_op_brcond_i & addr_valid)
+    end else if (decode_op_brcond_i & addr_valid) begin
       fetching_brcond <= 1;
-    else if (bus_access_done & padv_i | du_restart_i)
+    end else if (bus_access_done & padv_i | du_restart_i) begin
       fetching_brcond <= 0;
+    end
   end
 
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       fetching_mispredicted_branch <= 0;
-    else if (pipeline_flush_i)
+    end else if (pipeline_flush_i) begin
       fetching_mispredicted_branch <= 0;
-    else if (bus_access_done & padv_i | du_restart_i)
+    end else if (bus_access_done & padv_i | du_restart_i) begin
       fetching_mispredicted_branch <= 0;
-    else if (fetching_brcond & branch_mispredict_i & padv_i)
+    end else if (fetching_brcond & branch_mispredict_i & padv_i) begin
       fetching_mispredicted_branch <= 1;
+    end
   end
 
   assign mispredict_stall = fetching_mispredicted_branch |
     branch_mispredict_i & fetching_brcond;
 
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       ctrl_branch_exception_r <= 1'b0;
-    else
+    end else begin
       ctrl_branch_exception_r <= ctrl_branch_exception_i;
+    end
   end
 
   // calculate address stage pc
   always @(*) begin
-    if (rst)
+    if (rst) begin
       pc_addr = OPTION_RESET_PC;
-    else if (du_restart_i)
+    end else if (du_restart_i) begin
       pc_addr = du_restart_pc_i;
-    else if (ctrl_branch_exception_i & !fetch_exception_taken_o)
+    end else if (ctrl_branch_exception_i & !fetch_exception_taken_o) begin
       pc_addr = ctrl_branch_except_pc_i;
-    else if (branch_mispredict_i | fetching_mispredicted_branch)
+    end else if (branch_mispredict_i | fetching_mispredicted_branch) begin
       pc_addr = execute_mispredict_target_i;
-    else if (decode_branch_i)
+    end else if (decode_branch_i) begin
       pc_addr = decode_branch_target_i;
-    else
+    end else begin
       pc_addr = pc_fetch + 4;
+    end
   end
+
 
   // Register fetch pc from address stage
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       pc_fetch <= OPTION_RESET_PC;
-    else if (addr_valid | du_restart_i)
+    end else if (addr_valid | du_restart_i) begin
       pc_fetch <= pc_addr;
+    end
   end
 
   // fetch_exception_taken_o generation
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       fetch_exception_taken_o <= 1'b0;
-    else if (fetch_exception_taken_o)
+    end else if (fetch_exception_taken_o) begin
       fetch_exception_taken_o <= 1'b0;
-    else if (ctrl_branch_exception_i & bus_access_done & padv_i)
+    end else if (ctrl_branch_exception_i & bus_access_done & padv_i) begin
       fetch_exception_taken_o <= 1'b1;
-    else
+    end else begin
       fetch_exception_taken_o <= 1'b0;
+    end
   end
 
   // fetch_valid_o generation
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       fetch_valid_o <= 1'b0;
-    else if (pipeline_flush_i)
+    end else if (pipeline_flush_i) begin
       fetch_valid_o <= 1'b0;
-    else if (bus_access_done & padv_i & !mispredict_stall & !immu_busy & !tlb_reload_busy | stall_fetch_valid)
+    end else if (bus_access_done & padv_i & !mispredict_stall & !immu_busy & !tlb_reload_busy | stall_fetch_valid) begin
       fetch_valid_o <= 1'b1;
-    else
+    end else begin
       fetch_valid_o <= 1'b0;
+    end
   end
 
   // Register instruction coming in
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       decode_insn_o <= {`OR1K_OPCODE_NOP,26'd0};
-    else if (imem_err | flushing)
+    end else if (imem_err | flushing) begin
       decode_insn_o <= {`OR1K_OPCODE_NOP,26'd0};
-    else if (bus_access_done & padv_i & !mispredict_stall)
+    end else if (bus_access_done & padv_i & !mispredict_stall) begin
       decode_insn_o <= imem_dat;
+    end
   end
 
   // Register PC for later stages
   always @(posedge clk) begin
-    if (bus_access_done & padv_i & !mispredict_stall)
+    if (bus_access_done & padv_i & !mispredict_stall) begin
       pc_decode_o <= pc_fetch;
+    end
   end
 
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       decode_except_ibus_err_o <= 0;
-    else if (du_restart_i)
+    end else if (du_restart_i) begin
       decode_except_ibus_err_o <= 0;
-    else if (imem_err)
+    end else if (imem_err) begin
       decode_except_ibus_err_o <= 1;
-    else if (decode_except_ibus_err_o & ctrl_branch_exception_i)
+    end else if (decode_except_ibus_err_o & ctrl_branch_exception_i) begin
       decode_except_ibus_err_o <= 0;
+    end
   end
 
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       decode_except_itlb_miss_o <= 0;
-    else if (du_restart_i)
+    end else if (du_restart_i) begin
       decode_except_itlb_miss_o <= 0;
-    else if (tlb_reload_busy)
+    end else if (tlb_reload_busy) begin
       decode_except_itlb_miss_o <= 0;
-    else if (except_itlb_miss)
+    end else if (except_itlb_miss) begin
       decode_except_itlb_miss_o <= 1;
-    else if (decode_except_itlb_miss_o & ctrl_branch_exception_i)
+    end else if (decode_except_itlb_miss_o & ctrl_branch_exception_i) begin
       decode_except_itlb_miss_o <= 0;
+    end
   end
 
   assign except_ipagefault_clear = decode_except_ipagefault_o & ctrl_branch_exception_i;
 
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       decode_except_ipagefault_o <= 0;
-    else if (du_restart_i)
+    end else if (du_restart_i) begin
       decode_except_ipagefault_o <= 0;
-    else if (except_ipagefault)
+    end else if (except_ipagefault) begin
       decode_except_ipagefault_o <= 1;
-    else if (except_ipagefault_clear)
+    end else if (except_ipagefault_clear) begin
       decode_except_ipagefault_o <= 0;
+    end
   end
 
   // Bus access logic
@@ -369,9 +383,9 @@ module pu_or1k_fetch_cappuccino #(
   // is generated.
 
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       nop_ack <= 0;
-    else
+    end else begin
       nop_ack <= padv_i & !bus_access_done & !(ibus_req & ibus_access) &
       ((immu_enable_i & (tlb_miss | pagefault) &
         !tlb_reload_busy) |
@@ -379,6 +393,7 @@ module pu_or1k_fetch_cappuccino #(
        exception_while_tlb_reload & !tlb_reload_busy |
        tlb_reload_pagefault |
        mispredict_stall);
+    end
   end
 
   assign ibus_access = (!ic_access | tlb_reload_busy | ic_invalidate) &
@@ -397,10 +412,11 @@ module pu_or1k_fetch_cappuccino #(
                          {ibus_adr[31:4], ibus_adr[3:0] + 4'd4};  // 16 byte
 
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       imem_err <= 0;
-    else
+    end else begin
       imem_err <= ibus_err_i;
+    end
   end
 
   always @(posedge clk) begin
@@ -446,6 +462,7 @@ module pu_or1k_fetch_cappuccino #(
             state <= IDLE;
           end
         end
+
         if (ibus_err_i) begin
           ibus_req <= 0;
           state <= IDLE;
@@ -462,19 +479,23 @@ module pu_or1k_fetch_cappuccino #(
       end
 
       TLB_RELOAD: begin
-        if (ctrl_branch_exception_i)
+        if (ctrl_branch_exception_i) begin
           exception_while_tlb_reload <= 1;
+        end
 
         ibus_adr        <= tlb_reload_addr;
         tlb_reload_data <= ibus_dat_i;
         tlb_reload_ack  <= ibus_ack_i & tlb_reload_req;
 
-        if (!tlb_reload_req)
+        if (!tlb_reload_req) begin
           state <= IDLE;
+        end
 
         ibus_req <= tlb_reload_req;
-        if (ibus_ack_i | tlb_reload_ack)
+
+        if (ibus_ack_i | tlb_reload_ack) begin
           ibus_req <= 0;
+        end
       end
 
       default:
@@ -495,12 +516,13 @@ module pu_or1k_fetch_cappuccino #(
     if (FEATURE_INSTRUCTIONCACHE!="NONE") begin : icache_gen
       reg   ic_enable_r;
       always @(posedge clk `OR_ASYNC_RST) begin
-        if (rst)
+        if (rst) begin
           ic_enable_r <= 0;
-        else if (ic_enable & !ibus_req)
+        end else if (ic_enable & !ibus_req) begin
           ic_enable_r <= 1;
-        else if (!ic_enable & !ic_refill)
+        end else if (!ic_enable & !ic_refill) begin
           ic_enable_r <= 0;
+        end
       end
 
       wire ic_enabled = ic_enable & ic_enable_r;

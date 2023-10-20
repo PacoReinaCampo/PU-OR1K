@@ -61,10 +61,11 @@ module pu_or1k_simple_dpram_sclk #(
   generate
     if (CLEAR_ON_INIT) begin : clear_on_init
       integer idx;
-      initial
+      initial begin
         for (idx = 0; idx < (1 << ADDR_WIDTH); idx = idx + 1) begin
           mem[idx] = {DATA_WIDTH{1'b0}};
         end
+      end
     end
   endgenerate
 
@@ -76,12 +77,17 @@ module pu_or1k_simple_dpram_sclk #(
       assign dout = bypass ? din_r : rdata;
 
       always @(posedge clk) begin
-        if (re) din_r <= din;
+        if (re) begin
+          din_r <= din;
+        end
       end
 
       always @(posedge clk) begin
-        if (waddr == raddr && we && re) bypass <= 1;
-        else if (re) bypass <= 0;
+        if (waddr == raddr && we && re) begin
+          bypass <= 1;
+        end else if (re) begin
+          bypass <= 0;
+        end
       end
     end else begin
       assign dout = rdata;
@@ -89,7 +95,12 @@ module pu_or1k_simple_dpram_sclk #(
   endgenerate
 
   always @(posedge clk) begin
-    if (we) mem[waddr] <= din;
-    if (re) rdata <= mem[raddr];
+    if (we) begin
+      mem[waddr] <= din;
+    end
+
+    if (re) begin
+      rdata <= mem[raddr];
+    end
   end
 endmodule

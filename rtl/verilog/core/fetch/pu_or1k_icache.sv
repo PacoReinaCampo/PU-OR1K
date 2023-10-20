@@ -282,8 +282,9 @@ module pu_or1k_icache #(
     spr_bus_ack_o <= 0;
     case (state)
       IDLE: begin
-        if (cpu_req_i)
+        if (cpu_req_i) begin
           state <= READ;
+        end
       end
 
       READ: begin
@@ -313,14 +314,17 @@ module pu_or1k_icache #(
         if (we_i) begin
           refill_valid[wradr_i[OPTION_ICACHE_BLOCK_WIDTH-1:2]] <= 1;
 
-          if (refill_done)
+          if (refill_done) begin
             state <= IDLE;
+          end
         end
       end
 
       INVALIDATE: begin
-        if (!invalidate_o)
+        if (!invalidate_o) begin
           state <= IDLE;
+        end
+
         spr_bus_ack_o <= 1;
       end
 
@@ -334,10 +338,11 @@ module pu_or1k_icache #(
       state <= INVALIDATE;
     end
 
-    if (rst)
+    if (rst) begin
       state <= IDLE;
-    else if(ic_imem_err_i)
+    end else if(ic_imem_err_i) begin
       state <= IDLE;
+    end  
   end
 
   integer w2;

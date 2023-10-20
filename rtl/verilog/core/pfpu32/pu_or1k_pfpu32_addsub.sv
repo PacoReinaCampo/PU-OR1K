@@ -147,12 +147,13 @@ module pu_or1k_pfpu32_addsub (
   // ready is special case
   reg s1o_ready;
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       s1o_ready  <= 0;
-    else if(flush_i)
+    end else if(flush_i) begin
       s1o_ready  <= 0;
-    else if(adv_i)
+    end else if(adv_i) begin
       s1o_ready <= start_i;
+    end
   end
 
   /* Stage 2: multiplex and shift */
@@ -229,12 +230,13 @@ module pu_or1k_pfpu32_addsub (
   // ready is special case
   reg s2o_ready;
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       s2o_ready  <= 0;
-    else if(flush_i)
+    end else if(flush_i) begin
       s2o_ready  <= 0;
-    else if(adv_i)
+    end else if(adv_i) begin
       s2o_ready <= s1o_ready;
+    end
   end
 
   /* Stage 4: update exponent */
@@ -313,11 +315,12 @@ module pu_or1k_pfpu32_addsub (
 
   // ready is special case
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       add_rdy_o <= 0;
-    else if(flush_i)
+    end else if(flush_i) begin
       add_rdy_o <= 0;
-    else if(adv_i)
+    end else if(adv_i) begin
       add_rdy_o <= s2o_ready;
+    end
   end
 endmodule

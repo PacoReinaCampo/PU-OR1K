@@ -176,9 +176,7 @@ module pu_or1k_pfpu32_rnd #(
   assign s1t_shr = (|s1t_shr_t) ? s1t_shr_t : {4'd0,s1t_addmul_carry};
 
   // align
-  wire [34:0] s1t_fract35sh =
-              (|s1t_shr) ? (s1t_fract35 >> s1t_shr) :
-              (s1t_fract35 << s1t_shl);
+  wire [34:0] s1t_fract35sh = (|s1t_shr) ? (s1t_fract35 >> s1t_shr) : (s1t_fract35 << s1t_shl);
 
   // update sticky bit for right shift case.
   // maximum right shift value is :
@@ -282,12 +280,13 @@ module pu_or1k_pfpu32_rnd #(
   // ready is special case
   reg s1o_ready;
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       s1o_ready <= 1'b0;
-    else if(flush_i)
+    end else if(flush_i) begin
       s1o_ready <= 1'b0;
-    else if(adv_i)
+    end else if(adv_i)begin
       s1o_ready <= (add_rdy_i | mul_rdy_i | f2i_rdy_i | i2f_rdy_i);
+    end
   end
 
   // Stage #2: rounding
@@ -349,8 +348,7 @@ module pu_or1k_pfpu32_rnd #(
       assign s2t_i32_inv = ((~s1o_sign) & s2t_i32_carry_rnd) | s1o_f2i_ovf;
       // two's complement for negative number
       assign s2t_i32_int32 = (s1o_fract32 ^ {32{s1o_sign}}) + {31'd0,s1o_sign};
-    end
-    else begin : ftoi_ieee_rounding
+    end else begin : ftoi_ieee_rounding
       assign s2t_i32_carry_rnd = s2t_fract32_rnd[31];
       assign s2t_i32_inv = ((~s1o_sign) & s2t_i32_carry_rnd) | s1o_f2i_ovf;
       // two's complement for negative number
@@ -398,8 +396,7 @@ module pu_or1k_pfpu32_rnd #(
       fpu_cmp_valid_o <= 1'b0;
       // exeptions
       fpcsr_o         <= {`OR1K_FPCSR_WIDTH{1'b0}};
-    end
-    else if(flush_i) begin
+    end else if(flush_i) begin
       // arithmetic results
       fpu_result_o      <= 32'd0;
       fpu_arith_valid_o <=  1'b0;
@@ -408,8 +405,7 @@ module pu_or1k_pfpu32_rnd #(
       fpu_cmp_valid_o <= 1'b0;
       // exeptions
       fpcsr_o         <= {`OR1K_FPCSR_WIDTH{1'b0}};
-    end
-    else if(adv_i) begin
+    end else if(adv_i) begin
       // arithmetic results
       fpu_result_o      <= s2t_opc;
       fpu_arith_valid_o <= s1o_ready;

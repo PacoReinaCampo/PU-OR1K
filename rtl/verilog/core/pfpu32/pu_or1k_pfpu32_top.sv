@@ -77,14 +77,15 @@ module pu_or1k_pfpu32_top #(
   // start logic
   reg new_data;
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       new_data <= 1'b0;
-    else if(flush_i)
+    end else if(flush_i) begin
       new_data <= 1'b0;
-    else if(padv_decode_i)
+    end else if(padv_decode_i) begin
       new_data <= 1'b1;
-    else if(padv_fpu_units)
+    end else if(padv_fpu_units) begin
       new_data <= 1'b0;
+    end
   end
 
   wire new_fpu_data = new_data & is_op_fpu;
@@ -259,22 +260,26 @@ module pu_or1k_pfpu32_top #(
     .adv_i       (padv_fpu_units), // advance pipe
     .start_i     (mul_start),
     .is_div_i    (op_div),
+
     // input 'a' related values
     .signa_i     (in_signa),
     .exp10a_i    (in_exp10a),
     .fract24a_i  (in_fract24a),
     .infa_i      (in_infa),
     .zeroa_i     (in_opa_0),
+
     // input 'b' related values
     .signb_i     (in_signb),
     .exp10b_i    (in_exp10b),
     .fract24b_i  (in_fract24b),
     .infb_i      (in_infb),
     .zerob_i     (in_opb_0),
+
     // 'a'/'b' related
     .snan_i      (in_snan),        
     .qnan_i      (in_qnan),
     .anan_sign_i (in_anan_sign),
+
     // MUL/DIV common outputs
     .muldiv_rdy_o       (mul_rdy_o),       // mul is ready
     .muldiv_sign_o      (mul_sign_o),      // mul signum
@@ -289,6 +294,7 @@ module pu_or1k_pfpu32_top #(
     .muldiv_snan_o      (mul_snan_o),      // mul signaling NaN output reg
     .muldiv_qnan_o      (mul_qnan_o),      // mul quiet NaN output reg
     .muldiv_anan_sign_o (mul_anan_sign_o), // mul signum for output nan
+
     // DIV additional outputs
     .div_op_o(div_op_o),                  // operation is division
     .div_sign_rmnd_o(div_sign_rmnd_o),    // signum of reminder for IEEE compliant rounding
@@ -298,8 +304,7 @@ module pu_or1k_pfpu32_top #(
   // convertor
   //   i2f signals
   wire op_i2f_cnv = (~a_cmp) & (op_arith_conv == 3'd4);
-  wire i2f_start  = op_i2f_cnv & 
-  new_fpu_data;
+  wire i2f_start  = op_i2f_cnv &  new_fpu_data;
   wire        i2f_rdy_o;       // i2f is ready
   wire        i2f_sign_o;      // i2f signum
   wire [ 3:0] i2f_shr_o;
@@ -308,6 +313,7 @@ module pu_or1k_pfpu32_top #(
   wire [ 7:0] i2f_exp8shl_o;
   wire [ 7:0] i2f_exp8sh0_o;
   wire [31:0] i2f_fract32_o;
+
   //   i2f module instance
   pu_or1k_pfpu32_i2f u_i2f_cnv (
     .clk           (clk),
@@ -325,6 +331,7 @@ module pu_or1k_pfpu32_top #(
     .i2f_exp8sh0_o (i2f_exp8sh0_o),
     .i2f_fract32_o (i2f_fract32_o)
   );
+
   //   f2i signals
   wire op_f2i_cnv = (~a_cmp) & (op_arith_conv == 3'd5);
   wire f2i_start  = op_f2i_cnv & new_fpu_data;
@@ -335,17 +342,18 @@ module pu_or1k_pfpu32_top #(
   wire [ 3:0] f2i_shl_o;       // f2i required shift left value   
   wire        f2i_ovf_o;       // f2i overflow flag
   wire        f2i_snan_o;      // f2i signaling NaN output reg
+
   //    f2i module instance
   pu_or1k_pfpu32_f2i u_f2i_cnv (
     .clk         (clk),
     .rst         (rst),
-    .flush_i     (flush_i),        // flush pipe
-    .adv_i       (padv_fpu_units), // advance pipe
-    .start_i     (f2i_start),      // start conversion
-    .signa_i     (in_signa),       // input 'a' related values
+    .flush_i     (flush_i),         // flush pipe
+    .adv_i       (padv_fpu_units),  // advance pipe
+    .start_i     (f2i_start),       // start conversion
+    .signa_i     (in_signa),        // input 'a' related values
     .exp10a_i    (in_exp10a),
     .fract24a_i  (in_fract24a),
-    .snan_i      (in_snan),        // 'a'/'b' related
+    .snan_i      (in_snan),         // 'a'/'b' related
     .qnan_i      (in_qnan),
     .f2i_rdy_o   (f2i_rdy_o),       // f2i is ready
     .f2i_sign_o  (f2i_sign_o),      // f2i signum
@@ -367,6 +375,7 @@ module pu_or1k_pfpu32_top #(
     .flush_i         (flush_i),         // flush pipe
     .adv_i           (padv_fpu_units),  // advance pipe
     .rmode_i         (round_mode_i),    // rounding mode
+
     // from add/sub
     .add_rdy_i       (add_rdy_o),       // add/sub is ready
     .add_sign_i      (add_sign_o),      // add/sub signum
@@ -380,6 +389,7 @@ module pu_or1k_pfpu32_top #(
     .add_snan_i      (add_snan_o),      // add/sub signaling NaN
     .add_qnan_i      (add_qnan_o),      // add/sub quiet NaN
     .add_anan_sign_i (add_anan_sign_o), // add/sub signum for output nan
+
     // from mul
     .mul_rdy_i       (mul_rdy_o),       // mul is ready
     .mul_sign_i      (mul_sign_o),      // mul signum
@@ -394,9 +404,10 @@ module pu_or1k_pfpu32_top #(
     .mul_snan_i      (mul_snan_o),      // mul signaling NaN
     .mul_qnan_i      (mul_qnan_o),      // mul quiet NaN
     .mul_anan_sign_i (mul_anan_sign_o), // mul signum for output nan
-    .div_op_i        (div_op_o),         // MUL/DIV output is division
-    .div_sign_rmnd_i (div_sign_rmnd_o),  // signum or reminder for IEEE compliant rounding
-    .div_dbz_i       (div_dbz_o),        // division by zero flag
+    .div_op_i        (div_op_o),        // MUL/DIV output is division
+    .div_sign_rmnd_i (div_sign_rmnd_o), // signum or reminder for IEEE compliant rounding
+    .div_dbz_i       (div_dbz_o),       // division by zero flag
+
     // from i2f
     .i2f_rdy_i       (i2f_rdy_o),       // i2f is ready
     .i2f_sign_i      (i2f_sign_o),      // i2f signum
@@ -406,6 +417,7 @@ module pu_or1k_pfpu32_top #(
     .i2f_exp8shl_i   (i2f_exp8shl_o),
     .i2f_exp8sh0_i   (i2f_exp8sh0_o),
     .i2f_fract32_i   (i2f_fract32_o),
+
     // from f2i
     .f2i_rdy_i       (f2i_rdy_o),       // f2i is ready
     .f2i_sign_i      (f2i_sign_o),      // f2i signum
@@ -414,11 +426,13 @@ module pu_or1k_pfpu32_top #(
     .f2i_shl_i       (f2i_shl_o),       // f2i required shift left value   
     .f2i_ovf_i       (f2i_ovf_o),       // f2i overflow flag
     .f2i_snan_i      (f2i_snan_o),      // f2i signaling NaN
+
     // from cmp
     .cmp_rdy_i       (cmp_ready),       // cmp is ready
     .cmp_res_i       (cmp_result),      // cmp result
     .cmp_inv_i       (cmp_inv),         // cmp invalid flag
     .cmp_inf_i       (cmp_inf),         // cmp infinity flag
+
     // outputs
     .fpu_result_o      (fpu_result_o),
     .fpu_arith_valid_o (fpu_arith_valid_o),

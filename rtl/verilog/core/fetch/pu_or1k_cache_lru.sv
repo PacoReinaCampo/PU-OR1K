@@ -120,12 +120,15 @@ module pu_or1k_cache_lru #(
     //    statically one.
     for (i = 0; i < NUMWAYS; i = i + 1) begin
       expand[i][i] = 1'b1;
+
       for (j = i + 1; j < NUMWAYS; j = j + 1) begin
         expand[i][j] = current[offset+j-i-1];
       end
+
       for (j = 0; j < i; j = j + 1) begin
         expand[i][j] = !expand[j][i];
       end
+
       offset = offset + NUMWAYS - i - 1;
     end
 
@@ -169,6 +172,7 @@ module pu_or1k_cache_lru #(
             expand[i][j] = 1'b0;
           end
         end
+
         for (j = 0; j < NUMWAYS; j = j + 1) begin
           if (i != j) begin
             expand[j][i] = 1'b1;
@@ -198,6 +202,7 @@ module pu_or1k_cache_lru #(
       for (j = i + 1; j < NUMWAYS; j = j + 1) begin
         update[offset+j-i-1] = expand[i][j];
       end
+
       offset = offset + NUMWAYS - i - 1;
     end
 

@@ -249,8 +249,8 @@ module pu_or1k_ctrl_cappuccino #(
   );
 
   // Internal signals
-  reg [SPR_SR_WIDTH-1:0]      spr_sr;
-  reg [SPR_SR_WIDTH-1:0]      spr_esr;
+  reg [SPR_SR_WIDTH-        1:0]    spr_sr;
+  reg [SPR_SR_WIDTH        -1:0]    spr_esr;
   reg [OPTION_OPERAND_WIDTH-1:0]    spr_epcr;
   reg [OPTION_OPERAND_WIDTH-1:0]    spr_eear;
   reg [OPTION_OPERAND_WIDTH-1:0]    spr_evbar;
@@ -305,7 +305,7 @@ module pu_or1k_ctrl_cappuccino #(
 
   wire                              except_range;
 
-  wire [15:0]      spr_addr;
+  wire [                    15:0]   spr_addr;
 
   wire [OPTION_OPERAND_WIDTH-1:0]   b;
 
@@ -445,12 +445,9 @@ module pu_or1k_ctrl_cappuccino #(
 
   assign execute_waiting = !execute_valid_i;
 
-  assign padv_fetch_o = !execute_waiting & !cpu_stall & !decode_bubble_i
-    & (!stepping | (stepping & pstep[0] & !fetch_valid_i));
+  assign padv_fetch_o = !execute_waiting & !cpu_stall & !decode_bubble_i & (!stepping | (stepping & pstep[0] & !fetch_valid_i));
 
-  assign padv_decode_o = fetch_valid_i & !execute_waiting &
-    !decode_execute_halt & !cpu_stall
-    & (!stepping | (stepping & pstep[1]));
+  assign padv_decode_o = fetch_valid_i & !execute_waiting & !decode_execute_halt & !cpu_stall & (!stepping | (stepping & pstep[1]));
 
   assign padv_execute_o = ((decode_valid_i & !execute_waiting &
     /* Stop fetch before exception branch continuing */
@@ -480,36 +477,37 @@ module pu_or1k_ctrl_cappuccino #(
   assign ctrl_flag_o = (!ctrl_flag_clear & spr_sr[`OR1K_SPR_SR_F]) | ctrl_flag_set;
 
   // Carry output
-  assign ctrl_carry_o = FEATURE_CARRY_FLAG!="NONE" &
-    (!ctrl_carry_clear_i & spr_sr[`OR1K_SPR_SR_CY] | ctrl_carry_set_i);
+  assign ctrl_carry_o = FEATURE_CARRY_FLAG!="NONE" & (!ctrl_carry_clear_i & spr_sr[`OR1K_SPR_SR_CY] | ctrl_carry_set_i);
 
   // Ctrl stage pipeline advance signal is one cycle behind execute stage's
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       padv_ctrl <= 0;
-    else
+    end else begin
       padv_ctrl <= padv_execute_o;
+    end
   end
 
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       execute_waiting_r <= 0;
-    else if (!execute_waiting)
+    end else if (!execute_waiting) begin
       execute_waiting_r <= 0;
-    else if (decode_valid_i & execute_waiting)
+    end else if (decode_valid_i & execute_waiting) begin
       execute_waiting_r <= 1;
+    end
   end
 
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       decode_execute_halt <= 0;
-    else if (du_restart_from_stall)
+    end else if (du_restart_from_stall) begin
       decode_execute_halt <= 0;
-    else if (decode_execute_halt & deassert_decode_execute_halt)
+    end else if (decode_execute_halt & deassert_decode_execute_halt) begin
       decode_execute_halt <= 0;
-    else if ((ctrl_op_rfe_i | exception) & !decode_execute_halt &
-             !exception_taken)
+    end else if ((ctrl_op_rfe_i | exception) & !decode_execute_halt & !exception_taken) begin
       decode_execute_halt <= 1;
+    end
   end
 
   always @(posedge clk `OR_ASYNC_RST) begin
@@ -1041,15 +1039,12 @@ module pu_or1k_ctrl_cappuccino #(
   assign spr_internal_read_dat[`OR1K_SPR_SYS_BASE] = spr_sys_group_read;
   /* System group ack generation */
 
-  assign spr_access_ack[`OR1K_SPR_SYS_BASE] = spr_access[`OR1K_SPR_SYS_BASE] &
-    ((spr_addr[10:9] == 2'h2) ?
-     spr_gpr_ack_i : 1);
+  assign spr_access_ack[`OR1K_SPR_SYS_BASE] = spr_access[`OR1K_SPR_SYS_BASE] & ((spr_addr[10:9] == 2'h2) ? spr_gpr_ack_i : 1);
 
-  //
   // Generate data to the register file for mfspr operations
   // Read datas are simply ORed since set to 0 when not
   // concerned by spr access.
-  //
+
   assign mfspr_dat_o = spr_internal_read_dat[`OR1K_SPR_SYS_BASE]  |
     spr_internal_read_dat[`OR1K_SPR_DMMU_BASE] |
     spr_internal_read_dat[`OR1K_SPR_IMMU_BASE] |

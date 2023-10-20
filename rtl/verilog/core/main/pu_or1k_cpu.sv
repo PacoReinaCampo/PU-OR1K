@@ -379,24 +379,26 @@ module pu_or1k_cpu #(
 
 `ifndef SYNTHESIS
 
-      assign monitor_flag              = monitor_flag_set ? 1 : monitor_flag_clear ? 0 : monitor_flag_sr;
-      assign monitor_clk               = clk;
+      assign monitor_flag = monitor_flag_set ? 1 : monitor_flag_clear ? 0 : monitor_flag_sr;
+      assign monitor_clk = clk;
 
-      assign monitor_execute_advance   = cappuccino.pu_or1k_cpu.padv_execute_o;
-      assign monitor_flag_set          = cappuccino.pu_or1k_cpu.pu_or1k_execute_ctrl_cappuccino.flag_set_i;
-      assign monitor_flag_clear        = cappuccino.pu_or1k_cpu.pu_or1k_execute_ctrl_cappuccino.flag_clear_i;
-      assign monitor_flag_sr           = cappuccino.pu_or1k_cpu.pu_or1k_ctrl_cappuccino.ctrl_flag_o;
-      assign monitor_spr_sr            = {16'd0, cappuccino.pu_or1k_cpu.pu_or1k_ctrl_cappuccino.spr_sr[15:`OR1K_SPR_SR_F+1], cappuccino.pu_or1k_cpu.pu_or1k_ctrl_cappuccino.ctrl_flag_o, cappuccino.pu_or1k_cpu.pu_or1k_ctrl_cappuccino.spr_sr[`OR1K_SPR_SR_F-1:0]};
-      assign monitor_execute_pc        = cappuccino.pu_or1k_cpu.pc_decode_to_execute;
-      assign monitor_rf_result_in      = cappuccino.pu_or1k_cpu.pu_or1k_rf_cappuccino.result_i;
-      assign monitor_spr_esr           = {16'd0, cappuccino.pu_or1k_cpu.pu_or1k_ctrl_cappuccino.spr_esr};
-      assign monitor_spr_epcr          = cappuccino.pu_or1k_cpu.pu_or1k_ctrl_cappuccino.spr_epcr;
-      assign monitor_spr_eear          = cappuccino.pu_or1k_cpu.pu_or1k_ctrl_cappuccino.spr_eear;
+      assign monitor_execute_advance = cappuccino.pu_or1k_cpu.padv_execute_o;
+      assign monitor_flag_set = cappuccino.pu_or1k_cpu.pu_or1k_execute_ctrl_cappuccino.flag_set_i;
+      assign monitor_flag_clear = cappuccino.pu_or1k_cpu.pu_or1k_execute_ctrl_cappuccino.flag_clear_i;
+      assign monitor_flag_sr = cappuccino.pu_or1k_cpu.pu_or1k_ctrl_cappuccino.ctrl_flag_o;
+      assign monitor_spr_sr = {16'd0, cappuccino.pu_or1k_cpu.pu_or1k_ctrl_cappuccino.spr_sr[15:`OR1K_SPR_SR_F+1], cappuccino.pu_or1k_cpu.pu_or1k_ctrl_cappuccino.ctrl_flag_o, cappuccino.pu_or1k_cpu.pu_or1k_ctrl_cappuccino.spr_sr[`OR1K_SPR_SR_F-1:0]};
+      assign monitor_execute_pc = cappuccino.pu_or1k_cpu.pc_decode_to_execute;
+      assign monitor_rf_result_in = cappuccino.pu_or1k_cpu.pu_or1k_rf_cappuccino.result_i;
+      assign monitor_spr_esr = {16'd0, cappuccino.pu_or1k_cpu.pu_or1k_ctrl_cappuccino.spr_esr};
+      assign monitor_spr_epcr = cappuccino.pu_or1k_cpu.pu_or1k_ctrl_cappuccino.spr_epcr;
+      assign monitor_spr_eear = cappuccino.pu_or1k_cpu.pu_or1k_ctrl_cappuccino.spr_eear;
       assign monitor_branch_mispredict = cappuccino.pu_or1k_cpu.branch_mispredict_o;
 
       reg [`OR1K_INSN_WIDTH-1:0] monitor_execute_insn_reg;
       always @(posedge clk) begin
-        if (cappuccino.pu_or1k_cpu.padv_decode_o) monitor_execute_insn_reg <= cappuccino.pu_or1k_cpu.pu_or1k_decode.decode_insn_i;
+        if (cappuccino.pu_or1k_cpu.padv_decode_o) begin
+          monitor_execute_insn_reg <= cappuccino.pu_or1k_cpu.pu_or1k_decode.decode_insn_i;
+        end
       end
       assign monitor_execute_insn = monitor_execute_insn_reg;
 `endif

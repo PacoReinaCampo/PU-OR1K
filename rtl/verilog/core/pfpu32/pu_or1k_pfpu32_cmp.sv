@@ -69,9 +69,9 @@ module pfpu32_fcmp (
   output                                     addsub_aeqb_o,
   // outputs
   output                                     cmp_flag_o,
-  inv_o,
-  inf_o,
-  ready_o
+  output                                     inv_o,
+  output                                     inf_o,
+  output                                     ready_o
 );
 
   // Full length ordered comparison opcodes

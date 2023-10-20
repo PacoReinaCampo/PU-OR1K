@@ -142,11 +142,12 @@ module pu_or1k_pfpu32_i2f (
 
   // ready is special case
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       i2f_rdy_o <= 1'b0;
-    else if(flush_i)
+    end else if(flush_i) begin
       i2f_rdy_o <= 1'b0;
-    else if(adv_i)
+    end else if(adv_i) begin
       i2f_rdy_o <= start_i;
+    end
   end
 endmodule
