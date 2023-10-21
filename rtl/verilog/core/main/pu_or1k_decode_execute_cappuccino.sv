@@ -269,8 +269,7 @@ module pu_or1k_decode_execute_cappuccino #(
       execute_op_jal_o <= 1'b0;
       execute_op_brcond_o <= 1'b0;
       execute_op_branch_o <= 0;
-    end
-    else if (pipeline_flush_i) begin
+    end else if (pipeline_flush_i) begin
       execute_op_bf_o <= 1'b0;
       execute_op_bnf_o <= 1'b0;
       execute_op_alu_o <= 1'b0;
@@ -295,8 +294,7 @@ module pu_or1k_decode_execute_cappuccino #(
       execute_op_jal_o <= 1'b0;
       execute_op_brcond_o <= 1'b0;
       execute_op_branch_o <= 1'b0;
-    end
-    else if (padv_i) begin
+    end else if (padv_i) begin
       execute_op_bf_o <= decode_op_bf_i;
       execute_op_bnf_o <= decode_op_bnf_i;
       execute_op_alu_o <= decode_op_alu_i;
@@ -360,15 +358,15 @@ module pu_or1k_decode_execute_cappuccino #(
       reg [`OR1K_FPUOP_WIDTH-1:0] execute_op_fpu_r;
       assign execute_op_fpu_o = execute_op_fpu_r;
       always @(posedge clk `OR_ASYNC_RST) begin
-        if (rst)
+        if (rst) begin
           execute_op_fpu_r <= {`OR1K_FPUOP_WIDTH{1'b0}};
-        else if (pipeline_flush_i)
+        end else if (pipeline_flush_i) begin
           execute_op_fpu_r <= {`OR1K_FPUOP_WIDTH{1'b0}};
-        else if (padv_i)
+        end else if (padv_i) begin
           execute_op_fpu_r <= (decode_bubble_o ? {`OR1K_FPUOP_WIDTH{1'b0}} : decode_op_fpu_i);
+        end
       end
-    end
-    else begin : fpu_decode_execute_none
+    end else begin : fpu_decode_execute_none
       assign execute_op_fpu_o  = {`OR1K_FPUOP_WIDTH{1'b0}};
     end
   endgenerate
@@ -380,31 +378,32 @@ module pu_or1k_decode_execute_cappuccino #(
   // It will clear itself by the pipeline_flush_i that the rfe
   // will generate.
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       execute_op_rfe_o <= 0;
-    else if (pipeline_flush_i)
+    end else if (pipeline_flush_i) begin
       execute_op_rfe_o <= 0;
-    else if (padv_i)
+    end else if (padv_i) begin
       execute_op_rfe_o <= decode_op_rfe_i;
+    end
   end
 
   always @(posedge clk `OR_ASYNC_RST) begin
     if (rst) begin
       execute_rf_wb_o <= 0;
-    end
-    else if (pipeline_flush_i) begin
+    end else if (pipeline_flush_i) begin
       execute_rf_wb_o <= 0;
-    end
-    else if (padv_i) begin
+    end else if (padv_i) begin
       execute_rf_wb_o <= decode_rf_wb_i;
-      if (decode_bubble_o)
+      if (decode_bubble_o) begin
         execute_rf_wb_o <= 0;
+      end
     end
   end
 
   always @(posedge clk) begin
-    if (padv_i)
+    if (padv_i) begin
       execute_rfd_adr_o <= decode_rfd_adr_i;
+    end
   end
 
   always @(posedge clk) begin
@@ -423,8 +422,9 @@ module pu_or1k_decode_execute_cappuccino #(
   end
 
   always @(posedge clk) begin
-    if (padv_i )
+    if (padv_i ) begin
       execute_immjbr_upper_o <= decode_immjbr_upper_i;
+    end
   end
 
   always @(posedge clk) begin
@@ -437,14 +437,13 @@ module pu_or1k_decode_execute_cappuccino #(
   always @(posedge clk `OR_ASYNC_RST) begin
     if (rst) begin
       execute_opc_insn_o <= `OR1K_OPCODE_NOP;
-    end
-    else if (pipeline_flush_i) begin
+    end else if (pipeline_flush_i) begin
       execute_opc_insn_o <= `OR1K_OPCODE_NOP;
-    end
-    else if (padv_i) begin
+    end else if (padv_i) begin
       execute_opc_insn_o <= decode_opc_insn_i;
-      if (decode_bubble_o)
+      if (decode_bubble_o) begin
         execute_opc_insn_o <= `OR1K_OPCODE_NOP;
+      end
     end
   end
 
@@ -452,12 +451,10 @@ module pu_or1k_decode_execute_cappuccino #(
     if (rst) begin
       execute_adder_do_sub_o   <= 1'b0;
       execute_adder_do_carry_o <= 1'b0;
-    end
-    else if (pipeline_flush_i) begin
+    end else if (pipeline_flush_i) begin
       execute_adder_do_sub_o   <= 1'b0;
       execute_adder_do_carry_o <= 1'b0;
-    end
-    else if (padv_i) begin
+    end else if (padv_i) begin
       execute_adder_do_sub_o    <= decode_adder_do_sub_i;
       execute_adder_do_carry_o <= decode_adder_do_carry_i;
       if (decode_bubble_o) begin
@@ -469,66 +466,75 @@ module pu_or1k_decode_execute_cappuccino #(
 
   // Decode for system call exception
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       execute_except_syscall_o <= 0;
-    else if (padv_i && FEATURE_SYSCALL=="ENABLED")
+    end else if (padv_i && FEATURE_SYSCALL=="ENABLED") begin
       execute_except_syscall_o <= decode_except_syscall_i;
+    end
   end
 
   // Decode for system call exception
-  always @(posedge clk `OR_ASYNC_RST)
-    if (rst)
+  always @(posedge clk `OR_ASYNC_RST) begin
+    if (rst) begin
       execute_except_trap_o <= 0;
-  else if (padv_i && FEATURE_TRAP=="ENABLED") begin
-    execute_except_trap_o <= decode_except_trap_i;
+    end else if (padv_i && FEATURE_TRAP=="ENABLED") begin
+      execute_except_trap_o <= decode_except_trap_i;
+    end
   end
 
   // Decode Illegal instruction
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       execute_except_illegal_o <= 0;
-    else if (padv_i)
+    end else if (padv_i) begin
       execute_except_illegal_o <= decode_except_illegal_i;
+    end
   end
 
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       execute_except_ibus_err_o <= 1'b0;
-    else if (padv_i)
+    end else if (padv_i) begin
       execute_except_ibus_err_o <= decode_except_ibus_err_i;
+    end
   end
 
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       execute_except_itlb_miss_o <= 1'b0;
-    else if (padv_i)
+    end else if (padv_i) begin
       execute_except_itlb_miss_o <= decode_except_itlb_miss_i;
+    end
   end
 
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       execute_except_ipagefault_o <= 1'b0;
-    else if (padv_i)
+    end else if (padv_i) begin
       execute_except_ipagefault_o <= decode_except_ipagefault_i;
+    end
   end
 
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       execute_except_ibus_align_o <= 1'b0;
-    else if (padv_i)
+    end else if (padv_i) begin
       execute_except_ibus_align_o <= decode_except_ibus_align;
+    end
   end
 
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       decode_valid_o <= 0;
-    else
+    end else begin
       decode_valid_o <= padv_i;
+    end
   end
 
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (padv_i)
+    if (padv_i) begin
       pc_execute_o <= pc_decode_i;
+    end
   end
 
   // Branch detection
@@ -571,21 +577,24 @@ module pu_or1k_decode_execute_cappuccino #(
 
   // Forward branch prediction signals to execute stage
   always @(posedge clk) begin
-    if (padv_i & decode_op_brcond_i)
+    if (padv_i & decode_op_brcond_i) begin
       execute_mispredict_target_o <= decode_mispredict_target;
+    end
   end
 
   always @(posedge clk) begin
-    if (padv_i & decode_op_brcond_i)
+    if (padv_i & decode_op_brcond_i) begin
       execute_predicted_flag_o <= predicted_flag_i;
+    end
   end
 
   // Calculate the link register result
   // TODO: investigate if the ALU adder can be used for this without
   // introducing critical paths
   always @(posedge clk) begin
-    if (padv_i)
+    if (padv_i) begin
       execute_jal_result_o <= next_pc_after_branch_insn;
+    end
   end
 
   // Detect the situation where there is an instruction in execute stage
@@ -622,11 +631,12 @@ module pu_or1k_decode_execute_cappuccino #(
     decode_op_rfe_i) & padv_i;
 
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       execute_bubble_o <= 0;
-    else if (pipeline_flush_i)
+    end else if (pipeline_flush_i) begin
       execute_bubble_o <= 0;
-    else if (padv_i)
+    end else if (padv_i) begin
       execute_bubble_o <= decode_bubble_o;
+    end
   end
 endmodule

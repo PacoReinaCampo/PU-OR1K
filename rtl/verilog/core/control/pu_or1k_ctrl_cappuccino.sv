@@ -438,8 +438,9 @@ module pu_or1k_ctrl_cappuccino #(
         15'b00000000000001?:
         exception_pc_addr <= spr_evbar | {19'd0,`OR1K_INT_VECTOR,8'd0};
         //15'b00000000000001:
-        default:
+        default: begin
           exception_pc_addr <= spr_evbar | {19'd0,`OR1K_TT_VECTOR,8'd0};
+        end
       endcase
   end
 
@@ -511,23 +512,25 @@ module pu_or1k_ctrl_cappuccino #(
   end
 
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       exception_r <= 0;
-    else if (exception_taken | du_restart_from_stall)
+    end else if (exception_taken | du_restart_from_stall) begin
       exception_r <= 0;
-    else if (exception & !exception_r)
+    end else if (exception & !exception_r) begin
       exception_r <= 1;
+    end
   end
 
   // Signal to indicate that the incoming exception or l.rfe has been taken
   // and we're waiting for it to propagate through the pipeline.
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       exception_taken <= 0;
-    else if (exception_taken)
+    end else if (exception_taken) begin
       exception_taken <= 0;
-    else if (exception_r & fetch_exception_taken_i)
+    end else if (exception_r & fetch_exception_taken_i) begin
       exception_taken <= 1;
+    end
   end
 
   always @(posedge clk `OR_ASYNC_RST) begin
@@ -538,12 +541,13 @@ module pu_or1k_ctrl_cappuccino #(
   end
 
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       last_branch_target_pc <= 0;
-    else if (padv_execute_o & branch_mispredict_i)
+    end else if (padv_execute_o & branch_mispredict_i) begin
       last_branch_target_pc <= execute_mispredict_target_i;
-    else if (padv_decode_o & decode_branch_i)
+    end else if (padv_decode_o & decode_branch_i) begin
       last_branch_target_pc <= decode_branch_target_i;
+    end
   end
 
   // Used to gate execute stage's advance signal in the case where a LSU op has
@@ -566,12 +570,13 @@ module pu_or1k_ctrl_cappuccino #(
   assign deassert_doing_rfe = fetch_exception_taken_i & doing_rfe_r;
 
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       doing_rfe_r <= 0;
-    else if (deassert_doing_rfe)
+    end else if (deassert_doing_rfe) begin
       doing_rfe_r <= 0;
-    else if (padv_ctrl)
+    end else if (padv_ctrl) begin
       doing_rfe_r <= ctrl_op_rfe_i;
+    end
   end
 
   assign spr_sr_o = spr_sr;

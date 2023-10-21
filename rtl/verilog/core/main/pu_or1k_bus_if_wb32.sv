@@ -90,27 +90,27 @@ module pu_or1k_bus_if_wb32 #(
       wire                  address_differs;
 
       always @(posedge clk `OR_ASYNC_RST) begin
-        if (rst)
+        if (rst) begin
           bursting <= 0;
-        else if (wbm_err_i)
+        end else if (wbm_err_i) begin
           bursting <= 0;
-        else if (bursting & finish_burst & wbm_ack_i)
+        end else if (bursting & finish_burst & wbm_ack_i) begin
           bursting <= 0;
-        else if (cpu_req_i & !bursting & !cpu_we_i)
+        end else if (cpu_req_i & !bursting & !cpu_we_i) begin
           bursting <= 1;
+        end
       end
 
       always @(posedge clk `OR_ASYNC_RST) begin
         if (rst) begin
           burst_address    <= 0;
           burst_wrap_start <= 0;
-        end
-        else if (cpu_req_i & !bursting) begin
+        end else if (cpu_req_i & !bursting) begin
           burst_address    <= cpu_adr_i[31:2];
           burst_wrap_start <= cpu_adr_i[BADDR_WITH+2-1:2];
-        end
-        else if (wbm_ack_i)
+        end else if (wbm_ack_i) begin
           burst_address[BADDR_WITH+2-1:2] <= burst_address[BADDR_WITH+2-1:2] + 1;
+        end
       end
 
       assign address_differs   = (burst_address!=cpu_adr_i[31:2]);
@@ -119,12 +119,13 @@ module pu_or1k_bus_if_wb32 #(
                                                burst_address[BADDR_WITH+2-1:2]==(burst_wrap_finish)) | address_differs | !cpu_req_i));
 
       always @(posedge clk `OR_ASYNC_RST) begin
-        if (rst)
+        if (rst) begin
           finish_burst_r <= 0;
-        else if (wbm_ack_i)
+        end else if (wbm_ack_i) begin
           finish_burst_r <= finish_burst;
-        else
+        end else begin
           finish_burst_r <= 0;
+        end
       end
 
       assign wbm_adr_o = bursting ? {burst_address,2'b00} : cpu_adr_i;
@@ -142,8 +143,7 @@ module pu_or1k_bus_if_wb32 #(
       assign cpu_err_o = wbm_err_i;
       assign cpu_ack_o = (wbm_ack_i) & !(bursting & address_differs) & cpu_req_i;
       assign cpu_dat_o = wbm_err_i ? 0 :  wbm_dat_i;
-    end
-    else if (BUS_IF_TYPE=="B3_REGISTERED_FEEDBACK") begin : b3_registered_feedback
+    end else if (BUS_IF_TYPE=="B3_REGISTERED_FEEDBACK") begin : b3_registered_feedback
       assign wbm_adr_o = cpu_adr_i;
       assign wbm_stb_o = cpu_req_i;
       assign wbm_cyc_o = cpu_req_i;
@@ -159,8 +159,7 @@ module pu_or1k_bus_if_wb32 #(
       assign cpu_ack_o = wbm_ack_i;
       assign cpu_dat_o = wbm_dat_i;
 
-    end
-    else begin : classic // CLASSIC only
+    end else begin : classic // CLASSIC only
       // Only classic, single cycle accesses
 
       // A register to force de-assertion of access request signals after
@@ -168,10 +167,11 @@ module pu_or1k_bus_if_wb32 #(
       reg cycle_end;
 
       always @(posedge clk `OR_ASYNC_RST) begin
-        if (rst)
+        if (rst) begin
           cycle_end <= 1;
-        else
+        end else begin
           cycle_end <= wbm_ack_i | wbm_err_i;
+        end
       end
 
       assign cpu_err_o = wbm_err_i;

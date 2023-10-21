@@ -66,9 +66,13 @@ module pu_or1k_wb_mux_cappuccino #(
   assign rf_result_o = wb_op_mul ? mul_result_i : rf_result;
 
   always @(posedge clk) begin
-    if (op_mfspr_i) rf_result <= spr_i;
-    else if (op_lsu_load_i) rf_result <= lsu_result_i;
-    else rf_result <= alu_result_i;
+    if (op_mfspr_i) begin
+      rf_result <= spr_i;
+    end else if (op_lsu_load_i) begin
+      rf_result <= lsu_result_i;
+    end else begin
+      rf_result <= alu_result_i;
+    end
   end
 
   always @(posedge clk) begin

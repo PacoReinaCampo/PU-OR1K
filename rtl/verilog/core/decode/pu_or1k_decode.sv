@@ -372,33 +372,36 @@ module pu_or1k_decode #(
         default:                          decode_except_illegal_o = 1'b1;
       endcase
 
-      `OR1K_OPCODE_ALU:
-      case (decode_insn_i[`OR1K_ALU_OPC_SELECT])
-        `OR1K_ALU_OPC_ADD, `OR1K_ALU_OPC_SUB, `OR1K_ALU_OPC_OR, `OR1K_ALU_OPC_XOR, `OR1K_ALU_OPC_AND: decode_except_illegal_o = 1'b0;
-        `OR1K_ALU_OPC_CMOV: decode_except_illegal_o = (FEATURE_CMOV == "NONE");
-        `OR1K_ALU_OPC_FFL1: decode_except_illegal_o = (FEATURE_FFL1 == "NONE");
-        `OR1K_ALU_OPC_DIV, `OR1K_ALU_OPC_DIVU: decode_except_illegal_o = (FEATURE_DIVIDER == "NONE");
-        `OR1K_ALU_OPC_ADDC: decode_except_illegal_o = (FEATURE_ADDC == "NONE");
-        `OR1K_ALU_OPC_MUL, `OR1K_ALU_OPC_MULU: decode_except_illegal_o = (FEATURE_MULTIPLIER == "NONE");
-        `OR1K_ALU_OPC_EXTBH, `OR1K_ALU_OPC_EXTW: decode_except_illegal_o = (FEATURE_EXT == "NONE");
-        `OR1K_ALU_OPC_SHRT:
-        case (decode_insn_i[`OR1K_ALU_OPC_SECONDARY_SELECT])
-          `OR1K_ALU_OPC_SECONDARY_SHRT_SLL, `OR1K_ALU_OPC_SECONDARY_SHRT_SRL: decode_except_illegal_o = 1'b0;
-          `OR1K_ALU_OPC_SECONDARY_SHRT_SRA:                                   decode_except_illegal_o = (FEATURE_SRA == "NONE");
-          `OR1K_ALU_OPC_SECONDARY_SHRT_ROR:                                   decode_except_illegal_o = (FEATURE_ROR == "NONE");
-          default:                                                            decode_except_illegal_o = 1'b1;
+      `OR1K_OPCODE_ALU: begin
+        case (decode_insn_i[`OR1K_ALU_OPC_SELECT])
+          `OR1K_ALU_OPC_ADD, `OR1K_ALU_OPC_SUB, `OR1K_ALU_OPC_OR, `OR1K_ALU_OPC_XOR, `OR1K_ALU_OPC_AND: decode_except_illegal_o = 1'b0;
+          `OR1K_ALU_OPC_CMOV: decode_except_illegal_o = (FEATURE_CMOV == "NONE");
+          `OR1K_ALU_OPC_FFL1: decode_except_illegal_o = (FEATURE_FFL1 == "NONE");
+          `OR1K_ALU_OPC_DIV, `OR1K_ALU_OPC_DIVU: decode_except_illegal_o = (FEATURE_DIVIDER == "NONE");
+          `OR1K_ALU_OPC_ADDC: decode_except_illegal_o = (FEATURE_ADDC == "NONE");
+          `OR1K_ALU_OPC_MUL, `OR1K_ALU_OPC_MULU: decode_except_illegal_o = (FEATURE_MULTIPLIER == "NONE");
+          `OR1K_ALU_OPC_EXTBH, `OR1K_ALU_OPC_EXTW: decode_except_illegal_o = (FEATURE_EXT == "NONE");
+          `OR1K_ALU_OPC_SHRT:
+          case (decode_insn_i[`OR1K_ALU_OPC_SECONDARY_SELECT])
+            `OR1K_ALU_OPC_SECONDARY_SHRT_SLL, `OR1K_ALU_OPC_SECONDARY_SHRT_SRL: decode_except_illegal_o = 1'b0;
+            `OR1K_ALU_OPC_SECONDARY_SHRT_SRA:                                   decode_except_illegal_o = (FEATURE_SRA == "NONE");
+            `OR1K_ALU_OPC_SECONDARY_SHRT_ROR:                                   decode_except_illegal_o = (FEATURE_ROR == "NONE");
+            default:                                                            decode_except_illegal_o = 1'b1;
+          endcase
+          default: decode_except_illegal_o = 1'b1;
         endcase
-        default: decode_except_illegal_o = 1'b1;
-      endcase
+      end
 
       `OR1K_OPCODE_SYSTRAPSYNC: begin
         if ((decode_insn_i[`OR1K_SYSTRAPSYNC_OPC_SELECT] == `OR1K_SYSTRAPSYNC_OPC_SYSCALL && FEATURE_SYSCALL=="ENABLED") ||
             (decode_insn_i[`OR1K_SYSTRAPSYNC_OPC_SELECT] == `OR1K_SYSTRAPSYNC_OPC_TRAP && FEATURE_TRAP=="ENABLED") ||
             (decode_insn_i[`OR1K_SYSTRAPSYNC_OPC_SELECT] == `OR1K_SYSTRAPSYNC_OPC_MSYNC) ||
             (decode_insn_i[`OR1K_SYSTRAPSYNC_OPC_SELECT] == `OR1K_SYSTRAPSYNC_OPC_PSYNC && FEATURE_PSYNC!="NONE") ||
-            (decode_insn_i[`OR1K_SYSTRAPSYNC_OPC_SELECT] == `OR1K_SYSTRAPSYNC_OPC_CSYNC && FEATURE_CSYNC!="NONE"))
+            (decode_insn_i[`OR1K_SYSTRAPSYNC_OPC_SELECT] == `OR1K_SYSTRAPSYNC_OPC_CSYNC && FEATURE_CSYNC!="NONE")) begin
           decode_except_illegal_o = 1'b0;
-        else decode_except_illegal_o = 1'b1;
+        end else begin
+          decode_except_illegal_o = 1'b1;
+        end
       end
       default: decode_except_illegal_o = 1'b1;
     endcase
