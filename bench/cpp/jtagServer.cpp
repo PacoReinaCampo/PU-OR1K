@@ -69,7 +69,9 @@ int VerilatorJtagServer::check_for_command(struct jtag_cmd*packet) {
 }
 
 int VerilatorJtagServer::send_result_to_server(struct jtag_cmd*packet) {
-  write(connfd, packet, sizeof(struct jtag_cmd));
+  ssize_t nb;
+
+  nb = write(connfd, packet, sizeof(struct jtag_cmd));
   return 0;
 }
 

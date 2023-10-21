@@ -221,12 +221,9 @@ module pu_or1k_immu #(
     end
   end
 
-  assign pagefault_o = (supervisor_mode_i ? !sxe : !uxe) &
-    !tlb_reload_busy_o & !busy_o;
+  assign pagefault_o = (supervisor_mode_i ? !sxe : !uxe) & !tlb_reload_busy_o & !busy_o;
 
-  assign busy_o = ((itlb_match_spr_cs | itlb_trans_spr_cs) & !spr_bus_ack |
-                   (itlb_match_spr_cs_r | itlb_trans_spr_cs_r) &
-                   spr_bus_ack & !spr_bus_ack_r) & enable_i;
+  assign busy_o = ((itlb_match_spr_cs | itlb_trans_spr_cs) & !spr_bus_ack | (itlb_match_spr_cs_r | itlb_trans_spr_cs_r) & spr_bus_ack & !spr_bus_ack_r) & enable_i;
 
   assign spr_way_idx_full = {spr_bus_addr_i[10], spr_bus_addr_i[8]};
   assign spr_way_idx = spr_way_idx_full[WAYS_WIDTH-1:0];
@@ -267,12 +264,8 @@ module pu_or1k_immu #(
   assign itlb_match_spr_cs = spr_bus_stb_i & (spr_bus_addr_i[15:11] == 5'd2) & |spr_bus_addr_i[10:9] & !spr_bus_addr_i[7];
   assign itlb_trans_spr_cs = spr_bus_stb_i & (spr_bus_addr_i[15:11] == 5'd2) & |spr_bus_addr_i[10:9] & spr_bus_addr_i[7];
 
-  assign itlb_match_addr = itlb_match_spr_cs & !spr_bus_ack ?
-    spr_bus_addr_i[OPTION_IMMU_SET_WIDTH-1:0] :
-    virt_addr_i[13+(OPTION_IMMU_SET_WIDTH-1):13];
-  assign itlb_trans_addr = itlb_trans_spr_cs & !spr_bus_ack ?
-    spr_bus_addr_i[OPTION_IMMU_SET_WIDTH-1:0] :
-    virt_addr_i[13+(OPTION_IMMU_SET_WIDTH-1):13];
+  assign itlb_match_addr = itlb_match_spr_cs & !spr_bus_ack ? spr_bus_addr_i[OPTION_IMMU_SET_WIDTH-1:0] : virt_addr_i[13+(OPTION_IMMU_SET_WIDTH-1):13];
+  assign itlb_trans_addr = itlb_trans_spr_cs & !spr_bus_ack ? spr_bus_addr_i[OPTION_IMMU_SET_WIDTH-1:0] : virt_addr_i[13+(OPTION_IMMU_SET_WIDTH-1):13];
 
   assign itlb_match_din = itlb_match_spr_cs & spr_bus_we_i & !spr_bus_ack ? spr_bus_dat_i : itlb_match_reload_din;
   assign itlb_trans_din = itlb_trans_spr_cs & spr_bus_we_i & !spr_bus_ack ? spr_bus_dat_i : itlb_trans_reload_din;

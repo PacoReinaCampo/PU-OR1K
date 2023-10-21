@@ -250,17 +250,11 @@ module pu_or1k_dmmu #(
     end
   endgenerate
 
-  assign dtlb_match_spr_cs = spr_bus_stb_i & (spr_bus_addr_i[15:11] == 5'd1) &
-    |spr_bus_addr_i[10:9] & !spr_bus_addr_i[7];
-  assign dtlb_trans_spr_cs = spr_bus_stb_i & (spr_bus_addr_i[15:11] == 5'd1) &
-    |spr_bus_addr_i[10:9] & spr_bus_addr_i[7];
+  assign dtlb_match_spr_cs = spr_bus_stb_i & (spr_bus_addr_i[15:11] == 5'd1) & |spr_bus_addr_i[10:9] & !spr_bus_addr_i[7];
+  assign dtlb_trans_spr_cs = spr_bus_stb_i & (spr_bus_addr_i[15:11] == 5'd1) & |spr_bus_addr_i[10:9] & spr_bus_addr_i[7];
 
-  assign dtlb_match_addr = dtlb_match_spr_cs ?
-    spr_bus_addr_i[OPTION_DMMU_SET_WIDTH-1:0] :
-    virt_addr_i[13+(OPTION_DMMU_SET_WIDTH-1):13];
-  assign dtlb_trans_addr = dtlb_trans_spr_cs ?
-    spr_bus_addr_i[OPTION_DMMU_SET_WIDTH-1:0] :
-    virt_addr_i[13+(OPTION_DMMU_SET_WIDTH-1):13];
+  assign dtlb_match_addr = dtlb_match_spr_cs ? spr_bus_addr_i[OPTION_DMMU_SET_WIDTH-1:0] : virt_addr_i[13+(OPTION_DMMU_SET_WIDTH-1):13];
+  assign dtlb_trans_addr = dtlb_trans_spr_cs ? spr_bus_addr_i[OPTION_DMMU_SET_WIDTH-1:0] : virt_addr_i[13+(OPTION_DMMU_SET_WIDTH-1):13];
 
   assign dtlb_match_din = dtlb_match_reload_we ? dtlb_match_reload_din : spr_bus_dat_i;
   assign dtlb_trans_din = dtlb_trans_reload_we ? dtlb_trans_reload_din : spr_bus_dat_i;
