@@ -126,8 +126,7 @@ module pu_or1k_pfpu32_top #(
   wire in_snan = in_snan_a | in_snan_b;
   wire in_qnan = in_qnan_a | in_qnan_b;
   //   sign of output nan
-  wire in_anan_sign = (in_snan_a | in_qnan_a) ? in_signa :
-  in_signb;
+  wire in_anan_sign = (in_snan_a | in_qnan_a) ? in_signa : in_signb;
   // restored exponents
   wire [9:0] in_exp10a = {2'd0,in_expa[7:1],(in_expa[0] | in_opa_dn)};
   wire [9:0] in_exp10b = {2'd0,in_expb[7:1],(in_expb[0] | in_opb_dn)};

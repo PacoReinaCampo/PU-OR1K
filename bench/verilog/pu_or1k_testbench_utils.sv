@@ -57,8 +57,11 @@ module pu_or1k_testbench_utils;
 
   initial begin
     if ($test$plusargs("vcd")) begin
-      if ($value$plusargs("testcase=%s", testcase)) $dumpfile({testcase, ".vcd"});
-      else $dumpfile("testlog.vcd");
+      if ($value$plusargs("testcase=%s", testcase)) begin
+        $dumpfile({testcase, ".vcd"});
+      end else begin
+        $dumpfile("testlog.vcd");
+      end
       $dumpvars;
     end
   end
@@ -66,6 +69,8 @@ module pu_or1k_testbench_utils;
   //Heartbeat timer for simulations
   reg [63:0] heartbeat;
   initial begin
-    if ($value$plusargs("heartbeat=%d", heartbeat)) forever #heartbeat $display("Heartbeat : Time=%0t", $time);
+    if ($value$plusargs("heartbeat=%d", heartbeat)) begin
+      forever #heartbeat $display("Heartbeat : Time=%0t", $time);
+    end
   end
 endmodule  // pu_or1k_testbench_utils

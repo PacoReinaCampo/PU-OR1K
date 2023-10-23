@@ -276,9 +276,7 @@ module pu_or1k_immu #(
   assign itlb_match_huge_we = itlb_match_reload_we & tlb_reload_huge;
   assign itlb_trans_huge_we = itlb_trans_reload_we & tlb_reload_huge;
 
-  assign spr_bus_dat = itlb_match_spr_cs_r ? itlb_match_dout[spr_way_idx_r] :
-    itlb_trans_spr_cs_r ? itlb_trans_dout[spr_way_idx_r] :
-    immucr_spr_cs_r ? immucr : 0;
+  assign spr_bus_dat = itlb_match_spr_cs_r ? itlb_match_dout[spr_way_idx_r] : itlb_trans_spr_cs_r ? itlb_trans_dout[spr_way_idx_r] : immucr_spr_cs_r ? immucr : 0;
 
   // Use registered value on all but the first cycle spr_bus_ack is asserted
   assign spr_bus_dat_o = spr_bus_ack & !spr_bus_ack_r ? spr_bus_dat : spr_bus_dat_r;
@@ -312,8 +310,7 @@ module pu_or1k_immu #(
 
       assign do_reload = enable_i & tlb_miss_o & (immucr[31:10] != 0);
       assign tlb_reload_busy_o = (tlb_reload_state != TLB_IDLE) | do_reload;
-      assign tlb_reload_pagefault_o = tlb_reload_pagefault &
-        !tlb_reload_pagefault_clear_i;
+      assign tlb_reload_pagefault_o = tlb_reload_pagefault & !tlb_reload_pagefault_clear_i;
 
       always @(posedge clk `OR_ASYNC_RST) begin
         if (rst) begin

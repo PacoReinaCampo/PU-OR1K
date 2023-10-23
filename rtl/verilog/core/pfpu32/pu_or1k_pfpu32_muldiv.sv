@@ -339,8 +339,7 @@ module pu_or1k_pfpu32_muldiv (
   // support case: b==1
   wire b_eq_1 = s1o_fract24b[23] & (~(|s1o_fract24b[22:0]));
   // reciprocal with restored leading 01
-  wire [10:0] itr_recip11b = b_eq_1 ?  11'b10000000000 :
-  {2'b01,itr_recip9b};
+  wire [10:0] itr_recip11b = b_eq_1 ?  11'b10000000000 : {2'b01,itr_recip9b};
 
   // the subsequent two stages multiplier operates with 32-bit inputs
   // 25-bits: fractionals (quotient is in range 0.5 to 1)

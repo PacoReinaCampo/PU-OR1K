@@ -59,7 +59,9 @@ function integer clog2;
   input integer in;
   begin
     in = in - 1;
-    for (clog2 = 0; in > 0; clog2 = clog2 + 1) in = in >> 1;
+    for (clog2 = 0; in > 0; clog2 = clog2 + 1) begin
+      in = in >> 1;
+    end
   end
 endfunction
 
@@ -72,7 +74,9 @@ function integer ff1;
   begin
     ff1 = 0;
     for (i = width - 1; i >= 0; i = i - 1) begin
-      if (in[i]) ff1 = i;
+      if (in[i]) begin
+        ff1 = i;
+      end
     end
   end
 endfunction
@@ -120,7 +124,10 @@ function integer calc_rf_addr_width;
   input integer rf_addr_width;
   input integer rf_num_shadow_gpr;
   begin
-    if (rf_num_shadow_gpr == 0) calc_rf_addr_width = rf_addr_width;
-    else calc_rf_addr_width = rf_addr_width + ((rf_num_shadow_gpr == 1) ? 1 : `clog2(rf_num_shadow_gpr));
+    if (rf_num_shadow_gpr == 0) begin
+      calc_rf_addr_width = rf_addr_width;
+    end else begin
+      calc_rf_addr_width = rf_addr_width + ((rf_num_shadow_gpr == 1) ? 1 : `clog2(rf_num_shadow_gpr));
+    end
   end
 endfunction

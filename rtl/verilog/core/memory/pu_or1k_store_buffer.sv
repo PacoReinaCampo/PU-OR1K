@@ -80,22 +80,23 @@ module pu_or1k_store_buffer #(
   assign fifo_din = {adr_i, dat_i, bsel_i, pc_i, atomic_i};
   assign {adr_o, dat_o, bsel_o, pc_o, atomic_o} = fifo_dout;
 
-  assign full_o = (write_pointer[DEPTH_WIDTH] != read_pointer[DEPTH_WIDTH]) &&
-                  (write_pointer[DEPTH_WIDTH-1:0] == read_pointer[DEPTH_WIDTH-1:0]);
+  assign full_o = (write_pointer[DEPTH_WIDTH] != read_pointer[DEPTH_WIDTH]) && (write_pointer[DEPTH_WIDTH-1:0] == read_pointer[DEPTH_WIDTH-1:0]);
   assign empty_o = write_pointer == read_pointer;
 
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       write_pointer <= 0;
-    else if (write_i)
+    end else if (write_i) begin
       write_pointer <= write_pointer + 1'd1;
+    end
   end
 
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       read_pointer <= 0;
-    else if (read_i)
+    end else if (read_i) begin
       read_pointer <= read_pointer + 1'd1;
+    end
   end
 
   pu_or1k_simple_dpram_sclk #(

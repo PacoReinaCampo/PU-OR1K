@@ -188,11 +188,8 @@ module pu_or1k_fetch_cappuccino #(
     decode_except_ipagefault_o & ctrl_branch_exception_i |
     doing_rfe_i;
 
-  assign except_itlb_miss = tlb_miss & immu_enable_i & bus_access_done &
-    !mispredict_stall & !doing_rfe_i;
-  assign except_ipagefault = pagefault & immu_enable_i & bus_access_done &
-    !mispredict_stall & !doing_rfe_i |
-    tlb_reload_pagefault;
+  assign except_itlb_miss = tlb_miss & immu_enable_i & bus_access_done & !mispredict_stall & !doing_rfe_i;
+  assign except_ipagefault = pagefault & immu_enable_i & bus_access_done & !mispredict_stall & !doing_rfe_i | tlb_reload_pagefault;
 
   assign fetch_rfa_adr_o = imem_dat[`OR1K_RA_SELECT];
   assign fetch_rfb_adr_o = imem_dat[`OR1K_RB_SELECT];
@@ -396,13 +393,9 @@ module pu_or1k_fetch_cappuccino #(
     end
   end
 
-  assign ibus_access = (!ic_access | tlb_reload_busy | ic_invalidate) &
-    !ic_refill |
-    (state != IDLE) & (state != IC_REFILL) |
-    ibus_ack;
+  assign ibus_access = (!ic_access | tlb_reload_busy | ic_invalidate) & !ic_refill | (state != IDLE) & (state != IC_REFILL) | ibus_ack;
   assign imem_ack = ibus_access ? ibus_ack : ic_ack;
-  assign imem_dat = (nop_ack | except_itlb_miss | except_ipagefault) ? {`OR1K_OPCODE_NOP,26'd0} :
-                    ibus_access ? ibus_dat : ic_dat;
+  assign imem_dat = (nop_ack | except_itlb_miss | except_ipagefault) ? {`OR1K_OPCODE_NOP,26'd0} : ibus_access ? ibus_dat : ic_dat;
   assign ibus_adr_o = ibus_adr;
   assign ibus_req_o = ibus_req;
   assign ibus_burst_o = !ibus_access & ic_refill & !ic_refill_done;
@@ -432,21 +425,18 @@ module pu_or1k_fetch_cappuccino #(
             ibus_adr <= tlb_reload_addr;
             ibus_req <= 1;
             state    <= TLB_RELOAD;
-          end
-          else if (immu_enable_i) begin
+          end else if (immu_enable_i) begin
             ibus_adr <= immu_phys_addr;
             if (!tlb_miss & !pagefault & !immu_busy) begin
               ibus_req <= 1;
               state    <= READ;
             end
-          end
-          else if (!ctrl_branch_exception_i | doing_rfe_i) begin
+          end else if (!ctrl_branch_exception_i | doing_rfe_i) begin
             ibus_adr <= pc_fetch;
             ibus_req <= 1;
             state    <= READ;
           end
-        end
-        else if (ic_refill_req) begin
+        end else if (ic_refill_req) begin
           ibus_adr <= ic_addr_match;
           ibus_req <= 1;
           state    <= IC_REFILL;
@@ -508,7 +498,6 @@ module pu_or1k_fetch_cappuccino #(
     end
   end
 
-
   assign ic_addr = (addr_valid | du_restart_i) ? pc_addr : pc_fetch;
   assign ic_addr_match = immu_enable_i ? immu_phys_addr : pc_fetch;
 
@@ -536,15 +525,10 @@ module pu_or1k_fetch_cappuccino #(
       ic_access & ic_refill_allowed;
 
       if (OPTION_ICACHE_LIMIT_WIDTH == OPTION_OPERAND_WIDTH) begin
-        assign ic_access = ic_enabled &
-          !(immu_cache_inhibit & immu_enable_i);
+        assign ic_access = ic_enabled & !(immu_cache_inhibit & immu_enable_i);
       end else if (OPTION_ICACHE_LIMIT_WIDTH < OPTION_OPERAND_WIDTH) begin
-        assign ic_access = ic_enabled &
-          ic_addr_match[OPTION_OPERAND_WIDTH-1:
-                        OPTION_ICACHE_LIMIT_WIDTH] == 0 &
-          !(immu_cache_inhibit & immu_enable_i);
-      end
-      else begin
+        assign ic_access = ic_enabled & ic_addr_match[OPTION_OPERAND_WIDTH-1 : OPTION_ICACHE_LIMIT_WIDTH] == 0 & !(immu_cache_inhibit & immu_enable_i);
+      end else begin
         initial begin
           $display("ERROR: OPTION_ICACHE_LIMIT_WIDTH > OPTION_OPERAND_WIDTH");
           $finish();
@@ -587,8 +571,7 @@ module pu_or1k_fetch_cappuccino #(
         .spr_bus_dat_o (spr_bus_dat_ic_o),
         .spr_bus_ack_o (spr_bus_ack_ic_o)
       );
-    end
-    else begin
+    end else begin
       assign ic_access = 0;
       assign ic_refill = 0;
       assign ic_refill_req = 1'b0;
@@ -654,8 +637,7 @@ module pu_or1k_fetch_cappuccino #(
         .spr_bus_stb_i  (immu_spr_bus_stb),
         .spr_bus_dat_i  (spr_bus_dat_i[OPTION_OPERAND_WIDTH-1:0])
       );
-    end
-    else begin
+    end else begin
       assign immu_cache_inhibit = 0;
       assign immu_busy = 0;
       assign tlb_miss = 0;
