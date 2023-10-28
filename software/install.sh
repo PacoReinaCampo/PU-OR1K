@@ -42,15 +42,14 @@
 ##                                                                               ##
 ###################################################################################
 
-git clone git://sourceware.org/git/binutils-gdb.git binutils
+git clone https://github.com/openrisc/binutils-gdb.git binutils-gdb
 git clone https://github.com/openrisc/or1k-gcc.git gcc
-git clone git://sourceware.org/git/newlib-cygwin.git newlib
-git clone git://sourceware.org/git/binutils-gdb.git gdb
+git clone https://github.com/openrisc/newlib.git newlib
 
 export PATH=/opt/or1k-elf-gcc/bin:${PATH}
 
 mkdir build-binutils; cd build-binutils
-../binutils/configure --target=or1k-elf --prefix=/opt/or1k-elf-gcc \
+../binutils-gdb/configure --target=or1k-elf --prefix=/opt/or1k-elf-gcc \
 --disable-itcl --disable-tk --disable-tcl --disable-winsup --disable-gdbtk \
 --disable-libgui --disable-rda --disable-sid --disable-sim --disable-gdb \
 --with-sysroot --disable-newlib --disable-libgloss --with-system-zlib
@@ -79,7 +78,7 @@ sudo make install
 cd ..
 
 mkdir build-gdb; cd build-gdb
-../gdb/configure --target=or1k-elf --prefix=/opt/or1k-elf-gcc --disable-itcl \
+../binutils-gdb/configure --target=or1k-elf --prefix=/opt/or1k-elf-gcc --disable-itcl \
 --disable-tk --disable-tcl --disable-winsup --disable-gdbtk --disable-libgui \
 --disable-rda --disable-sid --with-sysroot --disable-newlib --disable-libgloss \
 --disable-gas --disable-ld --disable-binutils --disable-gprof --with-system-zlib

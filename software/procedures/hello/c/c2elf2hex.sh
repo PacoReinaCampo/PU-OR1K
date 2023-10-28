@@ -54,3 +54,6 @@ gcc hello_c.c -o hello_c.run
 # OpenRISC ISA
 or1k-elf-gcc hello_c.c -o hello_c.elf
 or1k-elf-objcopy -O ihex hello_c.elf hello_c.hex
+
+# Baremetal simulation
+or1k-sim -f or1ksim.cfg hello_c.elf
