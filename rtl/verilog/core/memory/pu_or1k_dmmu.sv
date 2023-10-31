@@ -144,12 +144,13 @@ module pu_or1k_dmmu #(
   genvar                             i;
 
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       spr_bus_ack <= 0;
-    else if (spr_bus_stb_i & spr_bus_addr_i[15:11] == 5'd1)
+    end else if (spr_bus_stb_i & spr_bus_addr_i[15:11] == 5'd1) begin
       spr_bus_ack <= 1;
-    else
+    end else begin
       spr_bus_ack <= 0;
+    end
   end
 
   assign spr_bus_ack_o = spr_bus_ack & spr_bus_stb_i & spr_bus_addr_i[15:11] == 5'd1;
@@ -174,8 +175,9 @@ module pu_or1k_dmmu #(
     cache_inhibit_o = 0;
 
     for (j = 0; j < OPTION_DMMU_WAYS; j=j+1) begin
-      if (way_huge[j] & way_huge_hit[j] | !way_huge[j] & way_hit[j])
+      if (way_huge[j] & way_huge_hit[j] | !way_huge[j] & way_hit[j]) begin
         tlb_miss_o = 0;
+      end
 
       if (way_huge[j] & way_huge_hit[j]) begin
         phys_addr_o = {dtlb_trans_huge_dout[j][31:24], virt_addr_match_i[23:0]};
@@ -184,8 +186,7 @@ module pu_or1k_dmmu #(
         sre = dtlb_trans_huge_dout[j][8];
         swe = dtlb_trans_huge_dout[j][9];
         cache_inhibit_o = dtlb_trans_huge_dout[j][1];
-      end
-      else if (!way_huge[j] & way_hit[j]) begin
+      end else if (!way_huge[j] & way_hit[j]) begin
         phys_addr_o = {dtlb_trans_dout[j][31:13], virt_addr_match_i[12:0]};
         ure = dtlb_trans_dout[j][6];
         uwe = dtlb_trans_dout[j][7];
@@ -195,16 +196,22 @@ module pu_or1k_dmmu #(
       end
 
       dtlb_match_we[j] = 0;
-      if (dtlb_match_reload_we)
+      if (dtlb_match_reload_we) begin
         dtlb_match_we[j] = 1;
-      if (j[WAYS_WIDTH-1:0] == spr_way_idx)
+      end
+
+      if (j[WAYS_WIDTH-1:0] == spr_way_idx) begin
         dtlb_match_we[j] = dtlb_match_spr_cs & spr_bus_we_i;
+      end
 
       dtlb_trans_we[j] = 0;
-      if (dtlb_trans_reload_we)
+      if (dtlb_trans_reload_we) begin
         dtlb_trans_we[j] = 1;
-      if (j[WAYS_WIDTH-1:0] == spr_way_idx)
+      end
+
+      if (j[WAYS_WIDTH-1:0] == spr_way_idx)begin
         dtlb_trans_we[j] = dtlb_trans_spr_cs & spr_bus_we_i;
+      end
     end
   end
 
@@ -222,8 +229,7 @@ module pu_or1k_dmmu #(
       dtlb_trans_spr_cs_r <= 0;
       dmmucr_spr_cs_r     <= 0;
       spr_way_idx_r       <= 0;
-    end
-    else begin
+    end else begin
       dtlb_match_spr_cs_r <= dtlb_match_spr_cs;
       dtlb_trans_spr_cs_r <= dtlb_trans_spr_cs;
       dmmucr_spr_cs_r     <= dmmucr_spr_cs;
@@ -236,13 +242,13 @@ module pu_or1k_dmmu #(
       assign dmmucr_spr_cs = spr_bus_stb_i & spr_bus_addr_i == `OR1K_SPR_DMMUCR_ADDR;
 
       always @(posedge clk `OR_ASYNC_RST) begin
-        if (rst)
+        if (rst) begin
           dmmucr <= 0;
-        else if (dmmucr_spr_cs & spr_bus_we_i)
+        end else if (dmmucr_spr_cs & spr_bus_we_i) begin
           dmmucr <= spr_bus_dat_i;
+        end
       end
-    end
-    else begin
+    end else begin
       assign dmmucr_spr_cs = 0;
       always @(posedge clk) begin
         dmmucr <= 0;
@@ -302,8 +308,10 @@ module pu_or1k_dmmu #(
       assign tlb_reload_pagefault_o = tlb_reload_pagefault & !tlb_reload_pagefault_clear_i;
 
       always @(posedge clk) begin
-        if (tlb_reload_pagefault_clear_i)
+        if (tlb_reload_pagefault_clear_i) begin
           tlb_reload_pagefault <= 0;
+        end
+
         dtlb_trans_reload_we   <= 0;
         dtlb_trans_reload_din  <= 0;
         dtlb_match_reload_we   <= 0;
@@ -333,13 +341,11 @@ module pu_or1k_dmmu #(
                 tlb_reload_pagefault <= 1;
                 tlb_reload_req_o     <= 0;
                 tlb_reload_state     <= TLB_IDLE;
-              end
-              else if (tlb_reload_data_i[9]) begin
+              end else if (tlb_reload_data_i[9]) begin
                 tlb_reload_huge  <= 1;
                 tlb_reload_req_o <= 0;
                 tlb_reload_state <= TLB_GET_PTE;
-              end
-              else begin
+              end else begin
                 tlb_reload_addr_o <= {tlb_reload_data_i[31:13], virt_addr_match_i[23:13], 2'b00};
                 tlb_reload_state  <= TLB_GET_PTE;
               end
@@ -355,8 +361,7 @@ module pu_or1k_dmmu #(
               if (!tlb_reload_data_i[10]) begin
                 tlb_reload_pagefault <= 1;
                 tlb_reload_state <= TLB_IDLE;
-              end
-              else begin
+              end else begin
                 // Translate register generation.
                 // PPN
                 dtlb_trans_reload_din[31:13] <= tlb_reload_data_i[31:13];
@@ -395,11 +400,11 @@ module pu_or1k_dmmu #(
         endcase
 
         // Abort if enable deasserts in the middle of a reload
-        if (!enable_i | (dmmucr[31:10] == 0))
+        if (!enable_i | (dmmucr[31:10] == 0)) begin
           tlb_reload_state <= TLB_IDLE;
+        end
       end
-    end
-    else begin
+    end else begin
       assign tlb_reload_pagefault_o = 0;
       assign tlb_reload_busy_o      = 0;
 

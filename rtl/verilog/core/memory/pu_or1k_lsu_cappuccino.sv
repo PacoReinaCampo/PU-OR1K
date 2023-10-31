@@ -413,10 +413,11 @@ module pu_or1k_lsu_cappuccino #(
                          {dbus_adr[31:4], dbus_adr[3:0] + 4'd4};  // 16 byte
 
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       dbus_err <= 0;
-    else
+    end else begin
       dbus_err <= dbus_err_i;
+    end
   end
 
   always @(posedge clk) begin
@@ -434,16 +435,14 @@ module pu_or1k_lsu_cappuccino #(
         last_write <= 0;
         if (store_buffer_write | !store_buffer_empty) begin
           state <= WRITE;
-        end
-        else if (ctrl_op_lsu & dbus_access & !dc_refill & !dbus_ack &
+        end else if (ctrl_op_lsu & dbus_access & !dc_refill & !dbus_ack &
           !dbus_err & !except_dbus & !access_done &
           !pipeline_flush_i) begin
           if (tlb_reload_req) begin
             dbus_adr <= tlb_reload_addr;
             dbus_req_o <= 1;
             state <= TLB_RELOAD;
-          end
-          else if (dmmu_enable_i) begin
+          end else if (dmmu_enable_i) begin
             dbus_adr <= dmmu_phys_addr;
             if (!tlb_miss & !pagefault & !except_align) begin
               if (ctrl_op_lsu_load_i) begin
@@ -452,8 +451,7 @@ module pu_or1k_lsu_cappuccino #(
                 state <= READ;
               end
             end
-          end
-          else if (!except_align) begin
+          end else if (!except_align) begin
             dbus_adr <= ctrl_lsu_adr_i;
             if (ctrl_op_lsu_load_i) begin
               dbus_req_o <= 1;
@@ -461,8 +459,7 @@ module pu_or1k_lsu_cappuccino #(
               state <= READ;
             end
           end
-        end
-        else if (dc_refill_req) begin
+        end else if (dc_refill_req) begin
           dbus_req_o <= 1;
           dbus_adr <= dc_adr_match;
           state <= DC_REFILL;
@@ -507,8 +504,9 @@ module pu_or1k_lsu_cappuccino #(
           last_write <= store_buffer_empty;
         end
 
-        if (store_buffer_write)
+        if (store_buffer_write) begin
           last_write <= 0;
+        end
 
         if (last_write & dbus_ack_i | dbus_err_i) begin
           dbus_req_o <= 0;
@@ -531,16 +529,19 @@ module pu_or1k_lsu_cappuccino #(
         end
 
         dbus_req_o <= tlb_reload_req;
-        if (dbus_ack_i | tlb_reload_ack)
+        if (dbus_ack_i | tlb_reload_ack) begin
           dbus_req_o <= 0;
+        end
       end
 
-      default:
+      default:  begin
         state <= IDLE;
+      end
     endcase
 
-    if (rst)
+    if (rst) begin
       state <= IDLE;
+    end
   end
 
   assign dbus_stall = tlb_reload_busy | except_align | except_dbus |
@@ -557,46 +558,49 @@ module pu_or1k_lsu_cappuccino #(
       reg atomic_flag_clear;
 
       always @(posedge clk `OR_ASYNC_RST) begin
-        if (rst)
+        if (rst) begin
           atomic_reserve <= 0;
-        else if (pipeline_flush_i)
+        end else if (pipeline_flush_i) begin
           atomic_reserve <= 0;
-        else if (ctrl_op_lsu_store_i & ctrl_op_lsu_atomic_i & write_done ||
+        end else if (ctrl_op_lsu_store_i & ctrl_op_lsu_atomic_i & write_done ||
           !ctrl_op_lsu_atomic_i & store_buffer_write &
           (store_buffer_wadr == atomic_addr) ||
-          (snoop_valid & (snoop_adr_i == atomic_addr)))
+          (snoop_valid & (snoop_adr_i == atomic_addr))) begin
           atomic_reserve <= 0;
-        else if (ctrl_op_lsu_load_i & ctrl_op_lsu_atomic_i & padv_ctrl_i)
+        end else if (ctrl_op_lsu_load_i & ctrl_op_lsu_atomic_i & padv_ctrl_i) begin
           atomic_reserve <= !(snoop_valid & (snoop_adr_i == dc_adr_match));
+        end
       end
 
       always @(posedge clk) begin
-        if (ctrl_op_lsu_load_i & ctrl_op_lsu_atomic_i & padv_ctrl_i)
+        if (ctrl_op_lsu_load_i & ctrl_op_lsu_atomic_i & padv_ctrl_i) begin
           atomic_addr <= dc_adr_match;
+        end
       end
 
       assign swa_success = ctrl_op_lsu_store_i & ctrl_op_lsu_atomic_i &
                            atomic_reserve & (dbus_adr == atomic_addr);
 
       always @(posedge clk) begin
-        if (padv_ctrl_i)
+        if (padv_ctrl_i) begin
           atomic_flag_set <= 0;
-        else if (write_done)
+        end else if (write_done) begin
           atomic_flag_set <= swa_success & lsu_valid_o;
+        end
       end
 
       always @(posedge clk) begin
-        if (padv_ctrl_i)
+        if (padv_ctrl_i) begin
           atomic_flag_clear <= 0;
-        else if (write_done)
+        end else if (write_done) begin
           atomic_flag_clear <= !swa_success & lsu_valid_o &
           ctrl_op_lsu_atomic_i & ctrl_op_lsu_store_i;
+        end
       end
 
       assign atomic_flag_set_o = atomic_flag_set;
       assign atomic_flag_clear_o = atomic_flag_clear;
-    end
-    else begin
+    end else begin
       assign atomic_flag_set_o = 0;
       assign atomic_flag_clear_o = 0;
       assign swa_success = 0;
@@ -610,13 +614,14 @@ module pu_or1k_lsu_cappuccino #(
 
   // Store buffer logic
   always @(posedge clk) begin
-    if (rst)
+    if (rst) begin
       store_buffer_write_pending <= 0;
-    else if (store_buffer_write | pipeline_flush_i)
+    end else if (store_buffer_write | pipeline_flush_i) begin
       store_buffer_write_pending <= 0;
-    else if (ctrl_op_lsu_store_i & padv_ctrl_i & !dbus_stall &
-      (store_buffer_full | dc_refill | dc_refill_r | dc_snoop_hit))
+    end else if (ctrl_op_lsu_store_i & padv_ctrl_i & !dbus_stall &
+      (store_buffer_full | dc_refill | dc_refill_r | dc_snoop_hit)) begin
       store_buffer_write_pending <= 1;
+    end
   end
 
   assign store_buffer_write = (ctrl_op_lsu_store_i &
@@ -660,8 +665,7 @@ module pu_or1k_lsu_cappuccino #(
         .full_o(store_buffer_full),
         .empty_o(store_buffer_empty)
       );
-    end
-    else begin
+    end else begin
       assign store_buffer_epcr_o = ctrl_epcr_i;
       assign store_buffer_radr = store_buffer_wadr;
       assign store_buffer_dat = lsu_sdat;
@@ -670,12 +674,13 @@ module pu_or1k_lsu_cappuccino #(
 
       reg store_buffer_full_r;
       always @(posedge clk `OR_ASYNC_RST) begin
-        if (rst)
+        if (rst) begin
           store_buffer_full_r <= 0;
-        else if (store_buffer_write)
+        end else if (store_buffer_write) begin
           store_buffer_full_r <= 1;
-        else if (write_done)
+        end else if (write_done) begin
           store_buffer_full_r <= 0;
+        end
       end
 
       assign store_buffer_full = store_buffer_full_r & !write_done;
@@ -684,12 +689,13 @@ module pu_or1k_lsu_cappuccino #(
   assign store_buffer_wadr = dc_adr_match;
 
   always @(posedge clk `OR_ASYNC_RST) begin
-    if (rst)
+    if (rst) begin
       dc_enable_r <= 0;
-    else if (dc_enable_i & !dbus_req_o)
+    end else if (dc_enable_i & !dbus_req_o) begin
       dc_enable_r <= 1;
-    else if (!dc_enable_i & !dc_refill)
+    end else if (!dc_enable_i & !dc_refill) begin
       dc_enable_r <= 0;
+    end
   end
 
   assign dc_enabled = dc_enable_i & dc_enable_r;
@@ -710,14 +716,12 @@ module pu_or1k_lsu_cappuccino #(
       if (OPTION_DCACHE_LIMIT_WIDTH == OPTION_OPERAND_WIDTH) begin
         assign dc_access =  ctrl_op_lsu_store_i | dc_enabled &
           !(dmmu_cache_inhibit & dmmu_enable_i);
-      end
-      else if (OPTION_DCACHE_LIMIT_WIDTH < OPTION_OPERAND_WIDTH) begin
+      end else if (OPTION_DCACHE_LIMIT_WIDTH < OPTION_OPERAND_WIDTH) begin
         assign dc_access = ctrl_op_lsu_store_i | dc_enabled &
           dc_adr_match[OPTION_OPERAND_WIDTH-1:
                        OPTION_DCACHE_LIMIT_WIDTH] == 0 &
                        !(dmmu_cache_inhibit & dmmu_enable_i);
-      end
-      else begin
+      end else begin
         initial begin
           $display("ERROR: OPTION_DCACHE_LIMIT_WIDTH > OPTION_OPERAND_WIDTH");
           $finish();
@@ -772,8 +776,7 @@ module pu_or1k_lsu_cappuccino #(
         .spr_bus_stb_i(spr_bus_stb_i),
         .spr_bus_dat_i(spr_bus_dat_i[OPTION_OPERAND_WIDTH-1:0])
       );
-    end
-    else begin
+    end else begin
       assign dc_access = 0;
       assign dc_refill = 0;
       assign dc_refill_done = 0;
@@ -841,8 +844,7 @@ module pu_or1k_lsu_cappuccino #(
         .spr_bus_stb_i(dmmu_spr_bus_stb),
         .spr_bus_dat_i(spr_bus_dat_i[OPTION_OPERAND_WIDTH-1:0])
       );
-    end
-    else begin
+    end else begin
       assign dmmu_cache_inhibit = 0;
       assign tlb_miss = 0;
       assign pagefault = 0;

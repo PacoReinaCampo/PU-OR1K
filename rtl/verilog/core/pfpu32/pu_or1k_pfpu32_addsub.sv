@@ -113,8 +113,7 @@ module pu_or1k_pfpu32_addsub (
 
   // stage #1 outputs
   //  input related
-  reg s1o_inv, s1o_inf_i,
-  s1o_snan_i, s1o_qnan_i, s1o_anan_i_sign;
+  reg s1o_inv, s1o_inf_i, s1o_snan_i, s1o_qnan_i, s1o_anan_i_sign;
   //  computation related
   reg        s1o_aeqb;
   reg [ 4:0] s1o_shr;

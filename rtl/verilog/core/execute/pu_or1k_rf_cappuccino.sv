@@ -129,10 +129,11 @@ module pu_or1k_rf_cappuccino #(
   // invalid until the next padv_decode, so it's execute_rfd_adr can not be
   // used to evaluate the execute_hazard.
   always @(posedge clk) begin
-    if (pipeline_flush_i)
+    if (pipeline_flush_i) begin
       flushing <= 1;
-    else if (padv_decode_i)
+    end else if (padv_decode_i) begin
       flushing <= 0;
+    end
   end
 
   // Detect hazards
@@ -171,8 +172,9 @@ module pu_or1k_rf_cappuccino #(
 
   reg [OPTION_OPERAND_WIDTH-1:0] ctrl_hazard_result_r;
   always @(posedge clk) begin
-    if (decode_valid_i)
+    if (decode_valid_i) begin
       ctrl_hazard_result_r <= result_i;
+    end
   end
 
   wire [OPTION_OPERAND_WIDTH-1:0] ctrl_hazard_result;
@@ -315,8 +317,7 @@ module pu_or1k_rf_cappuccino #(
         assign rfb_rdad[RF_ADDR_WIDTH-1:OPTION_RF_ADDR_WIDTH] = {(RF_ADDR_WIDTH-OPTION_RF_ADDR_WIDTH){1'b0}};
       end
 
-    end
-    else begin
+    end else begin
       assign spr_gpr_ack_o = 1;
 
       assign rf_wren =  wb_rf_wb_i;
@@ -379,8 +380,7 @@ module pu_or1k_rf_cappuccino #(
         .we(rf_wren),
         .din(rf_wrdat)
       );
-    end
-    else begin
+    end else begin
       assign spr_gpr_dat_o = 0;
     end
   endgenerate

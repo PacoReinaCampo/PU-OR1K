@@ -368,16 +368,15 @@ module pu_or1k_dcache #(
     if (rst) begin
       state <= IDLE;
       write_pending <= 0;
-    end
-    else if(dc_dbus_err_i) begin
+    end else if(dc_dbus_err_i) begin
       state <= IDLE;
       write_pending <= 0;
-    end
-    else begin
-      if (cpu_we_i)
+    end else begin
+      if (cpu_we_i) begin
         write_pending <= 1;
-      else if (!cpu_req_i)
+      end else if (!cpu_req_i) begin
         write_pending <= 0;
+      end
 
       refill_valid_r <= refill_valid;
 
@@ -388,8 +387,7 @@ module pu_or1k_dcache #(
         snoop_check <= 1;
         snoop_windex <= snoop_index;
         snoop_tag <= snoop_adr_i[OPTION_DCACHE_LIMIT_WIDTH-1:WAY_WIDTH];
-      end
-      else begin
+      end else begin
         snoop_check <= 0;
       end
 
@@ -405,11 +403,11 @@ module pu_or1k_dcache #(
             // Change to invalidate state that actually accesses
             // the tag memory
             state <= INVALIDATE;
-          end
-          else if (cpu_we_i | write_pending)
+          end else if (cpu_we_i | write_pending) begin
             state <= WRITE;
-          else if (cpu_req_i)
+          end else if (cpu_req_i) begin
             state <= READ;
+          end
         end
 
         READ: begin
@@ -427,15 +425,12 @@ module pu_or1k_dcache #(
               end
 
               state <= REFILL;
-            end
-            else if (cpu_we_i | write_pending) begin
+            end else if (cpu_we_i | write_pending) begin
               state <= WRITE;
-            end
-            else if (invalidate) begin
+            end else if (invalidate) begin
               state <= IDLE;
             end
-          end
-          else if (!dc_enable_i | invalidate) begin
+          end else if (!dc_enable_i | invalidate) begin
             state <= IDLE;
           end
         end
@@ -444,8 +439,9 @@ module pu_or1k_dcache #(
           if (we_i) begin
             refill_valid[wradr_i[OPTION_DCACHE_BLOCK_WIDTH-1:2]] <= 1;
 
-            if (refill_done)
+            if (refill_done) begin
               state <= IDLE;
+            end
           end
           // Abort refill on snoop-hit
           // TODO: only abort on snoop-hits to refill address
@@ -470,8 +466,7 @@ module pu_or1k_dcache #(
             invalidate_adr <= spr_bus_dat_i[WAY_WIDTH-1:OPTION_DCACHE_BLOCK_WIDTH];
 
             state <= INVALIDATE;
-          end
-          else begin
+          end else begin
             state <= IDLE;
           end
         end
@@ -508,13 +503,11 @@ module pu_or1k_dcache #(
       for (w2 = 0; w2 < OPTION_DCACHE_WAYS; w2 = w2 + 1) begin
         if (snoop_way_hit[w2]) begin
           tag_way_in[w2] = 0;
-        end
-        else begin
+        end else begin
           tag_way_in[w2] = snoop_way_out[w2];
         end
       end
-    end
-    else begin
+    end else begin
       // The tag mem is written during reads and writes to write
       // the lru info and  during refill and invalidate.
       tag_windex = read | write ?
@@ -548,14 +541,18 @@ module pu_or1k_dcache #(
           way_wr_dat = cpu_dat_i;
           if (hit & cpu_req_i) begin
             // Mux cache output with write data
-            if (!cpu_bsel_i[3])
+            if (!cpu_bsel_i[3]) begin
               way_wr_dat[31:24] = cpu_dat_o[31:24];
-            if (!cpu_bsel_i[2])
+            end
+            if (!cpu_bsel_i[2]) begin
               way_wr_dat[23:16] = cpu_dat_o[23:16];
-            if (!cpu_bsel_i[1])
+            end
+            if (!cpu_bsel_i[1]) begin
               way_wr_dat[15:8] = cpu_dat_o[15:8];
-            if (!cpu_bsel_i[0])
+            end
+            if (!cpu_bsel_i[0]) begin
               way_wr_dat[7:0] = cpu_dat_o[7:0];
+            end
 
             way_we     = way_hit;
             tag_lru_in = next_lru_history;

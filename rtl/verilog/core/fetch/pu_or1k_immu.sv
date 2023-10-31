@@ -185,8 +185,9 @@ module pu_or1k_immu #(
     cache_inhibit_o = 0;
 
     for (j = 0; j < OPTION_IMMU_WAYS; j=j+1) begin
-      if (way_huge[j] & way_huge_hit[j] | !way_huge[j] & way_hit[j])
+      if (way_huge[j] & way_huge_hit[j] | !way_huge[j] & way_hit[j]) begin
         tlb_miss_o = 0;
+      end
 
       if (way_huge[j] & way_huge_hit[j]) begin
         phys_addr_o = {itlb_trans_huge_dout[j][31:24], virt_addr_match_i[23:0]};
@@ -353,8 +354,7 @@ module pu_or1k_immu #(
                 tlb_reload_req_o <= 0;
                 tlb_reload_state <= TLB_GET_PTE;
               end else begin
-                tlb_reload_addr_o <= {tlb_reload_data_i[31:13],
-                                      virt_addr_match_i[23:13], 2'b00};
+                tlb_reload_addr_o <= {tlb_reload_data_i[31:13], virt_addr_match_i[23:13], 2'b00};
                 tlb_reload_state <= TLB_GET_PTE;
               end
             end
@@ -407,8 +407,7 @@ module pu_or1k_immu #(
           end
         endcase
       end
-    end
-    else begin
+    end else begin
       assign tlb_reload_pagefault_o = 0;
       assign tlb_reload_busy_o = 0;
       always @(posedge clk) begin

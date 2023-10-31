@@ -214,8 +214,7 @@ module pu_or1k_execute_alu #(
       assign a = (op_jbr_i | op_jr_i) ? pc_execute_i : rfa_i;
       assign b = immediate_sel_i ? immediate_i :
         op_jbr_i ? {{4{immjbr_upper_i[9]}},immjbr_upper_i,imm16_i,2'b00} : rfb_i;
-    end
-    else begin
+    end else begin
       assign a = rfa_i;
       assign b = immediate_sel_i ? immediate_i : rfb_i;
 
@@ -268,10 +267,11 @@ module pu_or1k_execute_alu #(
       assign mul_result = mul_result2;
 
       always @(posedge clk) begin
-        if (decode_valid_i)
+        if (decode_valid_i) begin
           mul_valid_shr <= {2'b00, op_mul_i};
-        else
+        end else begin
           mul_valid_shr <= mul_valid_shr[2] ? mul_valid_shr : {mul_valid_shr[1:0], 1'b0};
+        end
       end
 
       assign mul_valid = mul_valid_shr[2] & !decode_valid_i;
@@ -279,8 +279,7 @@ module pu_or1k_execute_alu #(
       // Can't detect unsigned overflow in this implementation
       assign mul_unsigned_overflow = 0;
 
-    end
-    else if (FEATURE_MULTIPLIER=="PIPELINED") begin : pipelinedmultiply
+    end else if (FEATURE_MULTIPLIER=="PIPELINED") begin : pipelinedmultiply
       // 32-bit multiplier in sync with cpu pipeline
       reg [OPTION_OPERAND_WIDTH-1:0]           mul_opa;
       reg [OPTION_OPERAND_WIDTH-1:0]           mul_opb;
@@ -292,8 +291,9 @@ module pu_or1k_execute_alu #(
           mul_opa <= decode_a;
           mul_opb <= decode_b;
         end
-        if (padv_execute_i)
+        if (padv_execute_i) begin
           mul_result1 <= mul_opa * mul_opb;
+        end
 
         mul_result2 <= mul_result1;
       end
@@ -322,29 +322,28 @@ module pu_or1k_execute_alu #(
           mul_prod_r <=  64'h0000_0000_0000_0000;
           serial_mul_cnt <= 6'd0;
           mul_done <= 1'b0;
-        end
-        else if (|serial_mul_cnt) begin
+        end else if (|serial_mul_cnt) begin
           serial_mul_cnt <= serial_mul_cnt - 6'd1;
 
-          if (mul_prod_r[0])
+          if (mul_prod_r[0]) begin
             mul_prod_r[(OPTION_OPERAND_WIDTH*2)-1:OPTION_OPERAND_WIDTH-1]
             <= mul_prod_r[(OPTION_OPERAND_WIDTH*2)-1:OPTION_OPERAND_WIDTH] + mul_a;
-          else
+          end else begin
             mul_prod_r[(OPTION_OPERAND_WIDTH*2)-1:OPTION_OPERAND_WIDTH-1]
             <= {1'b0,mul_prod_r[(OPTION_OPERAND_WIDTH*2)-1:OPTION_OPERAND_WIDTH]};
+          end
 
           mul_prod_r[OPTION_OPERAND_WIDTH-2:0] <= mul_prod_r[OPTION_OPERAND_WIDTH-1:1];
 
-          if (serial_mul_cnt==6'd1)
+          if (serial_mul_cnt==6'd1) begin
             mul_done <= 1'b1;
-        end
-        else if (decode_valid_i && op_mul_i) begin
+          end
+        end else if (decode_valid_i && op_mul_i) begin
           mul_prod_r[(OPTION_OPERAND_WIDTH*2)-1:OPTION_OPERAND_WIDTH] <= 32'd0;
           mul_prod_r[OPTION_OPERAND_WIDTH-1:0] <= mul_b;
           mul_done <= 0;
           serial_mul_cnt <= 6'b10_0000;
-        end
-        else if (decode_valid_i) begin
+        end else if (decode_valid_i) begin
           mul_done <= 1'b0;
         end
       end
@@ -373,8 +372,7 @@ module pu_or1k_execute_alu #(
       end
       `endif
       // synthesis translate_on
-    end
-    else if (FEATURE_MULTIPLIER=="SIMULATION") begin
+    end else if (FEATURE_MULTIPLIER=="SIMULATION") begin
       // Simple multiplier result
       wire [(OPTION_OPERAND_WIDTH*2)-1:0] mul_full_result;
       assign mul_full_result = a * b;
@@ -384,18 +382,15 @@ module pu_or1k_execute_alu #(
         |mul_full_result[(OPTION_OPERAND_WIDTH*2)-1:OPTION_OPERAND_WIDTH];
 
       assign mul_valid = 1;
-    end
-    else if (FEATURE_MULTIPLIER=="NONE") begin
+    end else if (FEATURE_MULTIPLIER=="NONE") begin
       // No multiplier
       assign mul_result = 0;
       assign mul_valid = 1'b1;
       assign mul_unsigned_overflow = 0;
-    end
-    else begin
+    end else begin
       // Incorrect configuration option
       initial begin
-        $display("%m: Error - chosen multiplier implementation (%s) not available",
-                 FEATURE_MULTIPLIER);
+        $display("%m: Error - chosen multiplier implementation (%s) not available", FEATURE_MULTIPLIER);
         $finish;
       end
     end
@@ -436,15 +431,14 @@ module pu_or1k_execute_alu #(
         if (rst) begin
           div_done <= 0;
           div_count <= 0;
-        end
-        else if (decode_valid_i & op_div_i) begin
+        end else if (decode_valid_i & op_div_i) begin
           div_done <= 0;
           div_count <= OPTION_OPERAND_WIDTH[5:0];
-        end
-        else if (div_count == 1)
+        end else if (div_count == 1) begin
           div_done <= 1;
-        else if (!div_done)
+        end else if (!div_done) begin
           div_count <= div_count - 1'd1;
+        end
       end
 
       always @(posedge clk) begin
@@ -462,24 +456,24 @@ module pu_or1k_execute_alu #(
            */
 
           if (op_div_signed_i) begin
-            if (rfa_i[OPTION_OPERAND_WIDTH-1] ^ rfb_i[OPTION_OPERAND_WIDTH-1])
+            if (rfa_i[OPTION_OPERAND_WIDTH-1] ^ rfb_i[OPTION_OPERAND_WIDTH-1]) begin
               div_neg <= 1'b1;
+            end
 
-            if (rfa_i[OPTION_OPERAND_WIDTH-1])
+            if (rfa_i[OPTION_OPERAND_WIDTH-1]) begin
               div_n <= ~rfa_i + 1;
+            end
 
-            if (rfb_i[OPTION_OPERAND_WIDTH-1])
+            if (rfb_i[OPTION_OPERAND_WIDTH-1]) begin
               div_d <= ~rfb_i + 1;
+            end
           end
-        end
-        else if (!div_done) begin
+        end else if (!div_done) begin
           if (!div_sub[OPTION_OPERAND_WIDTH]) begin // div_sub >= 0
             div_r <= div_sub[OPTION_OPERAND_WIDTH-1:0];
             div_n <= {div_n[OPTION_OPERAND_WIDTH-2:0], 1'b1};
-          end
-          else begin
-            div_r <= {div_r[OPTION_OPERAND_WIDTH-2:0],
-                      div_n[OPTION_OPERAND_WIDTH-1]};
+          end else begin
+            div_r <= {div_r[OPTION_OPERAND_WIDTH-2:0], div_n[OPTION_OPERAND_WIDTH-1]};
             div_n <= {div_n[OPTION_OPERAND_WIDTH-2:0], 1'b0};
           end
         end
@@ -488,24 +482,20 @@ module pu_or1k_execute_alu #(
       assign div_valid = div_done & !decode_valid_i;
       assign div_result = div_neg ? ~div_n + 1 : div_n;
       assign div_by_zero = div_by_zero_r;
-    end
-    else if (FEATURE_DIVIDER=="SIMULATION") begin
+    end else if (FEATURE_DIVIDER=="SIMULATION") begin
       assign div_result = a / b;
       assign div_valid = 1;
       assign div_by_zero = (opc_alu_i == `OR1K_ALU_OPC_DIV ||
                             opc_alu_i == `OR1K_ALU_OPC_DIVU) && !(|b);
 
-    end
-    else if (FEATURE_DIVIDER=="NONE") begin
+    end else if (FEATURE_DIVIDER=="NONE") begin
       assign div_result = 0;
       assign div_valid = 1'b1;
       assign div_by_zero = 0;
-    end
-    else begin
+    end else begin
       // Incorrect configuration option
       initial begin
-        $display("%m: Error - chosen divider implementation (%s) not available",
-                 FEATURE_DIVIDER);
+        $display("%m: Error - chosen divider implementation (%s) not available", FEATURE_DIVIDER);
         $finish;
       end
     end
@@ -548,8 +538,7 @@ module pu_or1k_execute_alu #(
       // some glue logic
       assign fpu_op_is_arith = op_fpu_i[`OR1K_FPUOP_WIDTH-1] & (~op_fpu_i[3]);
       assign fpu_op_is_cmp   = op_fpu_i[`OR1K_FPUOP_WIDTH-1] &   op_fpu_i[3];
-    end
-    else begin :  fpu_alu_none
+    end else begin :  fpu_alu_none
       // arithmetic part
       assign fpu_op_is_arith = 0;
       assign fpu_arith_valid = 0;
@@ -597,16 +586,15 @@ module pu_or1k_execute_alu #(
         assign ffl1_result = ffl1_result_r;
 
         always @(posedge clk) begin
-          if (decode_valid_i)
+          if (decode_valid_i) begin
             ffl1_result_r = ffl1_result_wire;
+          end
         end
-      end
-      else begin
+      end else begin
         assign ffl1_result = ffl1_result_wire;
         assign ffl1_valid = 1'b1;
       end
-    end
-    else begin
+    end else begin
       assign ffl1_result = 0;
       assign ffl1_valid = 1'b1;
     end
@@ -654,47 +642,43 @@ module pu_or1k_execute_alu #(
 
       assign shift_valid = 1;
 
-    end
-    else if (OPTION_SHIFTER=="SERIAL") begin : serial_shifter
+    end else if (OPTION_SHIFTER=="SERIAL") begin : serial_shifter
       // Serial shifter
       reg [4:0] shift_cnt;
       reg       shift_go;
       reg [OPTION_OPERAND_WIDTH-1:0] shift_result_r;
       always @(posedge clk `OR_ASYNC_RST) begin
-        if (rst)
+        if (rst) begin
           shift_go <= 0;
-        else if (decode_valid_i)
+        end else if (decode_valid_i) begin
           shift_go <= op_shift_i;
+        end
       end
 
       always @(posedge clk `OR_ASYNC_RST) begin
         if (rst) begin
           shift_cnt <= 0;
           shift_result_r <= 0;
-        end
-        else if (decode_valid_i & op_shift_i) begin
+        end else if (decode_valid_i & op_shift_i) begin
           shift_cnt <= 0;
           shift_result_r <= a;
-        end
-        else if (shift_go && !(shift_cnt==b[4:0])) begin
+        end else if (shift_go && !(shift_cnt==b[4:0])) begin
           shift_cnt <= shift_cnt + 1;
-          if (opc_alu_shr==`OR1K_ALU_OPC_SECONDARY_SHRT_SRL)
+          if (opc_alu_shr==`OR1K_ALU_OPC_SECONDARY_SHRT_SRL) begin
             shift_result_r <= {1'b0,shift_result_r[OPTION_OPERAND_WIDTH-1:1]};
-          else if (opc_alu_shr==`OR1K_ALU_OPC_SECONDARY_SHRT_SLL)
+          end else if (opc_alu_shr==`OR1K_ALU_OPC_SECONDARY_SHRT_SLL) begin
             shift_result_r <= {shift_result_r[OPTION_OPERAND_WIDTH-2:0],1'b0};
-          else if (opc_alu_shr==`OR1K_ALU_OPC_SECONDARY_SHRT_ROR)
+          end else if (opc_alu_shr==`OR1K_ALU_OPC_SECONDARY_SHRT_ROR) begin
             shift_result_r <= {shift_result_r[0], shift_result_r[OPTION_OPERAND_WIDTH-1:1]};
-
-          else if (opc_alu_shr==`OR1K_ALU_OPC_SECONDARY_SHRT_SRA)
-            shift_result_r <= {a[OPTION_OPERAND_WIDTH-1],
-                               shift_result_r[OPTION_OPERAND_WIDTH-1:1]};
+          end else if (opc_alu_shr==`OR1K_ALU_OPC_SECONDARY_SHRT_SRA) begin
+            shift_result_r <= {a[OPTION_OPERAND_WIDTH-1], shift_result_r[OPTION_OPERAND_WIDTH-1:1]};
+          end
         end
       end
 
       assign shift_valid  = (shift_cnt==b[4:0]) & shift_go & !decode_valid_i;
       assign shift_result = shift_result_r;
-    end
-    else
+    end else
       initial begin
         $display("%m: Error - chosen shifter implementation (%s) not available", OPTION_SHIFTER);
         $finish;
@@ -780,11 +764,13 @@ module pu_or1k_execute_alu #(
       default:
         logic_lut = 0;
     endcase
-    if (!op_alu_i)
+    if (!op_alu_i) begin
       logic_lut = 0;
+    end
     // Threat mfspr/mtspr as 'OR'
-    if (op_mfspr_i | op_mtspr_i)
+    if (op_mfspr_i | op_mtspr_i) begin
       logic_lut = 4'b1110;
+    end
   end
 
   // Extract the result, bit-for-bit, from the look-up-table
