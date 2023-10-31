@@ -128,7 +128,7 @@ module pu_or1k_pcu #(
 
       assign pcu_events_hit = pcu_events_active & pcu_pcmr[pcu_num];
 
-      always @(posedge clk `OR_ASYNC_RST) begin
+      always @(posedge clk or posedge rst) begin
         if (rst) begin
           pcu_pccr[pcu_num] <= 32'd0;
           pcu_pcmr[pcu_num] <= 32'd0 | 1 << `OR1K_PCMR_CP;

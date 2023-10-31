@@ -185,7 +185,7 @@ module pu_or1k_execute_ctrl_cappuccino #(
   assign execute_stall = ctrl_stall | !alu_valid_i;
   assign execute_valid_o = !execute_stall;
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       ctrl_except_ibus_err_o <= 0;
       ctrl_except_itlb_miss_o <= 0;
@@ -243,7 +243,7 @@ module pu_or1k_execute_ctrl_cappuccino #(
       ctrl_rfb_o <= rfb_i;
   end
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       ctrl_flag_set_o       <= 0;
       ctrl_flag_clear_o     <= 0;
@@ -264,7 +264,7 @@ module pu_or1k_execute_ctrl_cappuccino #(
 
   // pc_ctrl should not advance when a nop bubble moves from execute to
   // ctrl/mem stage
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst)
       pc_ctrl_o <= OPTION_RESET_PC;
     else if (padv_i & !execute_bubble_i)
@@ -279,7 +279,7 @@ module pu_or1k_execute_ctrl_cappuccino #(
 
   generate
     if (FEATURE_MULTIPLIER=="PIPELINED") begin
-      always @(posedge clk `OR_ASYNC_RST) begin
+      always @(posedge clk or posedge rst) begin
         if (rst)
           ctrl_op_mul_o <= 0;
         else if (padv_i)
@@ -300,7 +300,7 @@ module pu_or1k_execute_ctrl_cappuccino #(
     /* verilator lint_off WIDTH */
     if (FEATURE_FPU!="NONE") begin : fpu_execute_ctrl_ena
       /* verilator lint_on WIDTH */
-      always @(posedge clk `OR_ASYNC_RST) begin
+      always @(posedge clk or posedge rst) begin
         if (rst) begin
           ctrl_fpcsr_o <= {`OR1K_FPCSR_WIDTH{1'b0}};
           ctrl_fpcsr_set_o <= 0;
@@ -316,7 +316,7 @@ module pu_or1k_execute_ctrl_cappuccino #(
       end
     end
     else begin : fpu_execute_ctrl_none
-      always @(posedge clk `OR_ASYNC_RST) begin
+      always @(posedge clk or posedge rst) begin
         if (rst) begin
           ctrl_fpcsr_o     <= {`OR1K_FPCSR_WIDTH{1'b0}};
           ctrl_fpcsr_set_o <= 0;
@@ -325,7 +325,7 @@ module pu_or1k_execute_ctrl_cappuccino #(
     end
   endgenerate
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       ctrl_op_mfspr_o <= 0;
       ctrl_op_mtspr_o <= 0;
@@ -340,7 +340,7 @@ module pu_or1k_execute_ctrl_cappuccino #(
     end
   end
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst)
       ctrl_op_rfe_o <= 0;
     else if (padv_i)
@@ -349,7 +349,7 @@ module pu_or1k_execute_ctrl_cappuccino #(
       ctrl_op_rfe_o <= 0;
   end
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst)
       ctrl_op_msync_o <= 0;
     else if (padv_i)
@@ -358,7 +358,7 @@ module pu_or1k_execute_ctrl_cappuccino #(
       ctrl_op_msync_o <= 0;
   end
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       ctrl_op_lsu_load_o   <= 0;
       ctrl_op_lsu_store_o  <= 0;
@@ -389,7 +389,7 @@ module pu_or1k_execute_ctrl_cappuccino #(
     end
   end
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst)
       ctrl_rf_wb_o <= 0;
     else if (padv_i)
@@ -411,7 +411,7 @@ module pu_or1k_execute_ctrl_cappuccino #(
 
   // load and mfpsr can stall from ctrl stage, so we have to hold off the
   // write back on them
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst)
       wb_rf_wb_o <= 0;
     else if (pipeline_flush_i)

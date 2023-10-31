@@ -481,7 +481,7 @@ module pu_or1k_ctrl_cappuccino #(
   assign ctrl_carry_o = FEATURE_CARRY_FLAG!="NONE" & (!ctrl_carry_clear_i & spr_sr[`OR1K_SPR_SR_CY] | ctrl_carry_set_i);
 
   // Ctrl stage pipeline advance signal is one cycle behind execute stage's
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       padv_ctrl <= 0;
     end else begin
@@ -489,7 +489,7 @@ module pu_or1k_ctrl_cappuccino #(
     end
   end
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       execute_waiting_r <= 0;
     end else if (!execute_waiting) begin
@@ -499,7 +499,7 @@ module pu_or1k_ctrl_cappuccino #(
     end
   end
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       decode_execute_halt <= 0;
     end else if (du_restart_from_stall) begin
@@ -511,7 +511,7 @@ module pu_or1k_ctrl_cappuccino #(
     end
   end
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       exception_r <= 0;
     end else if (exception_taken | du_restart_from_stall) begin
@@ -523,7 +523,7 @@ module pu_or1k_ctrl_cappuccino #(
 
   // Signal to indicate that the incoming exception or l.rfe has been taken
   // and we're waiting for it to propagate through the pipeline.
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       exception_taken <= 0;
     end else if (exception_taken) begin
@@ -533,14 +533,14 @@ module pu_or1k_ctrl_cappuccino #(
     end
   end
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst)
       last_branch_insn_pc <= 0;
     else if (padv_execute_o & execute_op_branch_i)
       last_branch_insn_pc <= pc_execute_i;
   end
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       last_branch_target_pc <= 0;
     end else if (padv_execute_o & branch_mispredict_i) begin
@@ -553,7 +553,7 @@ module pu_or1k_ctrl_cappuccino #(
   // Used to gate execute stage's advance signal in the case where a LSU op has
   // finished before the next instruction has been fetched. Typically this
   // occurs when not using icache and doing lots of memory accesses.
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst)
       waiting_for_fetch <= 0;
     else if (fetch_valid_i)
@@ -569,7 +569,7 @@ module pu_or1k_ctrl_cappuccino #(
 
   assign deassert_doing_rfe = fetch_exception_taken_i & doing_rfe_r;
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       doing_rfe_r <= 0;
     end else if (deassert_doing_rfe) begin
@@ -611,7 +611,7 @@ module pu_or1k_ctrl_cappuccino #(
         (|fpu_allf);
 
       // FPU Control & status register
-      always @(posedge clk `OR_ASYNC_RST) begin
+      always @(posedge clk or posedge rst) begin
         if (rst) begin
           spr_fpcsr <= `OR1K_FPCSR_RESET_VALUE;
           `ifdef OR1K_FPCSR_MASK_FLAGS
@@ -642,7 +642,7 @@ module pu_or1k_ctrl_cappuccino #(
       assign ctrl_fpu_round_mode_o = {`OR1K_FPCSR_RM_SIZE{1'b0}};
       assign except_fpu = 0;
       // FPU Control & status register
-      always @(posedge clk `OR_ASYNC_RST) begin
+      always @(posedge clk or posedge rst) begin
         if (rst) begin
           spr_fpcsr <= {`OR1K_FPCSR_WIDTH{1'b0}};
           `ifdef OR1K_FPCSR_MASK_FLAGS
@@ -655,7 +655,7 @@ module pu_or1k_ctrl_cappuccino #(
 
 
   // Supervision register
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst)
       spr_sr <= SPR_SR_RESET_VALUE;
     else if (exception_re) begin
@@ -735,7 +735,7 @@ module pu_or1k_ctrl_cappuccino #(
   end
 
   // Exception SR
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst)
       spr_esr <= SPR_SR_RESET_VALUE;
     else if (exception_re) begin
@@ -795,7 +795,7 @@ module pu_or1k_ctrl_cappuccino #(
     end
   end
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst)
       ctrl_bubble_o <= 0;
     else if (padv_execute_o)
@@ -824,7 +824,7 @@ module pu_or1k_ctrl_cappuccino #(
   end
 
   // Exception Effective Address
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst)
       spr_eear <= {OPTION_OPERAND_WIDTH{1'b0}};
     else if (/*padv_ctrl & exception*/ exception_re) begin
@@ -836,7 +836,7 @@ module pu_or1k_ctrl_cappuccino #(
   end
 
   // Track the PC
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst)
       spr_ppc <= OPTION_RESET_PC;
     else if (padv_ctrl)
@@ -844,7 +844,7 @@ module pu_or1k_ctrl_cappuccino #(
   end
 
   // Generate the NPC for SPR accesses
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst)
       spr_npc <= OPTION_RESET_PC;
     else if (du_npc_write)
@@ -870,7 +870,7 @@ module pu_or1k_ctrl_cappuccino #(
   end
 
   // Exception Vector Address
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst)
       spr_evbar <= {OPTION_OPERAND_WIDTH{1'b0}};
     else if (spr_we && spr_access[`OR1K_SPR_SYS_BASE] &&
@@ -879,14 +879,14 @@ module pu_or1k_ctrl_cappuccino #(
   end
 
   // Remember when we're in a delay slot in execute stage.
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst)
       execute_delay_slot <= 0;
     else if (padv_execute_o)
       execute_delay_slot <= execute_op_branch_i;
   end
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst)
       ctrl_delay_slot <= 0;
     else if (padv_execute_o)
@@ -1258,7 +1258,7 @@ module pu_or1k_ctrl_cappuccino #(
       assign du_access = du_stb_i;
 
       // Generate ack back to the debug interface bus
-      always @(posedge clk `OR_ASYNC_RST) begin
+      always @(posedge clk or posedge rst) begin
         if (rst)
           du_ack <= 0;
         else if (du_ack)
@@ -1300,7 +1300,7 @@ module pu_or1k_ctrl_cappuccino #(
 
       // record if NPC was written while we were stalled.
       // If so, we will use this value for restarting
-      always @(posedge clk `OR_ASYNC_RST) begin
+      always @(posedge clk or posedge rst) begin
         if (rst)
           du_npc_written <= 0;
         else if (du_restart_from_stall)
@@ -1309,7 +1309,7 @@ module pu_or1k_ctrl_cappuccino #(
           du_npc_written <= 1;
       end
 
-      always @(posedge clk `OR_ASYNC_RST) begin
+      always @(posedge clk or posedge rst) begin
         if (rst)
           stepped_into_exception <= 0;
         else if (du_restart_from_stall)
@@ -1318,7 +1318,7 @@ module pu_or1k_ctrl_cappuccino #(
           stepped_into_exception <= 1;
       end
 
-      always @(posedge clk `OR_ASYNC_RST) begin
+      always @(posedge clk or posedge rst) begin
         if (rst)
           stepped_into_rfe <= 0;
         else if (du_restart_from_stall)
@@ -1334,7 +1334,7 @@ module pu_or1k_ctrl_cappuccino #(
       /* Indicate when we're stepping */
       assign stepping = spr_dmr1[`OR1K_SPR_DMR1_ST] & spr_dsr[`OR1K_SPR_DSR_TE];
 
-      always @(posedge clk `OR_ASYNC_RST) begin
+      always @(posedge clk or posedge rst) begin
         if (rst)
           pstep <= 0;
         else if (du_restart_from_stall & stepping)
@@ -1350,7 +1350,7 @@ module pu_or1k_ctrl_cappuccino #(
           pstep <= {pstep[4:0],1'b0};
       end
 
-      always @(posedge clk `OR_ASYNC_RST) begin
+      always @(posedge clk or posedge rst) begin
         if (rst)
           branch_step <= 0;
         else if (du_npc_written)
@@ -1398,7 +1398,7 @@ module pu_or1k_ctrl_cappuccino #(
         spr_drr : 0;
 
       /* Put the incoming stall signal through a register to detect FE */
-      always @(posedge clk `OR_ASYNC_RST) begin
+      always @(posedge clk or posedge rst) begin
         if (rst)
           du_stall_r <= 0;
         else
@@ -1406,7 +1406,7 @@ module pu_or1k_ctrl_cappuccino #(
       end
 
       /* DMR1 */
-      always @(posedge clk `OR_ASYNC_RST) begin
+      always @(posedge clk or posedge rst) begin
         if (rst)
           spr_dmr1 <= 0;
         else if (spr_we && spr_addr==`OR1K_SPR_DMR1_ADDR)
@@ -1419,7 +1419,7 @@ module pu_or1k_ctrl_cappuccino #(
       end
 
       /* DSR */
-      always @(posedge clk `OR_ASYNC_RST) begin
+      always @(posedge clk or posedge rst) begin
         if (rst)
           spr_dsr <= 0;
         else if (spr_we && spr_addr==`OR1K_SPR_DSR_ADDR)
@@ -1427,7 +1427,7 @@ module pu_or1k_ctrl_cappuccino #(
       end
 
       /* DRR */
-      always @(posedge clk `OR_ASYNC_RST) begin
+      always @(posedge clk or posedge rst) begin
         if (rst)
           spr_drr <= 0;
         else if (spr_we && spr_addr==`OR1K_SPR_DRR_ADDR)

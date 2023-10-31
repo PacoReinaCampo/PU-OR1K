@@ -91,7 +91,7 @@ module pu_or1k_pic #(
       reg  [31:0] irq_unmasked_r;
       wire [31:0] irq_unmasked_edge;
 
-      always @(posedge clk `OR_ASYNC_RST) begin
+      always @(posedge clk or posedge rst) begin
         if (rst) begin
           irq_unmasked_r <= 0;
         end else begin
@@ -103,7 +103,7 @@ module pu_or1k_pic #(
         assign irq_unmasked_edge[irqline] = irq_unmasked[irqline] & !irq_unmasked_r[irqline];
 
         // PIC status register
-        always @(posedge clk `OR_ASYNC_RST) begin
+        always @(posedge clk or posedge rst) begin
           if (rst) begin
             spr_picsr[irqline] <= 0;
           // Set
@@ -126,7 +126,7 @@ module pu_or1k_pic #(
     end else if (OPTION_PIC_TRIGGER=="LATCHED_LEVEL") begin : latched_level
       for(irqline=0;irqline<32;irqline=irqline+1) begin : piclatchedlevelgenerate
         // PIC status register
-        always @(posedge clk `OR_ASYNC_RST) begin
+        always @(posedge clk or posedge rst) begin
           if (rst) begin
             spr_picsr[irqline] <= 0;
           end else if (spr_we_i && spr_picsr_access) begin
@@ -145,7 +145,7 @@ module pu_or1k_pic #(
   endgenerate
 
   // PIC (un)mask register
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       spr_picmr <= {{(32-OPTION_PIC_NMI_WIDTH){1'b0}}, {OPTION_PIC_NMI_WIDTH{1'b1}}};
     end else if (spr_we_i && spr_picmr_access) begin

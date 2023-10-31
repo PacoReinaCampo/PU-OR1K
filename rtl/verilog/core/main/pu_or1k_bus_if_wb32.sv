@@ -89,7 +89,7 @@ module pu_or1k_bus_if_wb32 #(
       wire [BADDR_WITH-1:0] burst_wrap_finish;
       wire                  address_differs;
 
-      always @(posedge clk `OR_ASYNC_RST) begin
+      always @(posedge clk or posedge rst) begin
         if (rst) begin
           bursting <= 0;
         end else if (wbm_err_i) begin
@@ -101,7 +101,7 @@ module pu_or1k_bus_if_wb32 #(
         end
       end
 
-      always @(posedge clk `OR_ASYNC_RST) begin
+      always @(posedge clk or posedge rst) begin
         if (rst) begin
           burst_address    <= 0;
           burst_wrap_start <= 0;
@@ -118,7 +118,7 @@ module pu_or1k_bus_if_wb32 #(
       assign finish_burst      = (bursting & ((BURST_LENGTH!=0 &&
                                                burst_address[BADDR_WITH+2-1:2]==(burst_wrap_finish)) | address_differs | !cpu_req_i));
 
-      always @(posedge clk `OR_ASYNC_RST) begin
+      always @(posedge clk or posedge rst) begin
         if (rst) begin
           finish_burst_r <= 0;
         end else if (wbm_ack_i) begin
@@ -166,7 +166,7 @@ module pu_or1k_bus_if_wb32 #(
       // each ack
       reg cycle_end;
 
-      always @(posedge clk `OR_ASYNC_RST) begin
+      always @(posedge clk or posedge rst) begin
         if (rst) begin
           cycle_end <= 1;
         end else begin

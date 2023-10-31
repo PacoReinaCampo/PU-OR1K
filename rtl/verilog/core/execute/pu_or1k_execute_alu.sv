@@ -427,7 +427,7 @@ module pu_or1k_execute_alu #(
                         div_n[OPTION_OPERAND_WIDTH-1]} - div_d;
 
       // Cycle counter
-      always @(posedge clk `OR_ASYNC_RST) begin
+      always @(posedge clk or posedge rst) begin
         if (rst) begin
           div_done <= 0;
           div_count <= 0;
@@ -647,7 +647,7 @@ module pu_or1k_execute_alu #(
       reg [4:0] shift_cnt;
       reg       shift_go;
       reg [OPTION_OPERAND_WIDTH-1:0] shift_result_r;
-      always @(posedge clk `OR_ASYNC_RST) begin
+      always @(posedge clk or posedge rst) begin
         if (rst) begin
           shift_go <= 0;
         end else if (decode_valid_i) begin
@@ -655,7 +655,7 @@ module pu_or1k_execute_alu #(
         end
       end
 
-      always @(posedge clk `OR_ASYNC_RST) begin
+      always @(posedge clk or posedge rst) begin
         if (rst) begin
           shift_cnt <= 0;
           shift_result_r <= 0;

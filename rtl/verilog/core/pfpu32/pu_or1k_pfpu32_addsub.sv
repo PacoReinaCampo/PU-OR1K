@@ -145,7 +145,7 @@ module pu_or1k_pfpu32_addsub (
 
   // ready is special case
   reg s1o_ready;
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       s1o_ready  <= 0;
     end else if(flush_i) begin
@@ -228,7 +228,7 @@ module pu_or1k_pfpu32_addsub (
 
   // ready is special case
   reg s2o_ready;
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       s2o_ready  <= 0;
     end else if(flush_i) begin
@@ -313,7 +313,7 @@ module pu_or1k_pfpu32_addsub (
   end
 
   // ready is special case
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       add_rdy_o <= 0;
     end else if(flush_i) begin

@@ -241,7 +241,7 @@ module pu_or1k_decode_execute_cappuccino #(
   wire [OPTION_OPERAND_WIDTH-1:0] decode_mispredict_target;
 
   // Op control signals to execute stage
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       execute_op_bf_o <= 1'b0;
       execute_op_bnf_o <= 1'b0;
@@ -357,7 +357,7 @@ module pu_or1k_decode_execute_cappuccino #(
     if (FEATURE_FPU!="NONE") begin : fpu_decode_execute_ena
       reg [`OR1K_FPUOP_WIDTH-1:0] execute_op_fpu_r;
       assign execute_op_fpu_o = execute_op_fpu_r;
-      always @(posedge clk `OR_ASYNC_RST) begin
+      always @(posedge clk or posedge rst) begin
         if (rst) begin
           execute_op_fpu_r <= {`OR1K_FPUOP_WIDTH{1'b0}};
         end else if (pipeline_flush_i) begin
@@ -377,7 +377,7 @@ module pu_or1k_decode_execute_cappuccino #(
   // stage so it will cause the branch.
   // It will clear itself by the pipeline_flush_i that the rfe
   // will generate.
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       execute_op_rfe_o <= 0;
     end else if (pipeline_flush_i) begin
@@ -387,7 +387,7 @@ module pu_or1k_decode_execute_cappuccino #(
     end
   end
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       execute_rf_wb_o <= 0;
     end else if (pipeline_flush_i) begin
@@ -434,7 +434,7 @@ module pu_or1k_decode_execute_cappuccino #(
     end
   end
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       execute_opc_insn_o <= `OR1K_OPCODE_NOP;
     end else if (pipeline_flush_i) begin
@@ -447,7 +447,7 @@ module pu_or1k_decode_execute_cappuccino #(
     end
   end
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       execute_adder_do_sub_o   <= 1'b0;
       execute_adder_do_carry_o <= 1'b0;
@@ -465,7 +465,7 @@ module pu_or1k_decode_execute_cappuccino #(
   end
 
   // Decode for system call exception
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       execute_except_syscall_o <= 0;
     end else if (padv_i && FEATURE_SYSCALL=="ENABLED") begin
@@ -474,7 +474,7 @@ module pu_or1k_decode_execute_cappuccino #(
   end
 
   // Decode for system call exception
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       execute_except_trap_o <= 0;
     end else if (padv_i && FEATURE_TRAP=="ENABLED") begin
@@ -483,7 +483,7 @@ module pu_or1k_decode_execute_cappuccino #(
   end
 
   // Decode Illegal instruction
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       execute_except_illegal_o <= 0;
     end else if (padv_i) begin
@@ -491,7 +491,7 @@ module pu_or1k_decode_execute_cappuccino #(
     end
   end
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       execute_except_ibus_err_o <= 1'b0;
     end else if (padv_i) begin
@@ -499,7 +499,7 @@ module pu_or1k_decode_execute_cappuccino #(
     end
   end
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       execute_except_itlb_miss_o <= 1'b0;
     end else if (padv_i) begin
@@ -507,7 +507,7 @@ module pu_or1k_decode_execute_cappuccino #(
     end
   end
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       execute_except_ipagefault_o <= 1'b0;
     end else if (padv_i) begin
@@ -515,7 +515,7 @@ module pu_or1k_decode_execute_cappuccino #(
     end
   end
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       execute_except_ibus_align_o <= 1'b0;
     end else if (padv_i) begin
@@ -523,7 +523,7 @@ module pu_or1k_decode_execute_cappuccino #(
     end
   end
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       decode_valid_o <= 0;
     end else begin
@@ -531,7 +531,7 @@ module pu_or1k_decode_execute_cappuccino #(
     end
   end
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (padv_i) begin
       pc_execute_o <= pc_decode_i;
     end
@@ -630,7 +630,7 @@ module pu_or1k_decode_execute_cappuccino #(
     // rfe
     decode_op_rfe_i) & padv_i;
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       execute_bubble_o <= 0;
     end else if (pipeline_flush_i) begin

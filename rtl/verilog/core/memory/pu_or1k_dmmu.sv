@@ -143,7 +143,7 @@ module pu_or1k_dmmu #(
 
   genvar                             i;
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       spr_bus_ack <= 0;
     end else if (spr_bus_stb_i & spr_bus_addr_i[15:11] == 5'd1) begin
@@ -223,7 +223,7 @@ module pu_or1k_dmmu #(
   assign spr_way_idx_full = {spr_bus_addr_i[10], spr_bus_addr_i[8]};
   assign spr_way_idx      = spr_way_idx_full[WAYS_WIDTH-1:0];
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       dtlb_match_spr_cs_r <= 0;
       dtlb_trans_spr_cs_r <= 0;
@@ -241,7 +241,7 @@ module pu_or1k_dmmu #(
     if (FEATURE_DMMU_HW_TLB_RELOAD == "ENABLED") begin
       assign dmmucr_spr_cs = spr_bus_stb_i & spr_bus_addr_i == `OR1K_SPR_DMMUCR_ADDR;
 
-      always @(posedge clk `OR_ASYNC_RST) begin
+      always @(posedge clk or posedge rst) begin
         if (rst) begin
           dmmucr <= 0;
         end else if (dmmucr_spr_cs & spr_bus_we_i) begin

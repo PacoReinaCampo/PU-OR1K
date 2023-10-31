@@ -76,7 +76,7 @@ module pu_or1k_pfpu32_top #(
 
   // start logic
   reg new_data;
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       new_data <= 1'b0;
     end else if(flush_i) begin

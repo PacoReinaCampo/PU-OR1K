@@ -83,7 +83,7 @@ module pu_or1k_store_buffer #(
   assign full_o = (write_pointer[DEPTH_WIDTH] != read_pointer[DEPTH_WIDTH]) && (write_pointer[DEPTH_WIDTH-1:0] == read_pointer[DEPTH_WIDTH-1:0]);
   assign empty_o = write_pointer == read_pointer;
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       write_pointer <= 0;
     end else if (write_i) begin
@@ -91,7 +91,7 @@ module pu_or1k_store_buffer #(
     end
   end
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       read_pointer <= 0;
     end else if (read_i) begin

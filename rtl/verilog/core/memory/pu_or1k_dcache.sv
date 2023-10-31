@@ -364,7 +364,7 @@ module pu_or1k_dcache #(
    */
 
   integer w1;
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       state <= IDLE;
       write_pending <= 0;

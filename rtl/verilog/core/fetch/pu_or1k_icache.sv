@@ -277,7 +277,7 @@ module pu_or1k_icache #(
 
   //Cache FSM
   integer w1;
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     refill_valid_r <= refill_valid;
     spr_bus_ack_o <= 0;
     case (state)

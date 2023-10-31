@@ -101,7 +101,7 @@ module pu_or1k_pfpu32_f2i (
   end
 
   // ready is special case
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       f2i_rdy_o <= 1'b0;
     end else if(flush_i) begin

@@ -182,7 +182,7 @@ module pu_or1k_rf_cappuccino #(
 
   reg wb_hazard_a;
   reg wb_hazard_b;
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       wb_hazard_a <= 0;
       wb_hazard_b <= 0;

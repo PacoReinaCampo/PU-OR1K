@@ -143,7 +143,7 @@ module pu_or1k_immu #(
 
   genvar                             i;
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       spr_bus_ack <= 0;
     end else if (spr_bus_stb_i & spr_bus_addr_i[15:11] == 5'd2) begin
@@ -229,7 +229,7 @@ module pu_or1k_immu #(
   assign spr_way_idx_full = {spr_bus_addr_i[10], spr_bus_addr_i[8]};
   assign spr_way_idx = spr_way_idx_full[WAYS_WIDTH-1:0];
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       itlb_match_spr_cs_r <= 0;
       itlb_trans_spr_cs_r <= 0;
@@ -247,7 +247,7 @@ module pu_or1k_immu #(
     if (FEATURE_IMMU_HW_TLB_RELOAD == "ENABLED") begin
       assign immucr_spr_cs = spr_bus_stb_i & spr_bus_addr_i == `OR1K_SPR_IMMUCR_ADDR;
 
-      always @(posedge clk `OR_ASYNC_RST) begin
+      always @(posedge clk or posedge rst) begin
         if (rst) begin
           immucr <= 0;
         end else if (immucr_spr_cs & spr_bus_we_i) begin
@@ -313,7 +313,7 @@ module pu_or1k_immu #(
       assign tlb_reload_busy_o = (tlb_reload_state != TLB_IDLE) | do_reload;
       assign tlb_reload_pagefault_o = tlb_reload_pagefault & !tlb_reload_pagefault_clear_i;
 
-      always @(posedge clk `OR_ASYNC_RST) begin
+      always @(posedge clk or posedge rst) begin
         if (rst) begin
           tlb_reload_pagefault <= 0;
         end else if(tlb_reload_pagefault_clear_i) begin

@@ -196,7 +196,7 @@ module pu_or1k_fetch_cappuccino #(
   assign fetch_rf_adr_valid_o = bus_access_done & padv_i;
 
   // Signal to indicate that the ongoing bus access should be flushed
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       flush <= 0;
     end else if (bus_access_done & padv_i | du_restart_i) begin
@@ -212,7 +212,7 @@ module pu_or1k_fetch_cappuccino #(
   assign flushing = pipeline_flush_i | ctrl_branch_exception_edge | flush;
 
   // Branch misprediction stall logic
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       fetching_brcond <= 0;
     end else if (pipeline_flush_i) begin
@@ -224,7 +224,7 @@ module pu_or1k_fetch_cappuccino #(
     end
   end
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       fetching_mispredicted_branch <= 0;
     end else if (pipeline_flush_i) begin
@@ -239,7 +239,7 @@ module pu_or1k_fetch_cappuccino #(
   assign mispredict_stall = fetching_mispredicted_branch |
     branch_mispredict_i & fetching_brcond;
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       ctrl_branch_exception_r <= 1'b0;
     end else begin
@@ -266,7 +266,7 @@ module pu_or1k_fetch_cappuccino #(
 
 
   // Register fetch pc from address stage
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       pc_fetch <= OPTION_RESET_PC;
     end else if (addr_valid | du_restart_i) begin
@@ -275,7 +275,7 @@ module pu_or1k_fetch_cappuccino #(
   end
 
   // fetch_exception_taken_o generation
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       fetch_exception_taken_o <= 1'b0;
     end else if (fetch_exception_taken_o) begin
@@ -288,7 +288,7 @@ module pu_or1k_fetch_cappuccino #(
   end
 
   // fetch_valid_o generation
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       fetch_valid_o <= 1'b0;
     end else if (pipeline_flush_i) begin
@@ -301,7 +301,7 @@ module pu_or1k_fetch_cappuccino #(
   end
 
   // Register instruction coming in
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       decode_insn_o <= {`OR1K_OPCODE_NOP,26'd0};
     end else if (imem_err | flushing) begin
@@ -318,7 +318,7 @@ module pu_or1k_fetch_cappuccino #(
     end
   end
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       decode_except_ibus_err_o <= 0;
     end else if (du_restart_i) begin
@@ -330,7 +330,7 @@ module pu_or1k_fetch_cappuccino #(
     end
   end
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       decode_except_itlb_miss_o <= 0;
     end else if (du_restart_i) begin
@@ -346,7 +346,7 @@ module pu_or1k_fetch_cappuccino #(
 
   assign except_ipagefault_clear = decode_except_ipagefault_o & ctrl_branch_exception_i;
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       decode_except_ipagefault_o <= 0;
     end else if (du_restart_i) begin
@@ -379,7 +379,7 @@ module pu_or1k_fetch_cappuccino #(
   // Here those conditions are handled and an acknowledged signal
   // is generated.
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       nop_ack <= 0;
     end else begin
@@ -404,7 +404,7 @@ module pu_or1k_fetch_cappuccino #(
                          {ibus_adr[31:5], ibus_adr[4:0] + 5'd4} : // 32 byte
                          {ibus_adr[31:4], ibus_adr[3:0] + 4'd4};  // 16 byte
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       imem_err <= 0;
     end else begin
@@ -504,7 +504,7 @@ module pu_or1k_fetch_cappuccino #(
   generate
     if (FEATURE_INSTRUCTIONCACHE!="NONE") begin : icache_gen
       reg   ic_enable_r;
-      always @(posedge clk `OR_ASYNC_RST) begin
+      always @(posedge clk or posedge rst) begin
         if (rst) begin
           ic_enable_r <= 0;
         end else if (ic_enable & !ibus_req) begin

@@ -83,7 +83,7 @@ module pu_or1k_ticktimer (
   assign ttcr_match = spr_ttcr[27:0] == spr_ttmr[27:0];
 
   // Timer SPR control
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       spr_ttmr <= 0;
     end else if (spr_we_i & spr_ttmr_access) begin
@@ -101,7 +101,7 @@ module pu_or1k_ticktimer (
   assign ttcr_clear = (spr_ttmr[31:30] == 2'b01) & ttcr_match;
   assign ttcr_run = (spr_ttmr[31:30] != 2'b00) & !ttcr_match | (spr_ttmr[31:30] == 2'b11);
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       spr_ttcr <= 0;
     end else if (spr_we_i & spr_ttcr_access) begin

@@ -210,7 +210,7 @@ module pu_or1k_pfpu32_muldiv (
 
   // route ready through side back
   reg s0o_ready;
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       s0o_ready <= 0;
     end else if(flush_i) begin
@@ -243,7 +243,7 @@ module pu_or1k_pfpu32_muldiv (
   //   iteration in progress
   wire itr_Proc = |itr_state;
   // iteration control state machine
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       itr_state <= 11'd0;
     end else if(flush_i) begin
@@ -292,7 +292,7 @@ module pu_or1k_pfpu32_muldiv (
   // ready is special case
   reg s1o_mul_ready;
   reg s1o_div_ready;
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       s1o_mul_ready <= 1'b0;
       s1o_div_ready <= 1'b0;
@@ -454,7 +454,7 @@ module pu_or1k_pfpu32_muldiv (
   // ready is special case
   reg s2o_mul_ready;
   reg s2o_div_ready;
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       s2o_mul_ready <= 1'b0;
       s2o_div_ready <= 1'b0;
@@ -524,7 +524,7 @@ module pu_or1k_pfpu32_muldiv (
 
   // stage 3 ready makes sense for division only
   reg s3o_div_ready;
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       s3o_div_ready <= 1'b0;
     end else if(flush_i) begin
@@ -635,7 +635,7 @@ module pu_or1k_pfpu32_muldiv (
   end
 
   // ready is special case
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       muldiv_rdy_o <= 0;
     end else if(flush_i) begin

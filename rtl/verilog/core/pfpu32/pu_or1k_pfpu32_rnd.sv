@@ -279,7 +279,7 @@ module pu_or1k_pfpu32_rnd #(
 
   // ready is special case
   reg s1o_ready;
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       s1o_ready <= 1'b0;
     end else if(flush_i) begin
@@ -386,7 +386,7 @@ module pu_or1k_pfpu32_rnd #(
          {{s1o_sign,s2t_f32_exp10[7:0],s2t_f32_fract24[22:0]},s2t_lost,1'b0,1'b0,1'b0,1'b0};
 
   // Output Register
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       // arithmetic results
       fpu_result_o      <= 32'd0;

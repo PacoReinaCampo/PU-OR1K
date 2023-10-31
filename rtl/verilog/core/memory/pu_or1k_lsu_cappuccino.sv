@@ -266,7 +266,7 @@ module pu_or1k_lsu_cappuccino #(
 
   assign lsu_except_dpagefault_o = except_dpagefault & !pipeline_flush_i;
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst)
       access_done <= 0;
     else if (padv_execute_i)
@@ -275,7 +275,7 @@ module pu_or1k_lsu_cappuccino #(
       access_done <= 1;
   end
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst)
       except_dbus <= 0;
     else if (padv_execute_i | pipeline_flush_i)
@@ -284,7 +284,7 @@ module pu_or1k_lsu_cappuccino #(
       except_dbus <= 1;
   end
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst)
       except_dtlb_miss_r <= 0;
     else if (padv_execute_i)
@@ -293,7 +293,7 @@ module pu_or1k_lsu_cappuccino #(
       except_dtlb_miss_r <= 1;
   end
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst)
       except_dpagefault_r <= 0;
     else if (padv_execute_i)
@@ -302,7 +302,7 @@ module pu_or1k_lsu_cappuccino #(
       except_dpagefault_r <= 1;
   end
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst)
       store_buffer_err_o <= 0;
     else if (pipeline_flush_i)
@@ -412,7 +412,7 @@ module pu_or1k_lsu_cappuccino #(
                          {dbus_adr[31:5], dbus_adr[4:0] + 5'd4} : // 32 byte
                          {dbus_adr[31:4], dbus_adr[3:0] + 4'd4};  // 16 byte
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       dbus_err <= 0;
     end else begin
@@ -557,7 +557,7 @@ module pu_or1k_lsu_cappuccino #(
       reg atomic_flag_set;
       reg atomic_flag_clear;
 
-      always @(posedge clk `OR_ASYNC_RST) begin
+      always @(posedge clk or posedge rst) begin
         if (rst) begin
           atomic_reserve <= 0;
         end else if (pipeline_flush_i) begin
@@ -673,7 +673,7 @@ module pu_or1k_lsu_cappuccino #(
       assign store_buffer_empty = 1'b1;
 
       reg store_buffer_full_r;
-      always @(posedge clk `OR_ASYNC_RST) begin
+      always @(posedge clk or posedge rst) begin
         if (rst) begin
           store_buffer_full_r <= 0;
         end else if (store_buffer_write) begin
@@ -688,7 +688,7 @@ module pu_or1k_lsu_cappuccino #(
   endgenerate
   assign store_buffer_wadr = dc_adr_match;
 
-  always @(posedge clk `OR_ASYNC_RST) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       dc_enable_r <= 0;
     end else if (dc_enable_i & !dbus_req_o) begin
