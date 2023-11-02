@@ -42,7 +42,7 @@
 
 module pu_or1k_testbench_wb;
 
-  localparam MEM_SIZE = 32'h02000000;  //Set default memory size to 32MB
+  localparam MEM_SIZE = 32'h02000000;  // Set default memory size to 32MB
 
   pu_or1k_testbench_utils vlog_tb_utils0 ();
 

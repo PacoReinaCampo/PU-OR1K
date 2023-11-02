@@ -141,10 +141,10 @@ module pfpu32_fcmp (
       13'b00_01_10_???_???_?: {blta, altb, aeqb} = 3'b010;
       13'b00_01_11_???_???_?: {blta, altb, aeqb} = 3'b100;
 
-      13'b00_00_10_???_???_0: {blta, altb, aeqb} = 3'b010;  //compare base on sign
-      13'b00_00_01_???_???_0: {blta, altb, aeqb} = 3'b100;  //compare base on sign
+      13'b00_00_10_???_???_0: {blta, altb, aeqb} = 3'b010;  // compare base on sign
+      13'b00_00_01_???_???_0: {blta, altb, aeqb} = 3'b100;  // compare base on sign
 
-      13'b00_00_??_???_???_1: {blta, altb, aeqb} = 3'b001;  //compare base on sign both are zero
+      13'b00_00_??_???_???_1: {blta, altb, aeqb} = 3'b001;  // compare base on sign both are zero
 
       13'b00_00_00_010_???_?: {blta, altb, aeqb} = 3'b100;  // cmp exp, equal sign
       13'b00_00_00_001_???_?: {blta, altb, aeqb} = 3'b010;

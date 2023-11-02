@@ -383,7 +383,7 @@ module or1k_synthesis #(
   mpsoc_wb_spram #(
     .DEPTH(MEM_SIZE / 4)
   ) wb_bfm_memory0 (
-    //Wishbone Master interface
+    // Wishbone Master interface
     .wb_clk_i(wb_clk_i),
     .wb_rst_i(wb_rst_i),
 
@@ -408,7 +408,7 @@ module or1k_synthesis #(
     .DEBUG(0),
     .SIM  (1)
   ) uart16550 (
-    //Wishbone Master interface
+    // Wishbone Master interface
     .wb_clk_i(wb_clk_i),
     .wb_rst_i(wb_rst_i),
 

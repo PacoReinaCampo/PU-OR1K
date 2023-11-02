@@ -437,7 +437,7 @@ module pu_or1k_ctrl_cappuccino #(
         exception_pc_addr <= spr_evbar | {19'd0,`OR1K_FP_VECTOR,8'd0};
         15'b00000000000001?:
         exception_pc_addr <= spr_evbar | {19'd0,`OR1K_INT_VECTOR,8'd0};
-        //15'b00000000000001:
+        // 15'b00000000000001:
         default: begin
           exception_pc_addr <= spr_evbar | {19'd0,`OR1K_TT_VECTOR,8'd0};
         end

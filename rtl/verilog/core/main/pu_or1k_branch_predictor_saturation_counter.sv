@@ -47,7 +47,7 @@ module pu_or1k_branch_predictor_saturation_counter (
   input rst,
 
   // Signals belonging to the stage where the branch is predicted.
-  output predicted_flag_o,  //result of predictor
+  output predicted_flag_o,  // result of predictor
 
   input execute_op_bf_i,   // prev insn was bf
   input execute_op_bnf_i,  // prev insn was bnf

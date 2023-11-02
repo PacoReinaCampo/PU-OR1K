@@ -284,7 +284,7 @@ module pu_or1k_dmmu #(
     if (FEATURE_DMMU_HW_TLB_RELOAD == "ENABLED") begin
       // Hardware TLB reload
       // Compliant with the suggestion outlined in this thread:
-      // http://lists.openrisc.net/pipermail/openrisc/2013-July/001806.html
+      // http:// lists.openrisc.net/pipermail/openrisc/2013-July/001806.html
       //
       // PTE layout:
       // | 31 ... 13 | 12 |  11  |   10  | 9 | 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0 |

@@ -204,8 +204,8 @@ module pu_or1k_icache #(
 
   assign tag_rindex = cpu_adr_i[WAY_WIDTH-1:OPTION_ICACHE_BLOCK_WIDTH];
 
-  //The tag mem is written during reads to write the lru info and during
-  //refill and invalidate
+  // The tag mem is written during reads to write the lru info and during
+  // refill and invalidate
   assign tag_windex = read ?
     cpu_adr_match_i[WAY_WIDTH-1:OPTION_ICACHE_BLOCK_WIDTH] :
     invalidate ? invalidate_adr :
@@ -272,10 +272,10 @@ module pu_or1k_icache #(
 
   assign refill_req_o = read & cpu_req_i & !hit | refill;
 
-  //SPR bus interface
+  // SPR bus interface
   assign invalidate_o = spr_bus_stb_i & spr_bus_we_i & (spr_bus_addr_i == `OR1K_SPR_ICBIR_ADDR);
 
-  //Cache FSM
+  // Cache FSM
   integer w1;
   always @(posedge clk or posedge rst) begin
     refill_valid_r <= refill_valid;

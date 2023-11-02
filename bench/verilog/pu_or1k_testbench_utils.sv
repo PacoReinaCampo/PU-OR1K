@@ -44,7 +44,7 @@ module pu_or1k_testbench_utils;
   parameter MAX_STRING_LEN = 128;
   localparam CHAR_WIDTH = 8;
 
-  //Force simulation stop after timeout cycles
+  // Force simulation stop after timeout cycles
   reg [63:0] timeout;
   initial
     if ($value$plusargs("timeout=%d", timeout)) begin
@@ -52,7 +52,7 @@ module pu_or1k_testbench_utils;
       $finish;
     end
 
-  //FIXME: Add more options for VCD logging
+  // FIXME: Add more options for VCD logging
   reg [MAX_STRING_LEN*CHAR_WIDTH-1:0] testcase;
 
   initial begin
@@ -66,7 +66,7 @@ module pu_or1k_testbench_utils;
     end
   end
 
-  //Heartbeat timer for simulations
+  // Heartbeat timer for simulations
   reg [63:0] heartbeat;
   initial begin
     if ($value$plusargs("heartbeat=%d", heartbeat)) begin

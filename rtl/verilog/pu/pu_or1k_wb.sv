@@ -383,7 +383,7 @@ module pu_or1k_wb #(
   peripheral_spram_wb #(
     .DEPTH(MEM_SIZE / 4)
   ) wb_bfm_memory0 (
-    //Wishbone Master interface
+    // Wishbone Master interface
     .wb_clk_i(wb_clk_i),
     .wb_rst_i(wb_rst_i),
 
@@ -408,7 +408,7 @@ module pu_or1k_wb #(
     .DEBUG(0),
     .SIM  (1)
   ) uart16550 (
-    //Wishbone Master interface
+    // Wishbone Master interface
     .wb_clk_i(wb_clk_i),
     .wb_rst_i(wb_rst_i),
 
