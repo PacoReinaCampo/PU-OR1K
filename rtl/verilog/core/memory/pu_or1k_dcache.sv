@@ -14,31 +14,29 @@
 //              Wishbone Bus Interface                                        //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
-
-/* Copyright (c) 2015-2016 by the author(s)
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * =============================================================================
- * Author(s):
- *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
- */
+// Copyright (c) 2015-2016 by the author(s)
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+////////////////////////////////////////////////////////////////////////////////
+// Author(s):
+//   Paco Reina Campo <pacoreinacampo@queenfield.tech>
 
 `include "pu_or1k_defines.sv"
 
@@ -108,13 +106,11 @@ module pu_or1k_dcache #(
   // Address space in bytes for a way
   localparam WAY_WIDTH = OPTION_DCACHE_BLOCK_WIDTH + OPTION_DCACHE_SET_WIDTH;
 
-  /*
-   * Tag memory layout
-   *            +---------------------------------------------------------+
-   * (index) -> | LRU | wayN valid | wayN tag |...| way0 valid | way0 tag |
-   *            +---------------------------------------------------------+
-   */
-
+  // Tag memory layout
+  //            +---------------------------------------------------------+
+  // (index) -> | LRU | wayN valid | wayN tag |...| way0 valid | way0 tag |
+  //            +---------------------------------------------------------+
+ 
   // The tag is the part left of the index
   localparam TAG_WIDTH = (OPTION_DCACHE_LIMIT_WIDTH - WAY_WIDTH);
 
@@ -350,19 +346,17 @@ module pu_or1k_dcache #(
   // Acknowledge to the SPR bus.
   assign spr_bus_ack_o = invalidate_ack;
 
-  /*
-   * Cache FSM
-   * Starts in IDLE.
-   * State changes between READ and WRITE happens cpu_we_i is asserted or not.
-   * cpu_we_i is in sync with cpu_adr_i, so that means that it's the
-   * *upcoming* write that it is indicating. It only toggles for one cycle,
-   * so if we are busy doing something else when this signal comes
-   * (i.e. refilling) we assert the write_pending signal.
-   * cpu_req_i is in sync with cpu_adr_match_i, so it can be used to
-   * determined if a cache hit should cause a refill or if a write should
-   * really be executed.
-   */
-
+  // Cache FSM
+  // Starts in IDLE.
+  // State changes between READ and WRITE happens cpu_we_i is asserted or not.
+  // cpu_we_i is in sync with cpu_adr_i, so that means that it's the
+  // *upcoming* write that it is indicating. It only toggles for one cycle,
+  // so if we are busy doing something else when this signal comes
+  // (i.e. refilling) we assert the write_pending signal.
+  // cpu_req_i is in sync with cpu_adr_match_i, so it can be used to
+  // determined if a cache hit should cause a refill or if a write should
+  // really be executed.
+ 
   integer w1;
   always @(posedge clk or posedge rst) begin
     if (rst) begin

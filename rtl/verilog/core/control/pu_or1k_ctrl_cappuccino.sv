@@ -14,31 +14,29 @@
 //              Wishbone Bus Interface                                        //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
-
-/* Copyright (c) 2015-2016 by the author(s)
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * =============================================================================
- * Author(s):
- *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
- */
+// Copyright (c) 2015-2016 by the author(s)
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+////////////////////////////////////////////////////////////////////////////////
+// Author(s):
+//   Paco Reina Campo <pacoreinacampo@queenfield.tech>
 
 `include "pu_or1k_defines.sv"
 
@@ -311,13 +309,13 @@ module pu_or1k_ctrl_cappuccino #(
 
   wire                              deassert_decode_execute_halt;
 
-  /* Debug SPRs */
+  // Debug SPRs
   reg [31:0]      spr_dmr1;
   reg [31:0]      spr_dmr2;
   reg [31:0]      spr_dsr;
   reg [31:0]      spr_drr;
 
-  /* DU internal control signals */
+  // DU internal control signals
   wire                              du_access;
   reg                               cpu_stall;
   wire                              du_restart_from_stall;
@@ -330,7 +328,7 @@ module pu_or1k_ctrl_cappuccino #(
   reg                               du_npc_written;
   wire                              stall_on_trap;
 
-  /* Wires for SPR management */
+  // Wires for SPR management
   wire                              spr_access_valid;
   wire                              spr_we;
   wire                              spr_read;
@@ -345,7 +343,7 @@ module pu_or1k_ctrl_cappuccino #(
   reg  [OPTION_OPERAND_WIDTH  -1:0] spr_sys_group_read;
   wire [                       3:0] spr_group;
 
-  /* Wires from pu_or1k_cfgrs module */
+  // Wires from pu_or1k_cfgrs module
   wire [31:0]      spr_vr;
   wire [31:0]      spr_vr2;
   wire [31:0]      spr_avr;
@@ -451,7 +449,7 @@ module pu_or1k_ctrl_cappuccino #(
   assign padv_decode_o = fetch_valid_i & !execute_waiting & !decode_execute_halt & !cpu_stall & (!stepping | (stepping & pstep[1]));
 
   assign padv_execute_o = ((decode_valid_i & !execute_waiting &
-    /* Stop fetch before exception branch continuing */
+    // Stop fetch before exception branch continuing
     !(exception_r & fetch_exception_taken_i)) |
                            (!execute_waiting & execute_waiting_r &
                              fetch_valid_i) |
@@ -827,7 +825,7 @@ module pu_or1k_ctrl_cappuccino #(
   always @(posedge clk or posedge rst) begin
     if (rst)
       spr_eear <= {OPTION_OPERAND_WIDTH{1'b0}};
-    else if (/*padv_ctrl & exception*/ exception_re) begin
+    else if (exception_re) begin  //padv_ctrl & exception
       if (except_ibus_err_i | except_itlb_miss_i | except_ipagefault_i)
         spr_eear <= pc_ctrl_i;
       else
@@ -941,7 +939,7 @@ module pu_or1k_ctrl_cappuccino #(
     .spr_avr(spr_avr[31:0])
   );
 
-  /* Implementation-specific registers */
+  // Implementation-specific registers
   assign spr_isr[0] = 0;
   assign spr_isr[1] = 0;
   assign spr_isr[2] = 0;
@@ -1040,9 +1038,9 @@ module pu_or1k_ctrl_cappuccino #(
       endcase
   end
 
-  /* System group read data MUX in */
+  // System group read data MUX in
   assign spr_internal_read_dat[`OR1K_SPR_SYS_BASE] = spr_sys_group_read;
-  /* System group ack generation */
+  // System group ack generation
 
   assign spr_access_ack[`OR1K_SPR_SYS_BASE] = spr_access[`OR1K_SPR_SYS_BASE] & ((spr_addr[10:9] == 2'h2) ? spr_gpr_ack_i : 1);
 
@@ -1174,7 +1172,7 @@ module pu_or1k_ctrl_cappuccino #(
   assign spr_we = spr_write_access & spr_access_valid;
   assign spr_read = spr_read_access & spr_access_valid;
 
-  /* A bus out to other units that live outside of the control unit */
+  // A bus out to other units that live outside of the control unit
   assign spr_bus_addr_o = spr_addr;
   assign spr_bus_we_o = spr_write_access & spr_access_valid & spr_bus_access;
   assign spr_bus_stb_o = (spr_read_access | spr_write_access) & spr_access_valid & spr_bus_access;
@@ -1182,7 +1180,7 @@ module pu_or1k_ctrl_cappuccino #(
 
   assign spr_group = spr_addr[14:11];
 
-  /* Select spr */
+  // Select spr
   always @(*) begin
     spr_access = 0;
     case(spr_group)
@@ -1222,7 +1220,7 @@ module pu_or1k_ctrl_cappuccino #(
       // FPU
       `OR1K_SPR_FPU_BASE:
         spr_access[`OR1K_SPR_FPU_BASE] = (FEATURE_FPU!="NONE");
-      /* generate invalid if the group is not present in the design  */
+      // generate invalid if the group is not present in the design 
       default:
         spr_access = 0;
     endcase
@@ -1233,15 +1231,15 @@ module pu_or1k_ctrl_cappuccino #(
 
   assign spr_ack = (|spr_access_ack) | !spr_access_valid;
 
-  /* Is a SPR bus access needed, or is the requested SPR in this file? */
-  assign spr_bus_access = /* Any of the units we don't have in this file */
-    /* System group */
+  // Is a SPR bus access needed, or is the requested SPR in this file?
+  assign spr_bus_access = // Any of the units we don't have in this file
+    // System group
     !(spr_access[`OR1K_SPR_SYS_BASE] ||
-      /* Debug Group */
+      // Debug Group
       spr_access[`OR1K_SPR_DU_BASE] ||
-      /* PIC Group */
+      // PIC Group
       spr_access[`OR1K_SPR_PIC_BASE] ||
-      /* Tick Group */
+      // Tick Group
       spr_access[`OR1K_SPR_TT_BASE]) ||
       // GPR
      (spr_access[`OR1K_SPR_SYS_BASE] && spr_addr[10:9]==2'h2);
@@ -1269,7 +1267,7 @@ module pu_or1k_ctrl_cappuccino #(
 
       assign du_ack_o = du_ack;
 
-      /* Data back to the debug bus */
+      // Data back to the debug bus
       always @(posedge clk) begin
         du_read_dat <= mfspr_dat_o;
       end
@@ -1289,13 +1287,13 @@ module pu_or1k_ctrl_cappuccino #(
       // goes out to the debug interface and comes back 1 cycle later via du_stall_i
       assign du_stall_o = stepping & pstep[4] | (stall_on_trap & padv_ctrl & except_trap_i);
 
-      /* Pulse to indicate we're restarting after a stall */
+      // Pulse to indicate we're restarting after a stall
       assign du_restart_from_stall = du_stall_r & !du_stall_i;
 
-      /* NPC debug control logic */
+      // NPC debug control logic
       assign du_npc_write = (du_we_i && du_addr_i==`OR1K_SPR_NPC_ADDR && du_ack_o);
 
-      /* Pick the traps-cause-stall bit out of the DSR */
+      // Pick the traps-cause-stall bit out of the DSR
       assign stall_on_trap = spr_dsr[`OR1K_SPR_DSR_TE];
 
       // record if NPC was written while we were stalled.
@@ -1331,7 +1329,7 @@ module pu_or1k_ctrl_cappuccino #(
 
       assign du_restart_o = du_restart_from_stall;
 
-      /* Indicate when we're stepping */
+      // Indicate when we're stepping
       assign stepping = spr_dmr1[`OR1K_SPR_DMR1_ST] & spr_dsr[`OR1K_SPR_DSR_TE];
 
       always @(posedge clk or posedge rst) begin
@@ -1340,11 +1338,11 @@ module pu_or1k_ctrl_cappuccino #(
         else if (du_restart_from_stall & stepping)
           pstep <= 6'h1;
         else if ((pstep[0] & fetch_valid_i) |
-                 /* decode is always single cycle */
+                 // decode is always single cycle
                  (pstep[1] & padv_decode_o) |
-                 /* execute stage */
+                 // execute stage
                  (pstep[2] & (execute_valid_i | ctrl_stage_exceptions)) |
-                 /* ctrl stage */
+                 // ctrl stage
                  (pstep[3] & (ctrl_valid_i | ctrl_stage_exceptions)) |
                  pstep[4])
           pstep <= {pstep[4:0],1'b0};
@@ -1363,7 +1361,7 @@ module pu_or1k_ctrl_cappuccino #(
 
       assign stepped_into_delay_slot = branch_step[1] & stepping;
 
-      /* Signals for waveform debuging */
+      // Signals for waveform debuging
       wire [31:0] spr_read_data_group_0;
       assign spr_read_data_group_0 = spr_internal_read_dat[0];
       wire [31:0] spr_read_data_group_1;
@@ -1385,7 +1383,7 @@ module pu_or1k_ctrl_cappuccino #(
       wire [31:0] spr_read_data_group_9;
       assign spr_read_data_group_9 = spr_internal_read_dat[9];
 
-      /* always single cycle access */
+      // always single cycle access
       assign spr_access_ack[`OR1K_SPR_DU_BASE] = spr_access[`OR1K_SPR_DU_BASE];
       assign spr_internal_read_dat[`OR1K_SPR_DU_BASE] =
         (spr_addr==`OR1K_SPR_DMR1_ADDR) ?
@@ -1397,7 +1395,7 @@ module pu_or1k_ctrl_cappuccino #(
         (spr_addr==`OR1K_SPR_DRR_ADDR) ?
         spr_drr : 0;
 
-      /* Put the incoming stall signal through a register to detect FE */
+      // Put the incoming stall signal through a register to detect FE
       always @(posedge clk or posedge rst) begin
         if (rst)
           du_stall_r <= 0;
@@ -1405,7 +1403,7 @@ module pu_or1k_ctrl_cappuccino #(
           du_stall_r <= du_stall_i;
       end
 
-      /* DMR1 */
+      // DMR1
       always @(posedge clk or posedge rst) begin
         if (rst)
           spr_dmr1 <= 0;
@@ -1413,12 +1411,12 @@ module pu_or1k_ctrl_cappuccino #(
           spr_dmr1[23:0] <= spr_write_dat[23:0];
       end
 
-      /* DMR2 */
+      // DMR2
       always @(posedge clk) begin
         spr_dmr2 <= 0;
       end
 
-      /* DSR */
+      // DSR
       always @(posedge clk or posedge rst) begin
         if (rst)
           spr_dsr <= 0;
@@ -1426,7 +1424,7 @@ module pu_or1k_ctrl_cappuccino #(
           spr_dsr[13:0] <= spr_write_dat[13:0];
       end
 
-      /* DRR */
+      // DRR
       always @(posedge clk or posedge rst) begin
         if (rst)
           spr_drr <= 0;

@@ -14,33 +14,31 @@
 //              Wishbone Bus Interface                                        //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2015-2016 by the author(s)
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+////////////////////////////////////////////////////////////////////////////////
+// Author(s):
+//   Paco Reina Campo <pacoreinacampo@queenfield.tech>
 
-/* Copyright (c) 2015-2016 by the author(s)
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * =============================================================================
- * Author(s):
- *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
- */
-
-/* ORBIS32 opcodes - top 6 bits */
+// ORBIS32 opcodes - top 6 bits
 
 `define OR1K_INSN_WIDTH 32
 
@@ -120,13 +118,12 @@
 `define OR1K_OPCODE_MOVHI {2'b00, 4'h6}
 `define OR1K_OPCODE_MACRC {2'b00, 4'h6}
 
-/*
-`define OR1K_OPCODE_SYS     {2'b00, 4'h8}
-`define OR1K_OPCODE_TRAP    {2'b00, 4'h8}
-`define OR1K_OPCODE_MSYNC   {2'b00, 4'h8}
-`define OR1K_OPCODE_PSYNC   {2'b00, 4'h8}
-`define OR1K_OPCODE_CSYNC   {2'b00, 4'h8}
- */
+//`define OR1K_OPCODE_SYS     {2'b00, 4'h8}
+//`define OR1K_OPCODE_TRAP    {2'b00, 4'h8}
+//`define OR1K_OPCODE_MSYNC   {2'b00, 4'h8}
+//`define OR1K_OPCODE_PSYNC   {2'b00, 4'h8}
+//`define OR1K_OPCODE_CSYNC   {2'b00, 4'h8}
+
 `define OR1K_OPCODE_SYSTRAPSYNC {2'b00, 4'h8}
 `define OR1K_OPCODE_RFE {2'b00, 4'h9}
 
@@ -154,26 +151,25 @@
 `define OR1K_OPCODE_XORI {2'b10, 4'hB}
 `define OR1K_OPCODE_MULI {2'b10, 4'hC}
 `define OR1K_OPCODE_MFSPR {2'b10, 4'hD}
-/*
-`define OR1K_OPCODE_SLLI    {2'b10, 4'hE}
-`define OR1K_OPCODE_SRLI    {2'b10, 4'hE}
-`define OR1K_OPCODE_SRAI    {2'b10, 4'hE}
-`define OR1K_OPCODE_RORI    {2'b10, 4'hE}
-*/
+
+//`define OR1K_OPCODE_SLLI    {2'b10, 4'hE}
+//`define OR1K_OPCODE_SRLI    {2'b10, 4'hE}
+//`define OR1K_OPCODE_SRAI    {2'b10, 4'hE}
+//`define OR1K_OPCODE_RORI    {2'b10, 4'hE}
+
 `define OR1K_OPCODE_SHRTI {2'b10, 4'hE}
 
-/*
-`define OR1K_OPCODE_SFEQI   {2'b10, 4'hF}
-`define OR1K_OPCODE_SFNEI   {2'b10, 4'hF}
-`define OR1K_OPCODE_SFGTUI  {2'b10, 4'hF}
-`define OR1K_OPCODE_SFGEUI  {2'b10, 4'hF}
-`define OR1K_OPCODE_SFLTUI  {2'b10, 4'hF}
-`define OR1K_OPCODE_SFLEUI  {2'b10, 4'hF}
-`define OR1K_OPCODE_SFGTSI  {2'b10, 4'hF}
-`define OR1K_OPCODE_SFGESI  {2'b10, 4'hF}
-`define OR1K_OPCODE_SFLTSI  {2'b10, 4'hF}
-`define OR1K_OPCODE_SFLESI  {2'b10, 4'hF}
-*/
+//`define OR1K_OPCODE_SFEQI   {2'b10, 4'hF}
+//`define OR1K_OPCODE_SFNEI   {2'b10, 4'hF}
+//`define OR1K_OPCODE_SFGTUI  {2'b10, 4'hF}
+//`define OR1K_OPCODE_SFGEUI  {2'b10, 4'hF}
+//`define OR1K_OPCODE_SFLTUI  {2'b10, 4'hF}
+//`define OR1K_OPCODE_SFLEUI  {2'b10, 4'hF}
+//`define OR1K_OPCODE_SFGTSI  {2'b10, 4'hF}
+//`define OR1K_OPCODE_SFGESI  {2'b10, 4'hF}
+//`define OR1K_OPCODE_SFLTSI  {2'b10, 4'hF}
+//`define OR1K_OPCODE_SFLESI  {2'b10, 4'hF}
+
 `define OR1K_OPCODE_SFIMM {2'b10, 4'hF}
 
 `define OR1K_OPCODE_MTSPR {2'b11, 4'h0}
@@ -186,46 +182,44 @@
 `define OR1K_OPCODE_SB {2'b11, 4'h6}
 `define OR1K_OPCODE_SH {2'b11, 4'h7}
 
-/*
-`define OR1K_OPCODE_ADD     {2'b11, 4'h8}
-`define OR1K_OPCODE_ADDC    {2'b11, 4'h8}
-`define OR1K_OPCODE_SUB     {2'b11, 4'h8}
-`define OR1K_OPCODE_AND     {2'b11, 4'h8}
-`define OR1K_OPCODE_OR      {2'b11, 4'h8}
-`define OR1K_OPCODE_XOR     {2'b11, 4'h8}
-`define OR1K_OPCODE_MUL     {2'b11, 4'h8}
+//`define OR1K_OPCODE_ADD     {2'b11, 4'h8}
+//`define OR1K_OPCODE_ADDC    {2'b11, 4'h8}
+//`define OR1K_OPCODE_SUB     {2'b11, 4'h8}
+//`define OR1K_OPCODE_AND     {2'b11, 4'h8}
+//`define OR1K_OPCODE_OR      {2'b11, 4'h8}
+//`define OR1K_OPCODE_XOR     {2'b11, 4'h8}
+//`define OR1K_OPCODE_MUL     {2'b11, 4'h8}
 
-`define OR1K_OPCODE_SLL     {2'b11, 4'h8}
-`define OR1K_OPCODE_SRL     {2'b11, 4'h8}
-`define OR1K_OPCODE_SRA     {2'b11, 4'h8}
-`define OR1K_OPCODE_ROR     {2'b11, 4'h8}
-`define OR1K_OPCODE_DIV     {2'b11, 4'h8}
-`define OR1K_OPCODE_DIVU    {2'b11, 4'h8}
-`define OR1K_OPCODE_MULU    {2'b11, 4'h8}
-`define OR1K_OPCODE_EXTBS   {2'b11, 4'h8}
-`define OR1K_OPCODE_EXTHS   {2'b11, 4'h8}
-`define OR1K_OPCODE_EXTWS   {2'b11, 4'h8}
-`define OR1K_OPCODE_EXTBZ   {2'b11, 4'h8}
-`define OR1K_OPCODE_EXTHZ   {2'b11, 4'h8}
-`define OR1K_OPCODE_EXTWZ   {2'b11, 4'h8}
-`define OR1K_OPCODE_CMOV    {2'b11, 4'h8}
-`define OR1K_OPCODE_FF1     {2'b11, 4'h8}
-`define OR1K_OPCODE_FL1     {2'b11, 4'h8}
-*/
+//`define OR1K_OPCODE_SLL     {2'b11, 4'h8}
+//`define OR1K_OPCODE_SRL     {2'b11, 4'h8}
+//`define OR1K_OPCODE_SRA     {2'b11, 4'h8}
+//`define OR1K_OPCODE_ROR     {2'b11, 4'h8}
+//`define OR1K_OPCODE_DIV     {2'b11, 4'h8}
+//`define OR1K_OPCODE_DIVU    {2'b11, 4'h8}
+//`define OR1K_OPCODE_MULU    {2'b11, 4'h8}
+//`define OR1K_OPCODE_EXTBS   {2'b11, 4'h8}
+//`define OR1K_OPCODE_EXTHS   {2'b11, 4'h8}
+//`define OR1K_OPCODE_EXTWS   {2'b11, 4'h8}
+//`define OR1K_OPCODE_EXTBZ   {2'b11, 4'h8}
+//`define OR1K_OPCODE_EXTHZ   {2'b11, 4'h8}
+//`define OR1K_OPCODE_EXTWZ   {2'b11, 4'h8}
+//`define OR1K_OPCODE_CMOV    {2'b11, 4'h8}
+//`define OR1K_OPCODE_FF1     {2'b11, 4'h8}
+//`define OR1K_OPCODE_FL1     {2'b11, 4'h8}
+
 `define OR1K_OPCODE_ALU {2'b11, 4'h8}
 
-/*
-`define OR1K_OPCODE_SFEQ    {2'b11, 4'h9}
-`define OR1K_OPCODE_SFNE    {2'b11, 4'h9}
-`define OR1K_OPCODE_SFGTU   {2'b11, 4'h9}
-`define OR1K_OPCODE_SFGEU   {2'b11, 4'h9}
-`define OR1K_OPCODE_SFLTU   {2'b11, 4'h9}
-`define OR1K_OPCODE_SFLEU   {2'b11, 4'h9}
-`define OR1K_OPCODE_SFGTS   {2'b11, 4'h9}
-`define OR1K_OPCODE_SFGES   {2'b11, 4'h9}
-`define OR1K_OPCODE_SFLTS   {2'b11, 4'h9}
-`define OR1K_OPCODE_SFLES   {2'b11, 4'h9}
-*/
+//`define OR1K_OPCODE_SFEQ    {2'b11, 4'h9}
+//`define OR1K_OPCODE_SFNE    {2'b11, 4'h9}
+//`define OR1K_OPCODE_SFGTU   {2'b11, 4'h9}
+//`define OR1K_OPCODE_SFGEU   {2'b11, 4'h9}
+//`define OR1K_OPCODE_SFLTU   {2'b11, 4'h9}
+//`define OR1K_OPCODE_SFLEU   {2'b11, 4'h9}
+//`define OR1K_OPCODE_SFGTS   {2'b11, 4'h9}
+//`define OR1K_OPCODE_SFGES   {2'b11, 4'h9}
+//`define OR1K_OPCODE_SFLTS   {2'b11, 4'h9}
+//`define OR1K_OPCODE_SFLES   {2'b11, 4'h9}
+
 `define OR1K_OPCODE_SF {2'b11, 4'h9}
 
 `define OR1K_OPCODE_CUST5 {2'b11, 4'hC}
@@ -233,9 +227,7 @@
 `define OR1K_OPCODE_CUST7 {2'b11, 4'hE}
 `define OR1K_OPCODE_CUST8 {2'b11, 4'hF}
 
-//
 // ORFPX32 opcodes
-//
 `define OR1K_OPCODE_FPU {2'b11, 4'h2}
 // FP OPs
 // MSbit indicates FPU operation valid
@@ -635,7 +627,7 @@
 `define MOR1KX_SPR_SR_WIDTH 16
 `define MOR1KX_SPR_SR_RESET_VALUE `MOR1KX_SPR_SR_WIDTH'h8001
 
-/* Exception addresses */
+// Exception addresses
 `define OR1K_RESET_VECTOR 5'h01
 `define OR1K_BERR_VECTOR 5'h02
 `define OR1K_DPF_VECTOR 5'h03

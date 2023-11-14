@@ -14,31 +14,29 @@
 //              Wishbone Bus Interface                                        //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
-
-/* Copyright (c) 2015-2016 by the author(s)
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * =============================================================================
- * Author(s):
- *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
- */
+// Copyright (c) 2015-2016 by the author(s)
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+////////////////////////////////////////////////////////////////////////////////
+// Author(s):
+//   Paco Reina Campo <pacoreinacampo@queenfield.tech>
 
 `include "pu_or1k_defines.sv"
 
@@ -153,13 +151,13 @@ module pu_or1k_rf_cappuccino #(
 
   reg [OPTION_OPERAND_WIDTH-1:0] execute_hazard_result_r;
   always @(posedge clk) begin
-    if (decode_valid_i)
+    if (decode_valid_i) begin
       execute_hazard_result_r <= ctrl_alu_result_i;
+    end
   end
 
   wire [OPTION_OPERAND_WIDTH-1:0] execute_hazard_result;
-  assign execute_hazard_result = decode_valid_i ? ctrl_alu_result_i :
-    execute_hazard_result_r;
+  assign execute_hazard_result = decode_valid_i ? ctrl_alu_result_i : execute_hazard_result_r;
 
   reg ctrl_hazard_a;
   reg ctrl_hazard_b;
@@ -249,16 +247,13 @@ module pu_or1k_rf_cappuccino #(
   end
 
   wire execute_to_decode_bypass_b;
-  assign execute_to_decode_bypass_b = ctrl_rf_wb_i &
-    (ctrl_rfd_adr_i == decode_rfb_adr_i);
+  assign execute_to_decode_bypass_b = ctrl_rf_wb_i & (ctrl_rfd_adr_i == decode_rfb_adr_i);
 
   wire ctrl_to_decode_bypass_b;
-  assign ctrl_to_decode_bypass_b = use_last_wb_b | wb_rf_wb_i &
-    (wb_rfd_adr_i == decode_rfb_adr_i);
+  assign ctrl_to_decode_bypass_b = use_last_wb_b | wb_rf_wb_i & (wb_rfd_adr_i == decode_rfb_adr_i);
 
   wire [OPTION_OPERAND_WIDTH-1:0] ctrl_to_decode_result_b;
-  assign ctrl_to_decode_result_b = use_last_wb_b ?
-    wb_to_decode_result_b : result_i;
+  assign ctrl_to_decode_result_b = use_last_wb_b ? wb_to_decode_result_b : result_i;
 
 
   assign decode_rfa_o = execute_to_decode_bypass_a ? ctrl_alu_result_i :

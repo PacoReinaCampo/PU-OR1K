@@ -14,31 +14,29 @@
 //              Wishbone Bus Interface                                        //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
-
-/* Copyright (c) 2015-2016 by the author(s)
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * =============================================================================
- * Author(s):
- *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
- */
+// Copyright (c) 2015-2016 by the author(s)
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+////////////////////////////////////////////////////////////////////////////////
+// Author(s):
+//   Paco Reina Campo <pacoreinacampo@queenfield.tech>
 
 `include "pu_or1k_defines.sv"
 
@@ -320,25 +318,25 @@ module pu_or1k_decode #(
       `OR1K_OPCODE_ORI,
       `OR1K_OPCODE_XORI,
       `OR1K_OPCODE_MFSPR,
-      /*
-      `OR1K_OPCODE_SLLI,
-      `OR1K_OPCODE_SRLI,
-      `OR1K_OPCODE_SRAI,
-      `OR1K_OPCODE_RORI,
-      */
+
+//      `OR1K_OPCODE_SLLI,
+//      `OR1K_OPCODE_SRLI,
+//      `OR1K_OPCODE_SRAI,
+//      `OR1K_OPCODE_RORI,
+     
       `OR1K_OPCODE_SFIMM, `OR1K_OPCODE_MTSPR, `OR1K_OPCODE_SW, `OR1K_OPCODE_SB, `OR1K_OPCODE_SH,
-      /*
-      `OR1K_OPCODE_SFEQ,
-      `OR1K_OPCODE_SFNE,
-      `OR1K_OPCODE_SFGTU,
-      `OR1K_OPCODE_SFGEU,
-      `OR1K_OPCODE_SFLTU,
-      `OR1K_OPCODE_SFLEU,
-      `OR1K_OPCODE_SFGTS,
-      `OR1K_OPCODE_SFGES,
-      `OR1K_OPCODE_SFLTS,
-      `OR1K_OPCODE_SFLES,
-      */
+
+//      `OR1K_OPCODE_SFEQ,
+//      `OR1K_OPCODE_SFNE,
+//      `OR1K_OPCODE_SFGTU,
+//      `OR1K_OPCODE_SFGEU,
+//      `OR1K_OPCODE_SFLTU,
+//      `OR1K_OPCODE_SFLEU,
+//      `OR1K_OPCODE_SFGTS,
+//      `OR1K_OPCODE_SFGES,
+//      `OR1K_OPCODE_SFLTS,
+//      `OR1K_OPCODE_SFLES,
+     
       `OR1K_OPCODE_SF, `OR1K_OPCODE_NOP:
       decode_except_illegal_o = 1'b0;
 
