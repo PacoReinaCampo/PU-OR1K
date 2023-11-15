@@ -191,8 +191,7 @@ module pu_or1k_execute_ctrl_cappuccino #(
       ctrl_except_trap_o <= 0;
       ctrl_except_dbus_o <= 0;
       ctrl_except_align_o <= 0;
-    end
-    else if (pipeline_flush_i) begin
+    end else if (pipeline_flush_i) begin
       ctrl_except_ibus_err_o <= 0;
       ctrl_except_itlb_miss_o <= 0;
       ctrl_except_ipagefault_o <= 0;
@@ -202,8 +201,7 @@ module pu_or1k_execute_ctrl_cappuccino #(
       ctrl_except_trap_o <= 0;
       ctrl_except_dbus_o <= 0;
       ctrl_except_align_o <= 0;
-    end
-    else begin
+    end else begin
       if (padv_i) begin
         ctrl_except_ibus_err_o   <= execute_except_ibus_err_i;
         ctrl_except_itlb_miss_o  <= execute_except_itlb_miss_i;
@@ -221,21 +219,25 @@ module pu_or1k_execute_ctrl_cappuccino #(
   end
 
   always @(posedge clk) begin
-    if (padv_i)
-      if (op_jal_i)
+    if (padv_i) begin
+      if (op_jal_i) begin
         ctrl_alu_result_o <= execute_jal_result_i;
-    else
+      end else begin
       ctrl_alu_result_o <= alu_result_i;
+      end
+    end
   end
 
   always @(posedge clk) begin
-    if (padv_i & (op_lsu_store_i | op_lsu_load_i))
+    if (padv_i & (op_lsu_store_i | op_lsu_load_i)) begin
       ctrl_lsu_adr_o <= adder_result_i;
+    end
   end
 
   always @(posedge clk) begin
-    if (padv_i)
+    if (padv_i) begin
       ctrl_rfb_o <= rfb_i;
+    end
   end
 
   always @(posedge clk or posedge rst) begin
@@ -246,8 +248,7 @@ module pu_or1k_execute_ctrl_cappuccino #(
       ctrl_carry_clear_o    <= 0;
       ctrl_overflow_set_o   <= 0;
       ctrl_overflow_clear_o <= 0;
-    end
-    else if (padv_i) begin
+    end else if (padv_i) begin
       ctrl_flag_set_o       <= flag_set_i;
       ctrl_flag_clear_o     <= flag_clear_i;
       ctrl_carry_set_o      <= carry_set_i;
@@ -260,10 +261,11 @@ module pu_or1k_execute_ctrl_cappuccino #(
   // pc_ctrl should not advance when a nop bubble moves from execute to
   // ctrl/mem stage
   always @(posedge clk or posedge rst) begin
-    if (rst)
+    if (rst) begin
       pc_ctrl_o <= OPTION_RESET_PC;
-    else if (padv_i & !execute_bubble_i)
+    end else if (padv_i & !execute_bubble_i) begin
       pc_ctrl_o <= pc_execute_i;
+    end
   end
 
   // The pipeline flush comes when the instruction that has caused
@@ -275,15 +277,15 @@ module pu_or1k_execute_ctrl_cappuccino #(
   generate
     if (FEATURE_MULTIPLIER=="PIPELINED") begin
       always @(posedge clk or posedge rst) begin
-        if (rst)
+        if (rst) begin
           ctrl_op_mul_o <= 0;
-        else if (padv_i)
+        end else if (padv_i) begin
           ctrl_op_mul_o <= op_mul_i;
-        else if (pipeline_flush_i)
+        end else if (pipeline_flush_i) begin
           ctrl_op_mul_o <= 0;
+        end
       end
-    end
-    else begin
+    end else begin
       always @(posedge clk) begin
         ctrl_op_mul_o <= 0;
       end
@@ -299,18 +301,15 @@ module pu_or1k_execute_ctrl_cappuccino #(
         if (rst) begin
           ctrl_fpcsr_o <= {`OR1K_FPCSR_WIDTH{1'b0}};
           ctrl_fpcsr_set_o <= 0;
-        end
-        else if (pipeline_flush_i) begin
+        end else if (pipeline_flush_i) begin
           ctrl_fpcsr_o     <= {`OR1K_FPCSR_WIDTH{1'b0}};
           ctrl_fpcsr_set_o <= 0;
-        end
-        else if (padv_i) begin
+        end else if (padv_i) begin
           ctrl_fpcsr_o     <= fpcsr_i;
           ctrl_fpcsr_set_o <= fpcsr_set_i;
         end
       end
-    end
-    else begin : fpu_execute_ctrl_none
+    end else begin : fpu_execute_ctrl_none
       always @(posedge clk or posedge rst) begin
         if (rst) begin
           ctrl_fpcsr_o     <= {`OR1K_FPCSR_WIDTH{1'b0}};
@@ -324,33 +323,33 @@ module pu_or1k_execute_ctrl_cappuccino #(
     if (rst) begin
       ctrl_op_mfspr_o <= 0;
       ctrl_op_mtspr_o <= 0;
-    end
-    else if (padv_i) begin
+    end else if (padv_i) begin
       ctrl_op_mfspr_o <= op_mfspr_i;
       ctrl_op_mtspr_o <= op_mtspr_i;
-    end
-    else if (pipeline_flush_i) begin
+    end else if (pipeline_flush_i) begin
       ctrl_op_mfspr_o <= 0;
       ctrl_op_mtspr_o <= 0;
     end
   end
 
   always @(posedge clk or posedge rst) begin
-    if (rst)
+    if (rst) begin
       ctrl_op_rfe_o <= 0;
-    else if (padv_i)
+    end else if (padv_i) begin
       ctrl_op_rfe_o <= op_rfe_i;
-    else if (pipeline_flush_i)
+    end else if (pipeline_flush_i) begin
       ctrl_op_rfe_o <= 0;
+    end
   end
 
   always @(posedge clk or posedge rst) begin
-    if (rst)
+    if (rst) begin
       ctrl_op_msync_o <= 0;
-    else if (padv_i)
+    end else if (padv_i) begin
       ctrl_op_msync_o <= op_msync_i;
-    else if (pipeline_flush_i)
+    end else if (pipeline_flush_i) begin
       ctrl_op_msync_o <= 0;
+    end
   end
 
   always @(posedge clk or posedge rst) begin
@@ -358,19 +357,16 @@ module pu_or1k_execute_ctrl_cappuccino #(
       ctrl_op_lsu_load_o   <= 0;
       ctrl_op_lsu_store_o  <= 0;
       ctrl_op_lsu_atomic_o <= 0;
-    end
-    else if (ctrl_except_align_o | ctrl_except_dbus_o |
+    end else if (ctrl_except_align_o | ctrl_except_dbus_o |
       ctrl_except_dtlb_miss_o | ctrl_except_dpagefault_o) begin
       ctrl_op_lsu_load_o   <= 0;
       ctrl_op_lsu_store_o  <= 0;
       ctrl_op_lsu_atomic_o <= 0;
-    end
-    else if (padv_i) begin
+    end else if (padv_i) begin
       ctrl_op_lsu_load_o   <= op_lsu_load_i;
       ctrl_op_lsu_store_o  <= op_lsu_store_i;
       ctrl_op_lsu_atomic_o <= op_lsu_atomic_i;
-    end
-    else if (pipeline_flush_i) begin
+    end else if (pipeline_flush_i) begin
       ctrl_op_lsu_load_o   <= 0;
       ctrl_op_lsu_store_o  <= 0;
       ctrl_op_lsu_atomic_o <= 0;
@@ -385,38 +381,41 @@ module pu_or1k_execute_ctrl_cappuccino #(
   end
 
   always @(posedge clk or posedge rst) begin
-    if (rst)
+    if (rst) begin
       ctrl_rf_wb_o <= 0;
-    else if (padv_i)
+    end else if (padv_i) begin
       ctrl_rf_wb_o <= execute_rf_wb_i;
-    else if (ctrl_op_mfspr_o & ctrl_mfspr_ack_i | ctrl_op_lsu_load_o & lsu_valid_i)
+    end else if (ctrl_op_mfspr_o & ctrl_mfspr_ack_i | ctrl_op_lsu_load_o & lsu_valid_i) begin
       // Deassert the write enable when the "bus" access is done, to avoid:
       // 1) Writing multiple times to RF
       // 2) Signaling a need to bypass from control stage, when it really
       //    should be a bypass from wb stage.
       ctrl_rf_wb_o <= 0;
-    else if (pipeline_flush_i)
+    end else if (pipeline_flush_i) begin
       ctrl_rf_wb_o <= 0;
+    end
   end
 
   always @(posedge clk) begin
-    if (padv_i)
+    if (padv_i) begin
       ctrl_rfd_adr_o <= execute_rfd_adr_i;
+    end
   end
 
   // load and mfpsr can stall from ctrl stage, so we have to hold off the
   // write back on them
   always @(posedge clk or posedge rst) begin
-    if (rst)
+    if (rst) begin
       wb_rf_wb_o <= 0;
-    else if (pipeline_flush_i)
+    end else if (pipeline_flush_i) begin
       wb_rf_wb_o <= 0;
-    else if (ctrl_op_mfspr_o)
+    end else if (ctrl_op_mfspr_o) begin
       wb_rf_wb_o <= ctrl_rf_wb_o & ctrl_mfspr_ack_i;
-    else if (ctrl_op_lsu_load_o)
+    end else if (ctrl_op_lsu_load_o) begin
       wb_rf_wb_o <= ctrl_rf_wb_o & lsu_valid_i;
-    else
+    end else begin
       wb_rf_wb_o <= ctrl_rf_wb_o & padv_ctrl_i;
+    end
   end
 
   always @(posedge clk) begin

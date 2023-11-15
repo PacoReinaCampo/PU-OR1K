@@ -648,73 +648,67 @@ module pu_or1k_ctrl_cappuccino #(
       spr_sr <= SPR_SR_RESET_VALUE;
     end else if (exception_re) begin
       // Go into supervisor mode, disable interrupts, MMUs
-      spr_sr[`OR1K_SPR_SR_SM  ] <= 1'b1;
+      spr_sr[`OR1K_SPR_SR_SM] <= 1'b1;
       if (FEATURE_TIMER!="NONE")
-        spr_sr[`OR1K_SPR_SR_TEE ] <= 1'b0;
+        spr_sr[`OR1K_SPR_SR_TEE] <= 1'b0;
       if (FEATURE_PIC!="NONE")
-        spr_sr[`OR1K_SPR_SR_IEE ] <= 1'b0;
+        spr_sr[`OR1K_SPR_SR_IEE] <= 1'b0;
       if (FEATURE_DMMU!="NONE")
-        spr_sr[`OR1K_SPR_SR_DME ] <= 1'b0;
+        spr_sr[`OR1K_SPR_SR_DME] <= 1'b0;
       if (FEATURE_IMMU!="NONE")
-        spr_sr[`OR1K_SPR_SR_IME ] <= 1'b0;
+        spr_sr[`OR1K_SPR_SR_IME] <= 1'b0;
       if (FEATURE_DSX!="NONE")
-        spr_sr[`OR1K_SPR_SR_DSX ] <= ctrl_delay_slot;
+        spr_sr[`OR1K_SPR_SR_DSX] <= ctrl_delay_slot;
       if (FEATURE_OVERFLOW!="NONE")
-        spr_sr[`OR1K_SPR_SR_OVE ] <= 1'b0;
+        spr_sr[`OR1K_SPR_SR_OVE] <= 1'b0;
     end else if ((spr_we & spr_access[`OR1K_SPR_SYS_BASE] &
               (spr_sr[`OR1K_SPR_SR_SM] & padv_ctrl | du_access)) &&
              `SPR_OFFSET(spr_addr)==`SPR_OFFSET(`OR1K_SPR_SR_ADDR)) begin
-      spr_sr[`OR1K_SPR_SR_SM  ] <= spr_write_dat[`OR1K_SPR_SR_SM  ];
+      spr_sr[`OR1K_SPR_SR_SM] <= spr_write_dat[`OR1K_SPR_SR_SM];
 
-      spr_sr[`OR1K_SPR_SR_F  ] <= spr_write_dat[`OR1K_SPR_SR_F  ];
+      spr_sr[`OR1K_SPR_SR_F] <= spr_write_dat[`OR1K_SPR_SR_F];
 
       if (FEATURE_TIMER!="NONE")
-        spr_sr[`OR1K_SPR_SR_TEE ] <= spr_write_dat[`OR1K_SPR_SR_TEE ];
+        spr_sr[`OR1K_SPR_SR_TEE] <= spr_write_dat[`OR1K_SPR_SR_TEE];
 
       if (FEATURE_PIC!="NONE")
-        spr_sr[`OR1K_SPR_SR_IEE ] <= spr_write_dat[`OR1K_SPR_SR_IEE ];
+        spr_sr[`OR1K_SPR_SR_IEE] <= spr_write_dat[`OR1K_SPR_SR_IEE];
 
       if (FEATURE_DATACACHE!="NONE")
-        spr_sr[`OR1K_SPR_SR_DCE ] <= spr_write_dat[`OR1K_SPR_SR_DCE ];
+        spr_sr[`OR1K_SPR_SR_DCE] <= spr_write_dat[`OR1K_SPR_SR_DCE];
 
       if (FEATURE_INSTRUCTIONCACHE!="NONE")
-        spr_sr[`OR1K_SPR_SR_ICE ] <= spr_write_dat[`OR1K_SPR_SR_ICE ];
+        spr_sr[`OR1K_SPR_SR_ICE] <= spr_write_dat[`OR1K_SPR_SR_ICE];
 
       if (FEATURE_DMMU!="NONE")
-        spr_sr[`OR1K_SPR_SR_DME ] <= spr_write_dat[`OR1K_SPR_SR_DME ];
+        spr_sr[`OR1K_SPR_SR_DME] <= spr_write_dat[`OR1K_SPR_SR_DME];
 
       if (FEATURE_IMMU!="NONE")
-        spr_sr[`OR1K_SPR_SR_IME ] <= spr_write_dat[`OR1K_SPR_SR_IME ];
+        spr_sr[`OR1K_SPR_SR_IME] <= spr_write_dat[`OR1K_SPR_SR_IME];
 
       if (FEATURE_FASTCONTEXTS!="NONE")
-        spr_sr[`OR1K_SPR_SR_CE  ] <= spr_write_dat[`OR1K_SPR_SR_CE  ];
+        spr_sr[`OR1K_SPR_SR_CE] <= spr_write_dat[`OR1K_SPR_SR_CE];
 
       if (FEATURE_CARRY_FLAG!="NONE")
         spr_sr[`OR1K_SPR_SR_CY] <= spr_write_dat[`OR1K_SPR_SR_CY];
 
       if (FEATURE_OVERFLOW!="NONE") begin
-        spr_sr[`OR1K_SPR_SR_OV  ] <= spr_write_dat[`OR1K_SPR_SR_OV  ];
-        spr_sr[`OR1K_SPR_SR_OVE ] <= spr_write_dat[`OR1K_SPR_SR_OVE ];
+        spr_sr[`OR1K_SPR_SR_OV] <= spr_write_dat[`OR1K_SPR_SR_OV];
+        spr_sr[`OR1K_SPR_SR_OVE] <= spr_write_dat[`OR1K_SPR_SR_OVE];
       end
 
       if (FEATURE_DSX!="NONE") begin
-        spr_sr[`OR1K_SPR_SR_DSX ] <= spr_write_dat[`OR1K_SPR_SR_DSX ];
+        spr_sr[`OR1K_SPR_SR_DSX] <= spr_write_dat[`OR1K_SPR_SR_DSX];
       end
 
-      spr_sr[`OR1K_SPR_SR_EPH ] <= spr_write_dat[`OR1K_SPR_SR_EPH ];
+      spr_sr[`OR1K_SPR_SR_EPH] <= spr_write_dat[`OR1K_SPR_SR_EPH];
     end else if (padv_ctrl) begin
-      spr_sr[`OR1K_SPR_SR_F   ] <= ctrl_flag_set ? 1 :
-      ctrl_flag_clear ? 0 :
-      spr_sr[`OR1K_SPR_SR_F   ];
+      spr_sr[`OR1K_SPR_SR_F] <= ctrl_flag_set ? 1 : ctrl_flag_clear ? 0 : spr_sr[`OR1K_SPR_SR_F];
 
       if (FEATURE_CARRY_FLAG!="NONE")
-        spr_sr[`OR1K_SPR_SR_CY] <= ctrl_carry_set_i ? 1 :
-        ctrl_carry_clear_i ? 0 :
-        spr_sr[`OR1K_SPR_SR_CY];
+        spr_sr[`OR1K_SPR_SR_CY] <= ctrl_carry_set_i ? 1 : ctrl_carry_clear_i ? 0 : spr_sr[`OR1K_SPR_SR_CY];
       if (FEATURE_OVERFLOW!="NONE")
-        spr_sr[`OR1K_SPR_SR_OV   ] <= ctrl_overflow_set_i ? 1 :
-        ctrl_overflow_clear_i ? 0 :
-        spr_sr[`OR1K_SPR_SR_OV   ];
+        spr_sr[`OR1K_SPR_SR_OV] <= ctrl_overflow_set_i ? 1 : ctrl_overflow_clear_i ? 0 : spr_sr[`OR1K_SPR_SR_OV];
       // Skip FO. TODO: make this even more selective.
       if (ctrl_op_rfe_i)
         spr_sr[14:0] <= spr_esr[14:0];
@@ -742,44 +736,44 @@ module pu_or1k_ctrl_cappuccino #(
         end
       end
     end else if (spr_we && spr_access[`OR1K_SPR_SYS_BASE] && `SPR_OFFSET(spr_addr)==`SPR_OFFSET(`OR1K_SPR_ESR0_ADDR)) begin
-      spr_esr[`OR1K_SPR_SR_SM  ] <= spr_write_dat[`OR1K_SPR_SR_SM  ];
+      spr_esr[`OR1K_SPR_SR_SM] <= spr_write_dat[`OR1K_SPR_SR_SM];
 
-      spr_esr[`OR1K_SPR_SR_F  ] <= spr_write_dat[`OR1K_SPR_SR_F  ];
+      spr_esr[`OR1K_SPR_SR_F] <= spr_write_dat[`OR1K_SPR_SR_F];
 
       if (FEATURE_TIMER!="NONE")
-        spr_esr[`OR1K_SPR_SR_TEE ] <= spr_write_dat[`OR1K_SPR_SR_TEE ];
+        spr_esr[`OR1K_SPR_SR_TEE] <= spr_write_dat[`OR1K_SPR_SR_TEE];
 
       if (FEATURE_PIC!="NONE")
-        spr_esr[`OR1K_SPR_SR_IEE ] <= spr_write_dat[`OR1K_SPR_SR_IEE ];
+        spr_esr[`OR1K_SPR_SR_IEE] <= spr_write_dat[`OR1K_SPR_SR_IEE];
 
       if (FEATURE_DATACACHE!="NONE")
-        spr_esr[`OR1K_SPR_SR_DCE ] <= spr_write_dat[`OR1K_SPR_SR_DCE ];
+        spr_esr[`OR1K_SPR_SR_DCE] <= spr_write_dat[`OR1K_SPR_SR_DCE];
 
       if (FEATURE_INSTRUCTIONCACHE!="NONE")
-        spr_esr[`OR1K_SPR_SR_ICE ] <= spr_write_dat[`OR1K_SPR_SR_ICE ];
+        spr_esr[`OR1K_SPR_SR_ICE] <= spr_write_dat[`OR1K_SPR_SR_ICE];
 
       if (FEATURE_DMMU!="NONE")
-        spr_esr[`OR1K_SPR_SR_DME ] <= spr_write_dat[`OR1K_SPR_SR_DME ];
+        spr_esr[`OR1K_SPR_SR_DME] <= spr_write_dat[`OR1K_SPR_SR_DME];
 
       if (FEATURE_IMMU!="NONE")
-        spr_esr[`OR1K_SPR_SR_IME ] <= spr_write_dat[`OR1K_SPR_SR_IME ];
+        spr_esr[`OR1K_SPR_SR_IME] <= spr_write_dat[`OR1K_SPR_SR_IME];
 
       if (FEATURE_FASTCONTEXTS!="NONE")
-        spr_esr[`OR1K_SPR_SR_CE  ] <= spr_write_dat[`OR1K_SPR_SR_CE  ];
+        spr_esr[`OR1K_SPR_SR_CE] <= spr_write_dat[`OR1K_SPR_SR_CE];
 
       if (FEATURE_CARRY_FLAG!="NONE")
         spr_esr[`OR1K_SPR_SR_CY] <= spr_write_dat[`OR1K_SPR_SR_CY];
 
       if (FEATURE_OVERFLOW!="NONE") begin
-        spr_esr[`OR1K_SPR_SR_OV  ] <= spr_write_dat[`OR1K_SPR_SR_OV  ];
-        spr_esr[`OR1K_SPR_SR_OVE ] <= spr_write_dat[`OR1K_SPR_SR_OVE ];
+        spr_esr[`OR1K_SPR_SR_OV] <= spr_write_dat[`OR1K_SPR_SR_OV];
+        spr_esr[`OR1K_SPR_SR_OVE] <= spr_write_dat[`OR1K_SPR_SR_OVE];
       end
 
       if (FEATURE_DSX!="NONE") begin
-        spr_esr[`OR1K_SPR_SR_DSX ] <= spr_write_dat[`OR1K_SPR_SR_DSX ];
+        spr_esr[`OR1K_SPR_SR_DSX] <= spr_write_dat[`OR1K_SPR_SR_DSX];
       end
 
-      spr_esr[`OR1K_SPR_SR_EPH ] <= spr_write_dat[`OR1K_SPR_SR_EPH ];
+      spr_esr[`OR1K_SPR_SR_EPH] <= spr_write_dat[`OR1K_SPR_SR_EPH];
     end
   end
 

@@ -454,6 +454,7 @@ module pu_or1k_icache #(
       );
     end
   endgenerate
+
   pu_or1k_simple_dpram_sclk #(
     .ADDR_WIDTH    (OPTION_ICACHE_SET_WIDTH),
     .DATA_WIDTH    (TAGMEM_WIDTH),
