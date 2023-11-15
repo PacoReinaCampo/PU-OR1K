@@ -302,8 +302,8 @@ module pu_or1k_execute_alu #(
       // Can't detect unsigned overflow in this implementation
       assign mul_unsigned_overflow = 0;
 
-    end // if (FEATURE_MULTIPLIER=="PIPELINED")
-    else if (FEATURE_MULTIPLIER=="SERIAL") begin : serialmultiply
+    // if (FEATURE_MULTIPLIER=="PIPELINED")
+    end else if (FEATURE_MULTIPLIER=="SERIAL") begin : serialmultiply
       reg  [(OPTION_OPERAND_WIDTH*2)-1:0] mul_prod_r;
       reg  [                         5:0] serial_mul_cnt;
       reg                                 mul_done;
@@ -354,8 +354,7 @@ module pu_or1k_execute_alu #(
           mul_prod_r[OPTION_OPERAND_WIDTH-1:0]) :
           mul_prod_r[OPTION_OPERAND_WIDTH-1:0];
 
-      assign mul_unsigned_overflow =  OPTION_OPERAND_WIDTH==64 ? 0 :
-        |mul_prod_r[(OPTION_OPERAND_WIDTH*2)-1:OPTION_OPERAND_WIDTH];
+      assign mul_unsigned_overflow =  OPTION_OPERAND_WIDTH==64 ? 0 : |mul_prod_r[(OPTION_OPERAND_WIDTH*2)-1:OPTION_OPERAND_WIDTH];
 
       // synthesis translate_off
       `ifndef verilator

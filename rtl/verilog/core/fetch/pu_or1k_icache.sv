@@ -324,8 +324,9 @@ module pu_or1k_icache #(
         spr_bus_ack_o <= 1;
       end
 
-      default:
+      default: begin
         state <= IDLE;
+      end
     endcase
 
     if (invalidate_o & !refill) begin

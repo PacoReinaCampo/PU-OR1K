@@ -156,7 +156,6 @@ module pu_or1k_bus_if_wb32 #(
       assign cpu_err_o = wbm_err_i;
       assign cpu_ack_o = wbm_ack_i;
       assign cpu_dat_o = wbm_dat_i;
-
     end else begin : classic // CLASSIC only
       // Only classic, single cycle accesses
 

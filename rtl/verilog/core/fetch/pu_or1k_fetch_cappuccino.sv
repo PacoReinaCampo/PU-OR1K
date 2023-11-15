@@ -484,8 +484,9 @@ module pu_or1k_fetch_cappuccino #(
         end
       end
 
-      default:
+      default: begin
         state <= IDLE;
+      end
     endcase
 
     if (rst) begin

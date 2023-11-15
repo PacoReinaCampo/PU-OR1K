@@ -388,7 +388,7 @@ module pu_or1k_ctrl_cappuccino #(
   end
 
   always @(posedge clk) begin
-    if (exception & !exception_r)
+    if (exception & !exception_r) begin
       casez(
         {
           except_itlb_miss_i,
@@ -440,6 +440,7 @@ module pu_or1k_ctrl_cappuccino #(
           exception_pc_addr <= spr_evbar | {19'd0,`OR1K_TT_VECTOR,8'd0};
         end
       endcase
+    end
   end
 
   assign execute_waiting = !execute_valid_i;
@@ -532,10 +533,11 @@ module pu_or1k_ctrl_cappuccino #(
   end
 
   always @(posedge clk or posedge rst) begin
-    if (rst)
+    if (rst) begin
       last_branch_insn_pc <= 0;
-    else if (padv_execute_o & execute_op_branch_i)
+    end else if (padv_execute_o & execute_op_branch_i) begin
       last_branch_insn_pc <= pc_execute_i;
+    end
   end
 
   always @(posedge clk or posedge rst) begin
@@ -552,16 +554,16 @@ module pu_or1k_ctrl_cappuccino #(
   // finished before the next instruction has been fetched. Typically this
   // occurs when not using icache and doing lots of memory accesses.
   always @(posedge clk or posedge rst) begin
-    if (rst)
+    if (rst) begin
       waiting_for_fetch <= 0;
-    else if (fetch_valid_i)
+    end else if (fetch_valid_i) begin
       waiting_for_fetch <= 0;
-    else if (!execute_waiting & execute_waiting_r & !fetch_valid_i)
+    end else if (!execute_waiting & execute_waiting_r & !fetch_valid_i) begin
       waiting_for_fetch <= 1;
+    end
   end
 
-  assign doing_rfe = ((padv_ctrl & ctrl_op_rfe_i) | doing_rfe_r) &
-    !deassert_doing_rfe;
+  assign doing_rfe = ((padv_ctrl & ctrl_op_rfe_i) | doing_rfe_r) & !deassert_doing_rfe;
 
   assign doing_rfe_o = doing_rfe;
 
@@ -590,22 +592,16 @@ module pu_or1k_ctrl_cappuccino #(
 
       // select all flags
       `ifdef OR1K_FPCSR_MASK_FLAGS
-      wire [`OR1K_FPCSR_ALLF_SIZE-1:0] masked_fpres_flags =
-      ctrl_fpcsr_i[`OR1K_FPCSR_ALLF] & spr_fpcsr_mf;
+      wire [`OR1K_FPCSR_ALLF_SIZE-1:0] masked_fpres_flags = ctrl_fpcsr_i[`OR1K_FPCSR_ALLF] & spr_fpcsr_mf;
 
-      wire [`OR1K_FPCSR_ALLF_SIZE-1:0] masked_fpcsr_flags =
-      spr_fpcsr[`OR1K_FPCSR_ALLF] & spr_fpcsr_mf;
+      wire [`OR1K_FPCSR_ALLF_SIZE-1:0] masked_fpcsr_flags = spr_fpcsr[`OR1K_FPCSR_ALLF] & spr_fpcsr_mf;
 
-      wire [`OR1K_FPCSR_ALLF_SIZE-1:0] fpu_allf =
-      ctrl_fpcsr_set_i ? masked_fpres_flags : masked_fpcsr_flags;
+      wire [`OR1K_FPCSR_ALLF_SIZE-1:0] fpu_allf = ctrl_fpcsr_set_i ? masked_fpres_flags : masked_fpcsr_flags;
       `else
-      wire [`OR1K_FPCSR_ALLF_SIZE-1:0] fpu_allf =
-      ctrl_fpcsr_set_i ? ctrl_fpcsr_i[`OR1K_FPCSR_ALLF] : spr_fpcsr[`OR1K_FPCSR_ALLF];
+      wire [`OR1K_FPCSR_ALLF_SIZE-1:0] fpu_allf = ctrl_fpcsr_set_i ? ctrl_fpcsr_i[`OR1K_FPCSR_ALLF] : spr_fpcsr[`OR1K_FPCSR_ALLF];
       `endif
 
-      assign except_fpu = (~doing_rfe) &
-        spr_fpcsr[`OR1K_FPCSR_FPEE] & 
-        (|fpu_allf);
+      assign except_fpu = (~doing_rfe) & spr_fpcsr[`OR1K_FPCSR_FPEE] & (|fpu_allf);
 
       // FPU Control & status register
       always @(posedge clk or posedge rst) begin
@@ -614,28 +610,24 @@ module pu_or1k_ctrl_cappuccino #(
           `ifdef OR1K_FPCSR_MASK_FLAGS
           spr_fpcsr_mf <= `OR1K_FPCSR_MASK_RESET_VALUE;
           `endif
-        end
-        else if (exception_re) begin
+        end else if (exception_re) begin
           spr_fpcsr[`OR1K_FPCSR_ALLF] <= fpu_allf;
           spr_fpcsr[`OR1K_FPCSR_RM]   <= spr_fpcsr[`OR1K_FPCSR_RM];
           spr_fpcsr[`OR1K_FPCSR_FPEE] <= 1'b0;
-        end  
-        else if ((spr_we & spr_access[`OR1K_SPR_SYS_BASE] &
+        end else if ((spr_we & spr_access[`OR1K_SPR_SYS_BASE] &
                   (spr_sr[`OR1K_SPR_SR_SM] & padv_ctrl | du_access)) &&
                  `SPR_OFFSET(spr_addr)==`SPR_OFFSET(`OR1K_SPR_FPCSR_ADDR)) begin
           spr_fpcsr <= spr_write_dat[`OR1K_FPCSR_WIDTH-1:0]; // update all fields
           `ifdef OR1K_FPCSR_MASK_FLAGS
           spr_fpcsr_mf <= spr_write_dat[`OR1K_FPCSR_MASK_ALL];
           `endif
-        end
-        else if (padv_ctrl & ctrl_fpcsr_set_i) begin
+        end else if (padv_ctrl & ctrl_fpcsr_set_i) begin
           spr_fpcsr[`OR1K_FPCSR_ALLF] <= fpu_allf;
           spr_fpcsr[`OR1K_FPCSR_RM]   <= spr_fpcsr[`OR1K_FPCSR_RM];
           spr_fpcsr[`OR1K_FPCSR_FPEE] <= spr_fpcsr[`OR1K_FPCSR_FPEE];
         end
       end
-    end
-    else begin : fpu_csr_none
+    end else begin : fpu_csr_none
       assign ctrl_fpu_round_mode_o = {`OR1K_FPCSR_RM_SIZE{1'b0}};
       assign except_fpu = 0;
       // FPU Control & status register
@@ -652,9 +644,9 @@ module pu_or1k_ctrl_cappuccino #(
 
   // Supervision register
   always @(posedge clk or posedge rst) begin
-    if (rst)
+    if (rst) begin
       spr_sr <= SPR_SR_RESET_VALUE;
-    else if (exception_re) begin
+    end else if (exception_re) begin
       // Go into supervisor mode, disable interrupts, MMUs
       spr_sr[`OR1K_SPR_SR_SM  ] <= 1'b1;
       if (FEATURE_TIMER!="NONE")
@@ -669,8 +661,7 @@ module pu_or1k_ctrl_cappuccino #(
         spr_sr[`OR1K_SPR_SR_DSX ] <= ctrl_delay_slot;
       if (FEATURE_OVERFLOW!="NONE")
         spr_sr[`OR1K_SPR_SR_OVE ] <= 1'b0;
-    end
-    else if ((spr_we & spr_access[`OR1K_SPR_SYS_BASE] &
+    end else if ((spr_we & spr_access[`OR1K_SPR_SYS_BASE] &
               (spr_sr[`OR1K_SPR_SR_SM] & padv_ctrl | du_access)) &&
              `SPR_OFFSET(spr_addr)==`SPR_OFFSET(`OR1K_SPR_SR_ADDR)) begin
       spr_sr[`OR1K_SPR_SR_SM  ] <= spr_write_dat[`OR1K_SPR_SR_SM  ];
@@ -706,12 +697,12 @@ module pu_or1k_ctrl_cappuccino #(
         spr_sr[`OR1K_SPR_SR_OVE ] <= spr_write_dat[`OR1K_SPR_SR_OVE ];
       end
 
-      if (FEATURE_DSX!="NONE")
+      if (FEATURE_DSX!="NONE") begin
         spr_sr[`OR1K_SPR_SR_DSX ] <= spr_write_dat[`OR1K_SPR_SR_DSX ];
+      end
 
       spr_sr[`OR1K_SPR_SR_EPH ] <= spr_write_dat[`OR1K_SPR_SR_EPH ];
-    end
-    else if (padv_ctrl) begin
+    end else if (padv_ctrl) begin
       spr_sr[`OR1K_SPR_SR_F   ] <= ctrl_flag_set ? 1 :
       ctrl_flag_clear ? 0 :
       spr_sr[`OR1K_SPR_SR_F   ];
@@ -732,25 +723,25 @@ module pu_or1k_ctrl_cappuccino #(
 
   // Exception SR
   always @(posedge clk or posedge rst) begin
-    if (rst)
+    if (rst) begin
       spr_esr <= SPR_SR_RESET_VALUE;
-    else if (exception_re) begin
+    end else if (exception_re) begin
       spr_esr <= spr_sr;
       if (FEATURE_OVERFLOW!="NONE") begin
-        if (ctrl_overflow_set_i)
+        if (ctrl_overflow_set_i) begin
           spr_esr[`OR1K_SPR_SR_OV] <= 1'b1;
-        else if (ctrl_overflow_clear_i)
+        end else if (ctrl_overflow_clear_i) begin
           spr_esr[`OR1K_SPR_SR_OV] <= 1'b0;
+        end
       end
       if (FEATURE_CARRY_FLAG!="NONE") begin
-        if (ctrl_carry_set_i)
+        if (ctrl_carry_set_i) begin
           spr_esr[`OR1K_SPR_SR_CY] <= 1'b1;
-        else if (ctrl_carry_clear_i)
+        end else if (ctrl_carry_clear_i) begin
           spr_esr[`OR1K_SPR_SR_CY] <= 1'b0;
+        end
       end
-    end
-    else if (spr_we && spr_access[`OR1K_SPR_SYS_BASE] &&
-             `SPR_OFFSET(spr_addr)==`SPR_OFFSET(`OR1K_SPR_ESR0_ADDR)) begin
+    end else if (spr_we && spr_access[`OR1K_SPR_SYS_BASE] && `SPR_OFFSET(spr_addr)==`SPR_OFFSET(`OR1K_SPR_ESR0_ADDR)) begin
       spr_esr[`OR1K_SPR_SR_SM  ] <= spr_write_dat[`OR1K_SPR_SR_SM  ];
 
       spr_esr[`OR1K_SPR_SR_F  ] <= spr_write_dat[`OR1K_SPR_SR_F  ];
@@ -784,109 +775,116 @@ module pu_or1k_ctrl_cappuccino #(
         spr_esr[`OR1K_SPR_SR_OVE ] <= spr_write_dat[`OR1K_SPR_SR_OVE ];
       end
 
-      if (FEATURE_DSX!="NONE")
+      if (FEATURE_DSX!="NONE") begin
         spr_esr[`OR1K_SPR_SR_DSX ] <= spr_write_dat[`OR1K_SPR_SR_DSX ];
+      end
 
       spr_esr[`OR1K_SPR_SR_EPH ] <= spr_write_dat[`OR1K_SPR_SR_EPH ];
     end
   end
 
   always @(posedge clk or posedge rst) begin
-    if (rst)
+    if (rst) begin
       ctrl_bubble_o <= 0;
-    else if (padv_execute_o)
+    end else if (padv_execute_o) begin
       ctrl_bubble_o <= execute_bubble_i;
+    end
   end
 
   // Exception PC
   always @(posedge clk) begin
     if (exception_re) begin
-      if (except_ibus_err_i)
+      if (except_ibus_err_i) begin
         spr_epcr <= last_branch_insn_pc;
       // Syscall is a special case, we return back to the instruction _after_
       // the syscall instruction, unless the syscall was in a delay slot
-      else if (except_syscall_i)
+      end else if (except_syscall_i) begin
         spr_epcr <= ctrl_delay_slot ? ctrl_epcr_o : pc_ctrl_i + 4;
-      else if (store_buffer_err_i)
+      end else if (store_buffer_err_i) begin
         spr_epcr <= store_buffer_epcr_i;
       // Update EPCR unless we are handing over to the debug unit hardware
       // i.e. single stepping.
-      else if (!(except_trap_i & stall_on_trap))
+      end else if (!(except_trap_i & stall_on_trap)) begin
         spr_epcr <= ctrl_epcr_o;
-    end else if (spr_we && spr_access[`OR1K_SPR_SYS_BASE] &&
-                 `SPR_OFFSET(spr_addr)==`SPR_OFFSET(`OR1K_SPR_EPCR0_ADDR)) begin
+      end
+    end else if (spr_we && spr_access[`OR1K_SPR_SYS_BASE] && `SPR_OFFSET(spr_addr)==`SPR_OFFSET(`OR1K_SPR_EPCR0_ADDR)) begin
       spr_epcr <= spr_write_dat;
     end
   end
 
   // Exception Effective Address
   always @(posedge clk or posedge rst) begin
-    if (rst)
+    if (rst) begin
       spr_eear <= {OPTION_OPERAND_WIDTH{1'b0}};
-    else if (exception_re) begin  //padv_ctrl & exception
-      if (except_ibus_err_i | except_itlb_miss_i | except_ipagefault_i)
+    end else if (exception_re) begin  //padv_ctrl & exception
+      if (except_ibus_err_i | except_itlb_miss_i | except_ipagefault_i) begin
         spr_eear <= pc_ctrl_i;
-      else
+      end else begin
         spr_eear <= ctrl_lsu_adr_i;
+      end
     end
   end
 
   // Track the PC
   always @(posedge clk or posedge rst) begin
-    if (rst)
+    if (rst) begin
       spr_ppc <= OPTION_RESET_PC;
-    else if (padv_ctrl)
+    end else if (padv_ctrl) begin
       spr_ppc <= pc_ctrl_i;
+    end
   end
 
   // Generate the NPC for SPR accesses
   always @(posedge clk or posedge rst) begin
-    if (rst)
+    if (rst) begin
       spr_npc <= OPTION_RESET_PC;
-    else if (du_npc_write)
+    end else if (du_npc_write) begin
       spr_npc <= du_dat_i;
-    else if (du_npc_written)
+    end else if (du_npc_written) begin
       spr_npc <= spr_npc;
-    else if (stepping) begin
-      if (stepped_into_rfe)
+    end else if (stepping) begin
+      if (stepped_into_rfe) begin
         spr_npc <= spr_epcr;
-      else if (stepped_into_delay_slot)
+      end else if (stepped_into_delay_slot) begin
         spr_npc <= last_branch_target_pc;
-      else if (stepped_into_exception)
+      end else if (stepped_into_exception) begin
         spr_npc <= exception_pc_addr;
-      else
+      end else begin
         spr_npc <= pc_ctrl_i + 4;
-    end
-    else if (stall_on_trap & padv_ctrl & except_trap_i)
+      end
+    end else if (stall_on_trap & padv_ctrl & except_trap_i) begin
       spr_npc <= pc_ctrl_i;
-    else if (cpu_stall & padv_ctrl)
+    end else if (cpu_stall & padv_ctrl) begin
       spr_npc <= ctrl_delay_slot ? pc_ctrl_i - 4 : pc_ctrl_i;
-    else if (!cpu_stall)
+    end else if (!cpu_stall) begin
       spr_npc <= pc_execute_i;
+    end
   end
 
   // Exception Vector Address
   always @(posedge clk or posedge rst) begin
-    if (rst)
+    if (rst) begin
       spr_evbar <= {OPTION_OPERAND_WIDTH{1'b0}};
-    else if (spr_we && spr_access[`OR1K_SPR_SYS_BASE] &&
-             `SPR_OFFSET(spr_addr)==`SPR_OFFSET(`OR1K_SPR_EVBAR_ADDR))
+    end else if (spr_we && spr_access[`OR1K_SPR_SYS_BASE] && `SPR_OFFSET(spr_addr)==`SPR_OFFSET(`OR1K_SPR_EVBAR_ADDR)) begin
       spr_evbar <= {spr_write_dat[OPTION_OPERAND_WIDTH-1:13], 13'd0};
+    end
   end
 
   // Remember when we're in a delay slot in execute stage.
   always @(posedge clk or posedge rst) begin
-    if (rst)
+    if (rst) begin
       execute_delay_slot <= 0;
-    else if (padv_execute_o)
+    end else if (padv_execute_o) begin
       execute_delay_slot <= execute_op_branch_i;
+    end
   end
 
   always @(posedge clk or posedge rst) begin
-    if (rst)
+    if (rst) begin
       ctrl_delay_slot <= 0;
-    else if (padv_execute_o)
+    end else if (padv_execute_o) begin
       ctrl_delay_slot <= execute_delay_slot;
+    end
   end
 
   pu_or1k_cfgrs #(
@@ -950,7 +948,7 @@ module pu_or1k_ctrl_cappuccino #(
   // System group (0) SPR data out
   always @* begin
     spr_sys_group_read = 0;
-    if (spr_access[`OR1K_SPR_SYS_BASE])
+    if (spr_access[`OR1K_SPR_SYS_BASE]) begin
       case(`SPR_OFFSET(spr_addr))
         `SPR_OFFSET(`OR1K_SPR_VR_ADDR):
           spr_sys_group_read = spr_vr;
@@ -977,28 +975,24 @@ module pu_or1k_ctrl_cappuccino #(
         `SPR_OFFSET(`OR1K_SPR_NPC_ADDR):
           spr_sys_group_read = spr_npc;
         `SPR_OFFSET(`OR1K_SPR_SR_ADDR):
-          spr_sys_group_read = {{(OPTION_OPERAND_WIDTH-SPR_SR_WIDTH){1'b0}},
-                                spr_sr};
+          spr_sys_group_read = {{(OPTION_OPERAND_WIDTH-SPR_SR_WIDTH){1'b0}}, spr_sr};
 
         `SPR_OFFSET(`OR1K_SPR_PPC_ADDR):
           spr_sys_group_read = spr_ppc;
         `ifdef OR1K_FPCSR_MASK_FLAGS
         `SPR_OFFSET(`OR1K_SPR_FPCSR_ADDR):
           spr_sys_group_read =
-        {{(OPTION_OPERAND_WIDTH-`OR1K_FPCSR_WIDTH-`OR1K_FPCSR_ALLF_SIZE){1'b0}},
-         spr_fpcsr_mf,spr_fpcsr};
+        {{(OPTION_OPERAND_WIDTH-`OR1K_FPCSR_WIDTH-`OR1K_FPCSR_ALLF_SIZE){1'b0}}, spr_fpcsr_mf,spr_fpcsr};
         `else
         `SPR_OFFSET(`OR1K_SPR_FPCSR_ADDR):
-          spr_sys_group_read = {{(OPTION_OPERAND_WIDTH-`OR1K_FPCSR_WIDTH){1'b0}},
-                                spr_fpcsr};
+          spr_sys_group_read = {{(OPTION_OPERAND_WIDTH-`OR1K_FPCSR_WIDTH){1'b0}}, spr_fpcsr};
         `endif
         `SPR_OFFSET(`OR1K_SPR_EPCR0_ADDR):
           spr_sys_group_read = spr_epcr;
         `SPR_OFFSET(`OR1K_SPR_EEAR0_ADDR):
           spr_sys_group_read = spr_eear;
         `SPR_OFFSET(`OR1K_SPR_ESR0_ADDR):
-          spr_sys_group_read = {{(OPTION_OPERAND_WIDTH-SPR_SR_WIDTH){1'b0}},
-                                spr_esr};
+          spr_sys_group_read = {{(OPTION_OPERAND_WIDTH-SPR_SR_WIDTH){1'b0}}, spr_esr};
         `SPR_OFFSET(`OR1K_SPR_EVBAR_ADDR):
           spr_sys_group_read = spr_evbar;
         `SPR_OFFSET(`OR1K_SPR_ISR0_ADDR):
@@ -1029,11 +1023,14 @@ module pu_or1k_ctrl_cappuccino #(
           spr_sys_group_read = (FEATURE_MULTICORE!="NONE") ?
           multicore_numcores_i : 0;
 
-        default:
+        default: begin
           // GPR read
-          if (spr_addr[10:9] == 2'h2)
+          if (spr_addr[10:9] == 2'h2) begin
             spr_sys_group_read = spr_gpr_dat_i; // Register file
+          end
+        end
       endcase
+    end
   end
 
   // System group read data MUX in
@@ -1083,8 +1080,7 @@ module pu_or1k_ctrl_cappuccino #(
       );
 
       assign except_pic = (|spr_picsr) & spr_sr[`OR1K_SPR_SR_IEE] & !ctrl_op_mtspr_i & !doing_rfe;
-    end
-    else begin
+    end else begin
       assign except_pic = 0;
       assign spr_picsr = 0;
       assign spr_picmr = 0;
@@ -1125,8 +1121,7 @@ module pu_or1k_ctrl_cappuccino #(
         .pcu_event_itlb_miss_i(except_itlb_miss_i),
         .pcu_event_datadep_stall_i(execute_waiting)
       );
-    end
-    else begin
+    end else begin
       assign spr_access_ack[`OR1K_SPR_PC_BASE] = 0;
       assign spr_internal_read_dat[`OR1K_SPR_PC_BASE] = 0;
     end
@@ -1149,11 +1144,9 @@ module pu_or1k_ctrl_cappuccino #(
         .spr_dat_i            (spr_write_dat)
       );
 
-      assign except_ticktimer = spr_ttmr[28] & spr_sr[`OR1K_SPR_SR_TEE] &
-        !ctrl_op_mtspr_i & !doing_rfe;
+      assign except_ticktimer = spr_ttmr[28] & spr_sr[`OR1K_SPR_SR_TEE] & !ctrl_op_mtspr_i & !doing_rfe;
 
-    end
-    else begin
+    end else begin
       assign except_ticktimer = 0;
       assign spr_ttmr = 0;
       assign spr_ttcr = 0;
@@ -1219,8 +1212,9 @@ module pu_or1k_ctrl_cappuccino #(
       `OR1K_SPR_FPU_BASE:
         spr_access[`OR1K_SPR_FPU_BASE] = (FEATURE_FPU!="NONE");
       // generate invalid if the group is not present in the design 
-      default:
+      default: begin
         spr_access = 0;
+      end
     endcase
   end
 
@@ -1255,12 +1249,13 @@ module pu_or1k_ctrl_cappuccino #(
 
       // Generate ack back to the debug interface bus
       always @(posedge clk or posedge rst) begin
-        if (rst)
+        if (rst) begin
           du_ack <= 0;
-        else if (du_ack)
+        end else if (du_ack) begin
           du_ack <= 0;
-        else if (du_stb_i)
+        end else if (du_stb_i) begin
           du_ack <= spr_ack;
+        end
       end
 
       assign du_ack_o = du_ack;
@@ -1273,13 +1268,13 @@ module pu_or1k_ctrl_cappuccino #(
       assign du_dat_o = du_read_dat;
 
       always @(posedge clk) begin
-        if (rst)
+        if (rst) begin
           cpu_stall <= 0;
-        else if (!du_stall_i)
+        end else if (!du_stall_i) begin
           cpu_stall <= 0;
-        else if (padv_execute_o & !execute_bubble_i & du_stall_i |
-          du_stall_o)
+        end else if (padv_execute_o & !execute_bubble_i & du_stall_i | du_stall_o) begin
           cpu_stall <= 1;
+        end
       end
 
       // goes out to the debug interface and comes back 1 cycle later via du_stall_i
@@ -1297,30 +1292,33 @@ module pu_or1k_ctrl_cappuccino #(
       // record if NPC was written while we were stalled.
       // If so, we will use this value for restarting
       always @(posedge clk or posedge rst) begin
-        if (rst)
+        if (rst) begin
           du_npc_written <= 0;
-        else if (du_restart_from_stall)
+        end else if (du_restart_from_stall) begin
           du_npc_written <= 0;
-        else if (du_npc_write)
+        end else if (du_npc_write) begin
           du_npc_written <= 1;
+        end
       end
 
       always @(posedge clk or posedge rst) begin
-        if (rst)
+        if (rst) begin
           stepped_into_exception <= 0;
-        else if (du_restart_from_stall)
+        end else if (du_restart_from_stall) begin
           stepped_into_exception <= 0;
-        else if (exception & stepping & (padv_ctrl | ctrl_stage_exceptions))
+        end else if (exception & stepping & (padv_ctrl | ctrl_stage_exceptions)) begin
           stepped_into_exception <= 1;
+        end
       end
 
       always @(posedge clk or posedge rst) begin
-        if (rst)
+        if (rst) begin
           stepped_into_rfe <= 0;
-        else if (du_restart_from_stall)
+        end else if (du_restart_from_stall) begin
           stepped_into_rfe <= 0;
-        else if (stepping & padv_ctrl)
+        end else if (stepping & padv_ctrl) begin
           stepped_into_rfe <= ctrl_op_rfe_i;
+        end
       end
 
       assign du_restart_pc_o = spr_npc;
@@ -1331,30 +1329,32 @@ module pu_or1k_ctrl_cappuccino #(
       assign stepping = spr_dmr1[`OR1K_SPR_DMR1_ST] & spr_dsr[`OR1K_SPR_DSR_TE];
 
       always @(posedge clk or posedge rst) begin
-        if (rst)
+        if (rst) begin
           pstep <= 0;
-        else if (du_restart_from_stall & stepping)
+        end else if (du_restart_from_stall & stepping) begin
           pstep <= 6'h1;
-        else if ((pstep[0] & fetch_valid_i) |
+        end else if ((pstep[0] & fetch_valid_i) |
                  // decode is always single cycle
                  (pstep[1] & padv_decode_o) |
                  // execute stage
                  (pstep[2] & (execute_valid_i | ctrl_stage_exceptions)) |
                  // ctrl stage
                  (pstep[3] & (ctrl_valid_i | ctrl_stage_exceptions)) |
-                 pstep[4])
+                 pstep[4]) begin
           pstep <= {pstep[4:0],1'b0};
+        end
       end
 
       always @(posedge clk or posedge rst) begin
-        if (rst)
+        if (rst) begin
           branch_step <= 0;
-        else if (du_npc_written)
+        end else if (du_npc_written) begin
           branch_step <= 0;
-        else if (stepping & pstep[2])
+        end else if (stepping & pstep[2]) begin
           branch_step <= {branch_step[0], decode_branch_i};
-        else if (!stepping & padv_ctrl)
+        end else if (!stepping & padv_ctrl) begin
           branch_step <= {branch_step[0], ctrl_delay_slot};
+        end
       end
 
       assign stepped_into_delay_slot = branch_step[1] & stepping;
@@ -1395,18 +1395,20 @@ module pu_or1k_ctrl_cappuccino #(
 
       // Put the incoming stall signal through a register to detect FE
       always @(posedge clk or posedge rst) begin
-        if (rst)
+        if (rst) begin
           du_stall_r <= 0;
-        else
+        end else begin
           du_stall_r <= du_stall_i;
+        end
       end
 
       // DMR1
       always @(posedge clk or posedge rst) begin
-        if (rst)
+        if (rst) begin
           spr_dmr1 <= 0;
-        else if (spr_we && spr_addr==`OR1K_SPR_DMR1_ADDR)
+        end else if (spr_we && spr_addr==`OR1K_SPR_DMR1_ADDR) begin
           spr_dmr1[23:0] <= spr_write_dat[23:0];
+        end
       end
 
       // DMR2
@@ -1416,59 +1418,55 @@ module pu_or1k_ctrl_cappuccino #(
 
       // DSR
       always @(posedge clk or posedge rst) begin
-        if (rst)
+        if (rst) begin
           spr_dsr <= 0;
-        else if (spr_we && spr_addr==`OR1K_SPR_DSR_ADDR)
+        end else if (spr_we && spr_addr==`OR1K_SPR_DSR_ADDR) begin
           spr_dsr[13:0] <= spr_write_dat[13:0];
+        end
       end
 
       // DRR
       always @(posedge clk or posedge rst) begin
-        if (rst)
+        if (rst) begin
           spr_drr <= 0;
-        else if (spr_we && spr_addr==`OR1K_SPR_DRR_ADDR)
+        end else if (spr_we && spr_addr==`OR1K_SPR_DRR_ADDR) begin
           spr_drr[13:0] <= spr_write_dat[13:0];
-        else if (stall_on_trap & padv_ctrl & except_trap_i)
+        end else if (stall_on_trap & padv_ctrl & except_trap_i) begin
           spr_drr[`OR1K_SPR_DRR_TE] <= 1;
-      end
-    end
-    else
-      begin : no_du
-        assign du_access = 0;
-        assign du_stall_o = 0;
-        assign du_ack_o = 0;
-        assign du_restart_o = 0;
-        assign du_restart_pc_o = 0;
-        assign stepping = 0;
-        assign du_npc_write = 0;
-        assign stepped_into_delay_slot = 0;
-        assign du_dat_o = 0;
-        assign du_restart_from_stall = 0;
-        assign spr_access_ack[`OR1K_SPR_DU_BASE] = 0;
-        assign spr_internal_read_dat[`OR1K_SPR_DU_BASE] = 0;
-        assign stall_on_trap = 0;
-
-        always @(posedge clk) begin
-          spr_dmr1 <= 0;
-          spr_dmr2 <= 0;
-          spr_dsr <= 0;
-          spr_drr <= 0;
-          du_npc_written <= 0;
-          cpu_stall <= 0;
         end
       end
+    end else begin : no_du
+      assign du_access = 0;
+      assign du_stall_o = 0;
+      assign du_ack_o = 0;
+      assign du_restart_o = 0;
+      assign du_restart_pc_o = 0;
+      assign stepping = 0;
+      assign du_npc_write = 0;
+      assign stepped_into_delay_slot = 0;
+      assign du_dat_o = 0;
+      assign du_restart_from_stall = 0;
+      assign spr_access_ack[`OR1K_SPR_DU_BASE] = 0;
+      assign spr_internal_read_dat[`OR1K_SPR_DU_BASE] = 0;
+      assign stall_on_trap = 0;
+
+      always @(posedge clk) begin
+        spr_dmr1 <= 0;
+        spr_dmr2 <= 0;
+        spr_dsr <= 0;
+        spr_drr <= 0;
+        du_npc_written <= 0;
+        cpu_stall <= 0;
+      end
+    end
   endgenerate
 
   // Controls to generate ACKs from units that are external to this module
   generate
     if (FEATURE_DMMU!="NONE") begin : dmmu_ctrl
-      assign spr_access_ack[`OR1K_SPR_DMMU_BASE] = spr_bus_ack_dmmu_i &
-        spr_access[`OR1K_SPR_DMMU_BASE];
-      assign spr_internal_read_dat[`OR1K_SPR_DMMU_BASE] =
-        spr_bus_dat_dmmu_i &
-      {OPTION_OPERAND_WIDTH{spr_access[`OR1K_SPR_DMMU_BASE]}};
-    end
-    else begin
+      assign spr_access_ack[`OR1K_SPR_DMMU_BASE] = spr_bus_ack_dmmu_i & spr_access[`OR1K_SPR_DMMU_BASE];
+      assign spr_internal_read_dat[`OR1K_SPR_DMMU_BASE] = spr_bus_dat_dmmu_i & {OPTION_OPERAND_WIDTH{spr_access[`OR1K_SPR_DMMU_BASE]}};
+    end else begin
       assign spr_access_ack[`OR1K_SPR_DMMU_BASE] = 0;
       assign spr_internal_read_dat[`OR1K_SPR_DMMU_BASE] = 0;
     end
@@ -1476,13 +1474,9 @@ module pu_or1k_ctrl_cappuccino #(
 
   generate
     if (FEATURE_IMMU!="NONE") begin : immu_ctrl
-      assign spr_access_ack[`OR1K_SPR_IMMU_BASE] = spr_bus_ack_immu_i &
-        spr_access[`OR1K_SPR_IMMU_BASE];
-      assign spr_internal_read_dat[`OR1K_SPR_IMMU_BASE] =
-        spr_bus_dat_immu_i &
-      {OPTION_OPERAND_WIDTH{spr_access[`OR1K_SPR_IMMU_BASE]}};
-    end
-    else begin
+      assign spr_access_ack[`OR1K_SPR_IMMU_BASE] = spr_bus_ack_immu_i & spr_access[`OR1K_SPR_IMMU_BASE];
+      assign spr_internal_read_dat[`OR1K_SPR_IMMU_BASE] = spr_bus_dat_immu_i & {OPTION_OPERAND_WIDTH{spr_access[`OR1K_SPR_IMMU_BASE]}};
+    end else begin
       assign spr_access_ack[`OR1K_SPR_IMMU_BASE] = 0;
       assign spr_internal_read_dat[`OR1K_SPR_IMMU_BASE] = 0;
     end
@@ -1490,12 +1484,9 @@ module pu_or1k_ctrl_cappuccino #(
 
   generate
     if (FEATURE_DATACACHE!="NONE") begin : datacache_ctrl
-      assign spr_access_ack[`OR1K_SPR_DC_BASE] = spr_bus_ack_dc_i &
-        spr_access[`OR1K_SPR_DC_BASE];
-      assign spr_internal_read_dat[`OR1K_SPR_DC_BASE] =
-        spr_bus_dat_dc_i & {OPTION_OPERAND_WIDTH{spr_access[`OR1K_SPR_DC_BASE]}};
-    end
-    else begin
+      assign spr_access_ack[`OR1K_SPR_DC_BASE] = spr_bus_ack_dc_i & spr_access[`OR1K_SPR_DC_BASE];
+      assign spr_internal_read_dat[`OR1K_SPR_DC_BASE] = spr_bus_dat_dc_i & {OPTION_OPERAND_WIDTH{spr_access[`OR1K_SPR_DC_BASE]}};
+    end else begin
       assign spr_access_ack[`OR1K_SPR_DC_BASE] = 0;
       assign spr_internal_read_dat[`OR1K_SPR_DC_BASE] = 0;
     end
@@ -1503,12 +1494,9 @@ module pu_or1k_ctrl_cappuccino #(
 
   generate
     if (FEATURE_INSTRUCTIONCACHE!="NONE") begin : instructioncache_ctrl
-      assign spr_access_ack[`OR1K_SPR_IC_BASE] = spr_bus_ack_ic_i &
-        spr_access[`OR1K_SPR_IC_BASE];
-      assign spr_internal_read_dat[`OR1K_SPR_IC_BASE] =
-        spr_bus_dat_ic_i & {OPTION_OPERAND_WIDTH{spr_access[`OR1K_SPR_IC_BASE]}};
-    end
-    else begin
+      assign spr_access_ack[`OR1K_SPR_IC_BASE] = spr_bus_ack_ic_i & spr_access[`OR1K_SPR_IC_BASE];
+      assign spr_internal_read_dat[`OR1K_SPR_IC_BASE] = spr_bus_dat_ic_i & {OPTION_OPERAND_WIDTH{spr_access[`OR1K_SPR_IC_BASE]}};
+    end else begin
       assign spr_access_ack[`OR1K_SPR_IC_BASE] = 0;
       assign spr_internal_read_dat[`OR1K_SPR_IC_BASE] = 0;
     end
@@ -1516,13 +1504,9 @@ module pu_or1k_ctrl_cappuccino #(
 
   generate
     if (FEATURE_MAC!="NONE") begin : mac_ctrl
-      assign spr_access_ack[`OR1K_SPR_MAC_BASE] = spr_bus_ack_mac_i &
-        spr_access[`OR1K_SPR_MAC_BASE];
-      assign spr_internal_read_dat[`OR1K_SPR_MAC_BASE] =
-        spr_bus_dat_mac_i &
-      {OPTION_OPERAND_WIDTH{spr_access[`OR1K_SPR_MAC_BASE]}};
-    end
-    else begin
+      assign spr_access_ack[`OR1K_SPR_MAC_BASE] = spr_bus_ack_mac_i & spr_access[`OR1K_SPR_MAC_BASE];
+      assign spr_internal_read_dat[`OR1K_SPR_MAC_BASE] = spr_bus_dat_mac_i & {OPTION_OPERAND_WIDTH{spr_access[`OR1K_SPR_MAC_BASE]}};
+    end else begin
       assign spr_access_ack[`OR1K_SPR_MAC_BASE] = 0;
       assign spr_internal_read_dat[`OR1K_SPR_MAC_BASE] = 0;
     end
@@ -1530,12 +1514,9 @@ module pu_or1k_ctrl_cappuccino #(
 
   generate
     if (FEATURE_PMU!="NONE") begin : pmu_ctrl
-      assign spr_access_ack[`OR1K_SPR_PM_BASE] = spr_bus_ack_pmu_i &
-        spr_access[`OR1K_SPR_PM_BASE];
-      assign spr_internal_read_dat[`OR1K_SPR_PM_BASE] =
-        spr_bus_dat_pmu_i & {OPTION_OPERAND_WIDTH{spr_access[`OR1K_SPR_PM_BASE]}};
-    end
-    else begin
+      assign spr_access_ack[`OR1K_SPR_PM_BASE] = spr_bus_ack_pmu_i & spr_access[`OR1K_SPR_PM_BASE];
+      assign spr_internal_read_dat[`OR1K_SPR_PM_BASE] = spr_bus_dat_pmu_i & {OPTION_OPERAND_WIDTH{spr_access[`OR1K_SPR_PM_BASE]}};
+    end else begin
       assign spr_access_ack[`OR1K_SPR_PM_BASE] = 0;
       assign spr_internal_read_dat[`OR1K_SPR_PM_BASE] = 0;
     end
@@ -1544,11 +1525,8 @@ module pu_or1k_ctrl_cappuccino #(
   generate
     if (FEATURE_FPU!="NONE") begin : fpu_ctrl
       assign spr_access_ack[`OR1K_SPR_FPU_BASE] = spr_bus_ack_fpu_i;
-      assign spr_internal_read_dat[`OR1K_SPR_FPU_BASE] =
-        spr_bus_dat_fpu_i &
-      {OPTION_OPERAND_WIDTH{spr_access[`OR1K_SPR_FPU_BASE]}};
-    end
-    else begin
+      assign spr_internal_read_dat[`OR1K_SPR_FPU_BASE] = spr_bus_dat_fpu_i & {OPTION_OPERAND_WIDTH{spr_access[`OR1K_SPR_FPU_BASE]}};
+    end else begin
       assign spr_access_ack[`OR1K_SPR_FPU_BASE] = 0;
       assign spr_internal_read_dat[`OR1K_SPR_FPU_BASE] = 0;
     end

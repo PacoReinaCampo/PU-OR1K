@@ -264,48 +264,53 @@ module pu_or1k_lsu_cappuccino #(
   assign lsu_except_dpagefault_o = except_dpagefault & !pipeline_flush_i;
 
   always @(posedge clk or posedge rst) begin
-    if (rst)
+    if (rst) begin
       access_done <= 0;
-    else if (padv_execute_i)
+    end else if (padv_execute_i) begin
       access_done <= 0;
-    else if (lsu_ack)
+    end else if (lsu_ack) begin
       access_done <= 1;
+    end
   end
 
   always @(posedge clk or posedge rst) begin
-    if (rst)
+    if (rst) begin
       except_dbus <= 0;
-    else if (padv_execute_i | pipeline_flush_i)
+    end else if (padv_execute_i | pipeline_flush_i) begin
       except_dbus <= 0;
-    else if (dbus_err_i)
+    end else if (dbus_err_i) begin
       except_dbus <= 1;
+    end
   end
 
   always @(posedge clk or posedge rst) begin
-    if (rst)
+    if (rst) begin
       except_dtlb_miss_r <= 0;
-    else if (padv_execute_i)
+    end else if (padv_execute_i) begin
       except_dtlb_miss_r <= 0;
-    else if (except_dtlb_miss)
+    end else if (except_dtlb_miss) begin
       except_dtlb_miss_r <= 1;
+    end
   end
 
   always @(posedge clk or posedge rst) begin
-    if (rst)
+    if (rst) begin
       except_dpagefault_r <= 0;
-    else if (padv_execute_i)
+    end else if (padv_execute_i) begin
       except_dpagefault_r <= 0;
-    else if (except_dpagefault)
+    end else if (except_dpagefault) begin
       except_dpagefault_r <= 1;
+    end
   end
 
   always @(posedge clk or posedge rst) begin
-    if (rst)
+    if (rst) begin
       store_buffer_err_o <= 0;
-    else if (pipeline_flush_i)
+    end else if (pipeline_flush_i) begin
       store_buffer_err_o <= 0;
-    else if (dbus_err_i & dbus_we_o)
+    end else if (dbus_err_i & dbus_we_o) begin
       store_buffer_err_o <= 1;
+    end
   end
 
   // Big endian bus mapping
@@ -531,7 +536,7 @@ module pu_or1k_lsu_cappuccino #(
         end
       end
 
-      default:  begin
+      default: begin
         state <= IDLE;
       end
     endcase

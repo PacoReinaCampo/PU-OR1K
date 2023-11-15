@@ -393,8 +393,9 @@ module pu_or1k_dmmu #(
             tlb_reload_state <= TLB_IDLE;
           end
 
-          default:
+          default: begin
             tlb_reload_state <= TLB_IDLE;
+          end
         endcase
 
         // Abort if enable deasserts in the middle of a reload

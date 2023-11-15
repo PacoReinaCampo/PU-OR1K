@@ -114,8 +114,7 @@ module pu_or1k_cache_lru #(
     // the upper half of the
     offset = 0;
 
-    // 1. Fill the matrix (expand) with the values. The entry (i,i) is
-    //    statically one.
+    // 1. Fill the matrix (expand) with the values. The entry (i,i) is statically one.
     for (i = 0; i < NUMWAYS; i = i + 1) begin
       expand[i][i] = 1'b1;
 
@@ -137,8 +136,7 @@ module pu_or1k_cache_lru #(
     // 2  (2<0)  (2<1)    1    (2<3)    2 1 1 1 1
     // 3  (3<0)  (3<1)  (3<2)    1      3 0 0 0 1
 
-    //  2. The LRU_pre vector is the vector of the ANDs of the each
-    //     row.
+    // 2. The LRU_pre vector is the vector of the ANDs of the each row.
     for (i = 0; i < NUMWAYS; i = i + 1) begin
       lru_pre[i] = &expand[i];
     end
@@ -159,10 +157,10 @@ module pu_or1k_cache_lru #(
     // At this point you can also see why we initialize the diagonal
     // with 1.
 
-    //  3. Update the values with the access vector (if any) in the
-    //     following way: If access[i] is set, the values in row i
-    //     are set to 0. Similarly, the values in column i are set
-    //     to 1.
+    // 3. Update the values with the access vector (if any) in the
+    //    following way: If access[i] is set, the values in row i
+    //    are set to 0. Similarly, the values in column i are set
+    //    to 1.
     for (i = 0; i < NUMWAYS; i = i + 1) begin
       if (access[i]) begin
         for (j = 0; j < NUMWAYS; j = j + 1) begin

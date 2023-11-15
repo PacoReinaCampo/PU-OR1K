@@ -190,8 +190,9 @@ module pu_or1k_rf_cappuccino #(
   end
 
   always @(posedge clk) begin
-    if (padv_decode_i)
+    if (padv_decode_i) begin
       wb_hazard_result <= result_i;
+    end
   end
 
   // Bypassing to decode stage
@@ -309,7 +310,6 @@ module pu_or1k_rf_cappuccino #(
         assign rfa_rdad[RF_ADDR_WIDTH-1:OPTION_RF_ADDR_WIDTH] = {(RF_ADDR_WIDTH-OPTION_RF_ADDR_WIDTH){1'b0}};
         assign rfb_rdad[RF_ADDR_WIDTH-1:OPTION_RF_ADDR_WIDTH] = {(RF_ADDR_WIDTH-OPTION_RF_ADDR_WIDTH){1'b0}};
       end
-
     end else begin
       assign spr_gpr_ack_o = 1;
 

@@ -399,7 +399,9 @@ module pu_or1k_decode #(
           decode_except_illegal_o = 1'b1;
         end
       end
-      default: decode_except_illegal_o = 1'b1;
+      default: begin
+        decode_except_illegal_o = 1'b1;
+      end
     endcase
   end
 
