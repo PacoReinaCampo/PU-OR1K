@@ -288,7 +288,6 @@ module pu_or1k_pfpu32_addsub (
          (s2o_exp10c == s3t_nlz) ? {s3t_nlz_m1,10'd1} :
          {s3t_exp10c_m1[4:0],10'd1};
 
-
   // registering output
   always @(posedge clk) begin
     if(adv_i) begin

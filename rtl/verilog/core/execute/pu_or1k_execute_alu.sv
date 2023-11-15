@@ -194,7 +194,6 @@ module pu_or1k_execute_alu #(
   wire                                     div_valid;
   wire                                     div_by_zero;
 
-
   wire [OPTION_OPERAND_WIDTH         -1:0] ffl1_result;
 
   wire                                     op_cmov;

@@ -85,7 +85,6 @@ module pu_or1k_dcache #(
     // this cycle. The LSU may need to stall the pipeline.
     output                                snoop_hit_o,
 
-
     // SPR interface
     input      [                    15:0] spr_bus_addr_i,
     input                                 spr_bus_we_i,

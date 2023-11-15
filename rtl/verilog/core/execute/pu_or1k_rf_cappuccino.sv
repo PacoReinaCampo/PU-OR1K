@@ -58,7 +58,6 @@ module pu_or1k_rf_cappuccino #(
     input       padv_execute_i,
     input       padv_ctrl_i,
 
-
     input       decode_valid_i,
 
     input       fetch_rf_adr_valid_i,
@@ -254,7 +253,6 @@ module pu_or1k_rf_cappuccino #(
 
   wire [OPTION_OPERAND_WIDTH-1:0] ctrl_to_decode_result_b;
   assign ctrl_to_decode_result_b = use_last_wb_b ? wb_to_decode_result_b : result_i;
-
 
   assign decode_rfa_o = execute_to_decode_bypass_a ? ctrl_alu_result_i :
     ctrl_to_decode_bypass_a ? ctrl_to_decode_result_a :

@@ -173,7 +173,6 @@ module pu_or1k_monitor #(
     input [31:0] pc;
     input flag;
 
-
     reg rD_used;
     reg [4:0] rD_num, rA_num, rB_num;
     reg [  15:0] imm_16bit;

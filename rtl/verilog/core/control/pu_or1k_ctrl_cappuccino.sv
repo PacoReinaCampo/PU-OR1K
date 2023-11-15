@@ -596,7 +596,6 @@ module pu_or1k_ctrl_cappuccino #(
       wire [`OR1K_FPCSR_ALLF_SIZE-1:0] masked_fpcsr_flags =
       spr_fpcsr[`OR1K_FPCSR_ALLF] & spr_fpcsr_mf;
 
-
       wire [`OR1K_FPCSR_ALLF_SIZE-1:0] fpu_allf =
       ctrl_fpcsr_set_i ? masked_fpres_flags : masked_fpcsr_flags;
       `else
@@ -650,7 +649,6 @@ module pu_or1k_ctrl_cappuccino #(
       end
     end
   endgenerate // FPU related: FPCSR and exception
-
 
   // Supervision register
   always @(posedge clk or posedge rst) begin

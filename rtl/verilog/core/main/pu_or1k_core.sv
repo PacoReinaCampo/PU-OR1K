@@ -398,7 +398,6 @@ module pu_or1k_core #(
     .traceport_exec_wbreg_o   (traceport_exec_wbreg_o[OPTION_RF_ADDR_WIDTH-1:0]),
     .traceport_exec_wben_o    (traceport_exec_wben_o),
 
-
     .spr_bus_addr_o    (spr_bus_addr_o[15:0]),
     .spr_bus_we_o      (spr_bus_we_o),
     .spr_bus_stb_o     (spr_bus_stb_o),

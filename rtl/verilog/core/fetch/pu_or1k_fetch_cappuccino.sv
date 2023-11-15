@@ -150,7 +150,6 @@ module pu_or1k_fetch_cappuccino #(
 
   wire                            ic_access;
 
-
   wire [OPTION_OPERAND_WIDTH-1:0] immu_phys_addr;
   wire                            immu_cache_inhibit;
   wire                            pagefault;
@@ -261,7 +260,6 @@ module pu_or1k_fetch_cappuccino #(
       pc_addr = pc_fetch + 4;
     end
   end
-
 
   // Register fetch pc from address stage
   always @(posedge clk or posedge rst) begin

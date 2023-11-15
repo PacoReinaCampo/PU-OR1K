@@ -103,13 +103,11 @@ module pu_or1k_execute_ctrl_cappuccino #(
     input [`OR1K_FPCSR_WIDTH-1:0]    fpcsr_i,
     input                            fpcsr_set_i,
 
-
     input [OPTION_OPERAND_WIDTH-1:0] pc_execute_i,
 
     input      execute_rf_wb_i,
     output reg ctrl_rf_wb_o,
     output reg wb_rf_wb_o,
-
 
     // address of destination register from execute stage
     input      [OPTION_RF_ADDR_WIDTH-1:0] execute_rfd_adr_i,
@@ -134,7 +132,6 @@ module pu_or1k_execute_ctrl_cappuccino #(
 
     output reg [`OR1K_FPCSR_WIDTH-1:0] ctrl_fpcsr_o,
     output reg                         ctrl_fpcsr_set_o,
-
 
     output reg [OPTION_OPERAND_WIDTH-1:0] pc_ctrl_o,
 

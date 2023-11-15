@@ -135,7 +135,6 @@ module pu_or1k_decode #(
   output                            decode_op_msync_o,
   output [`OR1K_FPUOP_WIDTH   -1:0] decode_op_fpu_o,
 
-
   // Adder control logic
   output decode_adder_do_sub_o,
   output decode_adder_do_carry_o,
@@ -262,7 +261,6 @@ module pu_or1k_decode #(
 
   // Immediate in l.mtspr is broken up, reassemble
   assign decode_imm16_o = (decode_op_mtspr_o | decode_op_lsu_store_o) ? {decode_insn_i[25:21], decode_insn_i[10:0]} : decode_insn_i[`OR1K_IMM_SELECT];
-
 
   // Upper 10 bits for jump/branch instructions
   assign decode_immjbr_upper_o = decode_insn_i[25:16];

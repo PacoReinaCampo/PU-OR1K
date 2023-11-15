@@ -242,7 +242,6 @@ module pu_or1k_lsu_cappuccino #(
   assign align_err_word = |ctrl_lsu_adr_i[1:0];
   assign align_err_short = ctrl_lsu_adr_i[0];
 
-
   assign lsu_valid_o = (lsu_ack | access_done) & !tlb_reload_busy & !dc_snoop_hit;
 
   assign lsu_except_dbus_o = except_dbus | store_buffer_err_o;
