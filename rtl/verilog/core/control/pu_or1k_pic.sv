@@ -113,8 +113,7 @@ module pu_or1k_pic #(
           end
         end
       end
-    end
-    else if (OPTION_PIC_TRIGGER=="LEVEL") begin : level_triggered
+    end else if (OPTION_PIC_TRIGGER=="LEVEL") begin : level_triggered
       for(irqline=0;irqline<32;irqline=irqline+1) begin: picsrlevelgenerate
         // PIC status register
         always @(*) begin

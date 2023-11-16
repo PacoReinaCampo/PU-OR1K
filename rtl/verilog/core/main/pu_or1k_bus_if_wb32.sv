@@ -113,8 +113,7 @@ module pu_or1k_bus_if_wb32 #(
 
       assign address_differs   = (burst_address!=cpu_adr_i[31:2]);
       assign burst_wrap_finish = burst_wrap_start - 1;
-      assign finish_burst      = (bursting & ((BURST_LENGTH!=0 &&
-                                               burst_address[BADDR_WITH+2-1:2]==(burst_wrap_finish)) | address_differs | !cpu_req_i));
+      assign finish_burst      = (bursting & ((BURST_LENGTH!=0 && burst_address[BADDR_WITH+2-1:2]==(burst_wrap_finish)) | address_differs | !cpu_req_i));
 
       always @(posedge clk or posedge rst) begin
         if (rst) begin

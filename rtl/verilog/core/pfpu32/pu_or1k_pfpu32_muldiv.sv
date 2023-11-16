@@ -539,7 +539,7 @@ module pu_or1k_pfpu32_muldiv (
   wire [32:0] itr_rndM33 = // bits [6],[5] ... [0]
               { 26'd0,(itr_rndQ & itr_rndQ1xx),(itr_rndQ & itr_rndQ01x), // round resulting quotient
                  4'd0,(itr_rndD & s3o_mul33s) };                         // round intermediate divisor
-                                                                         //   rounding
+                                                                         // rounding
   assign itr_qtnt33 = s3o_mul33o + itr_rndM33;
 
   // compute 2's complement or reminder (for sticky bit detection)

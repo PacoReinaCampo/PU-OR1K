@@ -209,8 +209,7 @@ module pu_or1k_execute_alu #(
   generate
     if (CALCULATE_BRANCH_DEST=="TRUE") begin : calculate_branch_dest
       assign a = (op_jbr_i | op_jr_i) ? pc_execute_i : rfa_i;
-      assign b = immediate_sel_i ? immediate_i :
-        op_jbr_i ? {{4{immjbr_upper_i[9]}},immjbr_upper_i,imm16_i,2'b00} : rfb_i;
+      assign b = immediate_sel_i ? immediate_i : op_jbr_i ? {{4{immjbr_upper_i[9]}},immjbr_upper_i,imm16_i,2'b00} : rfb_i;
     end else begin
       assign a = rfa_i;
       assign b = immediate_sel_i ? immediate_i : rfb_i;
@@ -288,6 +287,7 @@ module pu_or1k_execute_alu #(
           mul_opa <= decode_a;
           mul_opb <= decode_b;
         end
+
         if (padv_execute_i) begin
           mul_result1 <= mul_opa * mul_opb;
         end
@@ -419,8 +419,7 @@ module pu_or1k_execute_alu #(
       reg                              div_done;
       reg                              div_by_zero_r;
 
-      assign div_sub = {div_r[OPTION_OPERAND_WIDTH-2:0],
-                        div_n[OPTION_OPERAND_WIDTH-1]} - div_d;
+      assign div_sub = {div_r[OPTION_OPERAND_WIDTH-2:0], div_n[OPTION_OPERAND_WIDTH-1]} - div_d;
 
       // Cycle counter
       always @(posedge clk or posedge rst) begin
@@ -691,7 +690,7 @@ module pu_or1k_execute_alu #(
     if (FEATURE_EXT=="ENABLED") begin
       always @* begin
         case(opc_alu_i)
-          `OR1K_ALU_OPC_EXTBH:
+          `OR1K_ALU_OPC_EXTBH: begin
             case(opc_alu_ext)
               `OR1K_ALU_OPC_SECONDARY_EXTBH_EXTBS,
               `OR1K_ALU_OPC_SECONDARY_EXTBH_EXTBZ:
@@ -703,15 +702,19 @@ module pu_or1k_execute_alu #(
                 ext_result = a[15] && (opc_alu_ext == `OR1K_ALU_OPC_SECONDARY_EXTBH_EXTHS) ?
               {{(OPTION_OPERAND_WIDTH-16){1'b1}}, a[15:0]} :
               {{(OPTION_OPERAND_WIDTH-16){1'b0}}, a[15:0]};
-              default:
+              default: begin
                 ext_result = a;
+              end
             endcase
-          `OR1K_ALU_OPC_EXTW:
+          end
+          `OR1K_ALU_OPC_EXTW: begin
             //`OR1K_ALU_OPC_SECONDARY_EXTW_EXTWS,
             //`OR1K_ALU_OPC_SECONDARY_EXTW_EXTWZ:
             ext_result = a;
-          default:
+          end
+          default: begin
             ext_result = a;
+          end
         endcase
       end
     end
@@ -749,14 +752,18 @@ module pu_or1k_execute_alu #(
   reg [3:0] logic_lut;
   always @(*) begin
     case(opc_alu_i)
-      `OR1K_ALU_OPC_AND:
+      `OR1K_ALU_OPC_AND: begin
         logic_lut = 4'b1000;
-      `OR1K_ALU_OPC_OR:
+      end
+      `OR1K_ALU_OPC_OR: begin
         logic_lut = 4'b1110;
-      `OR1K_ALU_OPC_XOR:
+      end
+      `OR1K_ALU_OPC_XOR: begin
         logic_lut = 4'b0110;
-      default:
+      end
+      default: begin
         logic_lut = 0;
+      end
     endcase
     if (!op_alu_i) begin
       logic_lut = 0;
