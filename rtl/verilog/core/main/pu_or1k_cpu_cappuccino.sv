@@ -934,7 +934,7 @@ module pu_or1k_cpu_cappuccino #(
     // verilator public
     input [RF_ADDR_WIDTH-1:0] gpr_num;
     begin
-      // TODO: handle load ops
+      // TO-DO: handle load ops
       if ((pu_or1k_rf_cappuccino.execute_rfd_adr_i == gpr_num[4:0]) & pu_or1k_rf_cappuccino.execute_rf_wb_i) begin
         get_gpr = alu_result_o;
       end else if ((pu_or1k_rf_cappuccino.ctrl_rfd_adr_i == gpr_num[4:0]) & pu_or1k_rf_cappuccino.ctrl_rf_wb_i) begin

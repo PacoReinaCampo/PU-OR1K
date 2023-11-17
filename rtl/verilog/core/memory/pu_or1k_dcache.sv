@@ -437,7 +437,7 @@ module pu_or1k_dcache #(
             end
           end
           // Abort refill on snoop-hit
-          // TODO: only abort on snoop-hits to refill address
+          // TO-DO: only abort on snoop-hits to refill address
           if (snoop_hit) begin
             refill_valid   <= 0;
             refill_valid_r <= 0;

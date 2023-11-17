@@ -478,7 +478,7 @@ module pu_or1k_lsu_cappuccino #(
           end
         end
 
-        // TODO: only abort on snoop-hits to refill address
+        // TO-DO: only abort on snoop-hits to refill address
         if (dbus_err_i | dc_snoop_hit) begin
           dbus_req_o <= 0;
           state <= IDLE;

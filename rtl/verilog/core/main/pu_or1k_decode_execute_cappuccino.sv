@@ -587,7 +587,7 @@ module pu_or1k_decode_execute_cappuccino #(
   end
 
   // Calculate the link register result
-  // TODO: investigate if the ALU adder can be used for this without
+  // TO-DO: investigate if the ALU adder can be used for this without
   // introducing critical paths
   always @(posedge clk) begin
     if (padv_i) begin

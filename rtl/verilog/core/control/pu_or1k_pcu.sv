@@ -80,7 +80,7 @@ module pu_or1k_pcu #(
   wire pcu_pcmr_access;
 
   // check if we access pcu
-  // TODO: generate this signals according to present units
+  // TO-DO: generate this signals according to present units
   assign pcu_pccr_access = spr_access_i &
     ((`SPR_OFFSET(spr_addr_i) == `SPR_OFFSET(`OR1K_SPR_PCCR0_ADDR)) |
      (`SPR_OFFSET(spr_addr_i) == `SPR_OFFSET(`OR1K_SPR_PCCR1_ADDR)) |
