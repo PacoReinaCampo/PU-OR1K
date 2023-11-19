@@ -50,7 +50,7 @@ module pu_or1k_testbench_utils;
       $finish;
     end
 
-  // FIXME: Add more options for VCD logging
+  // FIX-ME: Add more options for VCD logging
   reg [MAX_STRING_LEN*CHAR_WIDTH-1:0] testcase;
 
   initial begin

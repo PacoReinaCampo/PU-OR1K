@@ -411,11 +411,11 @@
 `define OR1K_SPR_SR_CID 31:28  // Context ID
 
 // Version register - DEPRECATED
-`define OR1K_SPR_VR_REV 5:0      // Revision
-`define OR1K_SPR_VR_UVRP 6        // Updated Version Registers Present
+`define OR1K_SPR_VR_REV 5:0  // Revision
+`define OR1K_SPR_VR_UVRP 6  // Updated Version Registers Present
 `define OR1K_SPR_VR_RESERVED 15:7  // Reserved
-`define OR1K_SPR_VR_CFG 23:16    // Configuration Template
-`define OR1K_SPR_VR_VER 31:24    // Version
+`define OR1K_SPR_VR_CFG 23:16  // Configuration Template
+`define OR1K_SPR_VR_VER 31:24  // Version
 
 // Unit Present register
 `define OR1K_SPR_UPR_UP 0
@@ -440,11 +440,11 @@
 `define OR1K_SPR_CPUCFGR_OF32S 7
 `define OR1K_SPR_CPUCFGR_OF64S 8
 `define OR1K_SPR_CPUCFGR_OV64S 9
-`define OR1K_SPR_CPUCFGR_ND 10 // No delay-slot implementation
-`define OR1K_SPR_CPUCFGR_AVRP 11 // Arch. version registers
-`define OR1K_SPR_CPUCFGR_EVBARP 12 // Exception vector base addr reg
-`define OR1K_SPR_CPUCFGR_ISRP 13 // Implementation specific regs
-`define OR1K_SPR_CPUCFGR_AECSRP 14 // Arith. exception regs
+`define OR1K_SPR_CPUCFGR_ND 10  // No delay-slot implementation
+`define OR1K_SPR_CPUCFGR_AVRP 11  // Arch. version registers
+`define OR1K_SPR_CPUCFGR_EVBARP 12  // Exception vector base addr reg
+`define OR1K_SPR_CPUCFGR_ISRP 13  // Implementation specific regs
+`define OR1K_SPR_CPUCFGR_AECSRP 14  // Arith. exception regs
 `define OR1K_SPR_CPUCFGR_RESERVED 31:15
 
 // Version register 2 (new with OR1K 1.0)
