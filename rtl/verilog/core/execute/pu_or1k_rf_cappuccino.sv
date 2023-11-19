@@ -101,24 +101,24 @@ module pu_or1k_rf_cappuccino #(
 
   localparam RF_ADDR_WIDTH = calc_rf_addr_width(OPTION_RF_ADDR_WIDTH, OPTION_RF_NUM_SHADOW_GPR);
 
-  wire [OPTION_OPERAND_WIDTH-1:0]    rfa_ram_o;
-  wire [OPTION_OPERAND_WIDTH-1:0]    rfb_ram_o;
+  wire [OPTION_OPERAND_WIDTH-1:0] rfa_ram_o;
+  wire [OPTION_OPERAND_WIDTH-1:0] rfb_ram_o;
 
-  reg [OPTION_OPERAND_WIDTH-1:0]     wb_hazard_result;
-  reg [OPTION_OPERAND_WIDTH-1:0]     execute_rfa;
-  reg [OPTION_OPERAND_WIDTH-1:0]     execute_rfb;
+  reg [OPTION_OPERAND_WIDTH-1:0] wb_hazard_result;
+  reg [OPTION_OPERAND_WIDTH-1:0] execute_rfa;
+  reg [OPTION_OPERAND_WIDTH-1:0] execute_rfb;
 
-  wire [RF_ADDR_WIDTH-1:0]           rfa_rdad;
-  wire [RF_ADDR_WIDTH-1:0]           rfb_rdad;
+  wire [RF_ADDR_WIDTH-1:0] rfa_rdad;
+  wire [RF_ADDR_WIDTH-1:0] rfb_rdad;
 
-  wire       rfa_rden;
-  wire       rfb_rden;
+  wire rfa_rden;
+  wire rfb_rden;
 
   wire                            rf_wren;
   wire [RF_ADDR_WIDTH       -1:0] rf_wradr;
   wire [OPTION_OPERAND_WIDTH-1:0] rf_wrdat;
 
-  reg       flushing;
+  reg flushing;
 
   // Keep track of the flush signal, this is needed to not wrongly assert
   // execute_hazard after an exception (or rfe) has happened.

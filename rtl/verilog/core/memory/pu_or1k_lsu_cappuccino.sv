@@ -229,8 +229,7 @@ module pu_or1k_lsu_cappuccino #(
   wire                              dc_snoop_hit;
 
   // We have to mask out our snooped bus accesses
-  assign snoop_valid = (OPTION_DCACHE_SNOOP != "NONE") ?
-                       snoop_en_i & !((snoop_adr_i == dbus_adr_o) & dbus_ack_i) : 0;
+  assign snoop_valid = (OPTION_DCACHE_SNOOP != "NONE") ? snoop_en_i & !((snoop_adr_i == dbus_adr_o) & dbus_ack_i) : 0;
 
   assign ctrl_op_lsu = ctrl_op_lsu_load_i | ctrl_op_lsu_store_i;
 
@@ -246,20 +245,17 @@ module pu_or1k_lsu_cappuccino #(
 
   assign lsu_except_dbus_o = except_dbus | store_buffer_err_o;
 
-  assign align_err = (ctrl_lsu_length_i == 2'b10) & align_err_word |
-                     (ctrl_lsu_length_i == 2'b01) & align_err_short;
+  assign align_err = (ctrl_lsu_length_i == 2'b10) & align_err_word | (ctrl_lsu_length_i == 2'b01) & align_err_short;
 
   assign except_align = ctrl_op_lsu & align_err;
 
   assign lsu_except_align_o = except_align & !pipeline_flush_i;
 
-  assign except_dtlb_miss = ctrl_op_lsu & tlb_miss & dmmu_enable_i &
-                            !tlb_reload_busy;
+  assign except_dtlb_miss = ctrl_op_lsu & tlb_miss & dmmu_enable_i & !tlb_reload_busy;
 
   assign lsu_except_dtlb_miss_o = except_dtlb_miss & !pipeline_flush_i;
 
-  assign except_dpagefault = ctrl_op_lsu & pagefault & dmmu_enable_i &
-                            !tlb_reload_busy | tlb_reload_pagefault;
+  assign except_dpagefault = ctrl_op_lsu & pagefault & dmmu_enable_i & !tlb_reload_busy | tlb_reload_pagefault;
 
   assign lsu_except_dpagefault_o = except_dpagefault & !pipeline_flush_i;
 
@@ -343,14 +339,18 @@ module pu_or1k_lsu_cappuccino #(
   // Select part of read word
   always @* begin
     case(ctrl_lsu_adr_i[1:0])
-      2'b00:
+      2'b00: begin
         dbus_dat_aligned = lsu_ldat;
-      2'b01:
+      end
+      2'b01: begin
         dbus_dat_aligned = {lsu_ldat[23:0],8'd0};
-      2'b10:
+      end
+      2'b10: begin
         dbus_dat_aligned = {lsu_ldat[15:0],16'd0};
-      2'b11:
+      end
+      2'b11: begin
         dbus_dat_aligned = {lsu_ldat[7:0],24'd0};
+      end
     endcase
   end
 
@@ -390,8 +390,7 @@ module pu_or1k_lsu_cappuccino #(
   end
 
   wire     store_buffer_ack;
-  assign store_buffer_ack = (FEATURE_STORE_BUFFER!="NONE") ?
-                            store_buffer_write : write_done;
+  assign store_buffer_ack = (FEATURE_STORE_BUFFER!="NONE") ? store_buffer_write : write_done;
 
   assign lsu_ack = (ctrl_op_lsu_store_i | state == WRITE) ?
                    (store_buffer_ack & !ctrl_op_lsu_atomic_i |
@@ -546,9 +545,7 @@ module pu_or1k_lsu_cappuccino #(
     end
   end
 
-  assign dbus_stall = tlb_reload_busy | except_align | except_dbus |
-                      except_dtlb_miss | except_dpagefault |
-                      pipeline_flush_i;
+  assign dbus_stall = tlb_reload_busy | except_align | except_dbus | except_dtlb_miss | except_dpagefault | pipeline_flush_i;
 
   // Stall until the store buffer is empty
   assign msync_stall_o = ctrl_op_msync_i & (state == WRITE);
@@ -701,15 +698,10 @@ module pu_or1k_lsu_cappuccino #(
   end
 
   assign dc_enabled = dc_enable_i & dc_enable_r;
-  assign dc_adr = padv_execute_i &
-                  (exec_op_lsu_load_i | exec_op_lsu_store_i) ?
-                  exec_lsu_adr_i : ctrl_lsu_adr_i;
-  assign dc_adr_match = dmmu_enable_i ?
-                        {dmmu_phys_addr[OPTION_OPERAND_WIDTH-1:2],2'b0} :
-                        {ctrl_lsu_adr_i[OPTION_OPERAND_WIDTH-1:2],2'b0};
+  assign dc_adr = padv_execute_i & (exec_op_lsu_load_i | exec_op_lsu_store_i) ? exec_lsu_adr_i : ctrl_lsu_adr_i;
+  assign dc_adr_match = dmmu_enable_i ? {dmmu_phys_addr[OPTION_OPERAND_WIDTH-1:2],2'b0} : {ctrl_lsu_adr_i[OPTION_OPERAND_WIDTH-1:2],2'b0};
 
-  assign dc_refill_allowed = !(ctrl_op_lsu_store_i | state == WRITE) &
-                             !dc_snoop_hit & !snoop_valid;
+  assign dc_refill_allowed = !(ctrl_op_lsu_store_i | state == WRITE) & !dc_snoop_hit & !snoop_valid;
 
   generate
     if (FEATURE_DATACACHE!="NONE") begin : dcache_gen
@@ -719,10 +711,7 @@ module pu_or1k_lsu_cappuccino #(
         assign dc_access =  ctrl_op_lsu_store_i | dc_enabled &
           !(dmmu_cache_inhibit & dmmu_enable_i);
       end else if (OPTION_DCACHE_LIMIT_WIDTH < OPTION_OPERAND_WIDTH) begin
-        assign dc_access = ctrl_op_lsu_store_i | dc_enabled &
-          dc_adr_match[OPTION_OPERAND_WIDTH-1:
-                       OPTION_DCACHE_LIMIT_WIDTH] == 0 &
-                       !(dmmu_cache_inhibit & dmmu_enable_i);
+        assign dc_access = ctrl_op_lsu_store_i | dc_enabled & dc_adr_match[OPTION_OPERAND_WIDTH-1 : OPTION_DCACHE_LIMIT_WIDTH] == 0 & !(dmmu_cache_inhibit & dmmu_enable_i);
       end else begin
         initial begin
           $display("ERROR: OPTION_DCACHE_LIMIT_WIDTH > OPTION_OPERAND_WIDTH");

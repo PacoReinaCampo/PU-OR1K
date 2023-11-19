@@ -338,9 +338,7 @@ module pu_or1k_dcache #(
   reg invalidate_ack;
 
   // An invalidate request is either a block flush or a block invalidate
-  assign invalidate = spr_bus_stb_i & spr_bus_we_i &
-    (spr_bus_addr_i == `OR1K_SPR_DCBFR_ADDR |
-     spr_bus_addr_i == `OR1K_SPR_DCBIR_ADDR);
+  assign invalidate = spr_bus_stb_i & spr_bus_we_i & (spr_bus_addr_i == `OR1K_SPR_DCBFR_ADDR | spr_bus_addr_i == `OR1K_SPR_DCBIR_ADDR);
 
   // Acknowledge to the SPR bus.
   assign spr_bus_ack_o = invalidate_ack;
@@ -464,8 +462,9 @@ module pu_or1k_dcache #(
           end
         end
 
-        default:
+        default: begin
           state <= IDLE;
+        end
       endcase
     end
   end

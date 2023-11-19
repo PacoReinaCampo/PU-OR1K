@@ -694,14 +694,10 @@ module pu_or1k_execute_alu #(
             case(opc_alu_ext)
               `OR1K_ALU_OPC_SECONDARY_EXTBH_EXTBS,
               `OR1K_ALU_OPC_SECONDARY_EXTBH_EXTBZ:
-                ext_result = a[7] && (opc_alu_ext == `OR1K_ALU_OPC_SECONDARY_EXTBH_EXTBS) ?
-              {{(OPTION_OPERAND_WIDTH-8){1'b1}}, a[7:0]} :
-              {{(OPTION_OPERAND_WIDTH-8){1'b0}}, a[7:0]};
+                ext_result = a[7] && (opc_alu_ext == `OR1K_ALU_OPC_SECONDARY_EXTBH_EXTBS) ? {{(OPTION_OPERAND_WIDTH-8){1'b1}}, a[7:0]} : {{(OPTION_OPERAND_WIDTH-8){1'b0}}, a[7:0]};
               `OR1K_ALU_OPC_SECONDARY_EXTBH_EXTHS,
               `OR1K_ALU_OPC_SECONDARY_EXTBH_EXTHZ:
-                ext_result = a[15] && (opc_alu_ext == `OR1K_ALU_OPC_SECONDARY_EXTBH_EXTHS) ?
-              {{(OPTION_OPERAND_WIDTH-16){1'b1}}, a[15:0]} :
-              {{(OPTION_OPERAND_WIDTH-16){1'b0}}, a[15:0]};
+                ext_result = a[15] && (opc_alu_ext == `OR1K_ALU_OPC_SECONDARY_EXTBH_EXTHS) ? {{(OPTION_OPERAND_WIDTH-16){1'b1}}, a[15:0]} : {{(OPTION_OPERAND_WIDTH-16){1'b0}}, a[15:0]};
               default: begin
                 ext_result = a;
               end
@@ -722,12 +718,8 @@ module pu_or1k_execute_alu #(
 
   // Comparison logic
   // To update SR[F] either from integer or float point comparision
-  assign flag_set_o   = fpu_op_is_cmp ?
-    (fpu_cmp_flag & fpu_cmp_valid) :
-    (flag_set & op_setflag_i);
-  assign flag_clear_o = fpu_op_is_cmp ?
-    ((~fpu_cmp_flag) & fpu_cmp_valid) :
-    ((~flag_set) & op_setflag_i);
+  assign flag_set_o   = fpu_op_is_cmp ? (fpu_cmp_flag & fpu_cmp_valid) : (flag_set & op_setflag_i);
+  assign flag_clear_o = fpu_op_is_cmp ? ((~fpu_cmp_flag) & fpu_cmp_valid) : ((~flag_set) & op_setflag_i);
 
   // Combinatorial block
   always @* begin

@@ -213,10 +213,7 @@ module pu_or1k_dmmu #(
     end
   end
 
-  assign pagefault_o = (supervisor_mode_i ?
-    !swe & op_store_i || !sre & op_load_i :
-    !uwe & op_store_i || !ure & op_load_i) &
-    !tlb_reload_busy_o;
+  assign pagefault_o = (supervisor_mode_i ? !swe & op_store_i || !sre & op_load_i : !uwe & op_store_i || !ure & op_load_i) & !tlb_reload_busy_o;
 
   assign spr_way_idx_full = {spr_bus_addr_i[10], spr_bus_addr_i[8]};
   assign spr_way_idx      = spr_way_idx_full[WAYS_WIDTH-1:0];

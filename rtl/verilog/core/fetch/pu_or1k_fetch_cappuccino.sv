@@ -512,14 +512,8 @@ module pu_or1k_fetch_cappuccino #(
       end
 
       wire ic_enabled = ic_enable & ic_enable_r;
-      wire ic_refill_allowed = (!((tlb_miss | pagefault) & immu_enable_i) &
-                                !ctrl_branch_exception_i & !pipeline_flush_i &
-                                !mispredict_stall | doing_rfe_i) &
-      !tlb_reload_busy & !immu_busy;
-      wire ic_req = padv_i & !decode_except_ibus_err_o &
-      !decode_except_itlb_miss_o & !except_itlb_miss &
-      !decode_except_ipagefault_o & !except_ipagefault &
-      ic_access & ic_refill_allowed;
+      wire ic_refill_allowed = (!((tlb_miss | pagefault) & immu_enable_i) & !ctrl_branch_exception_i & !pipeline_flush_i & !mispredict_stall | doing_rfe_i) & !tlb_reload_busy & !immu_busy;
+      wire ic_req = padv_i & !decode_except_ibus_err_o & !decode_except_itlb_miss_o & !except_itlb_miss & !decode_except_ipagefault_o & !except_ipagefault & ic_access & ic_refill_allowed;
 
       if (OPTION_ICACHE_LIMIT_WIDTH == OPTION_OPERAND_WIDTH) begin
         assign ic_access = ic_enabled & !(immu_cache_inhibit & immu_enable_i);
@@ -584,9 +578,9 @@ module pu_or1k_fetch_cappuccino #(
 
   generate
     if (FEATURE_IMMU!="NONE") begin : immu_gen
-      wire  [OPTION_OPERAND_WIDTH-1:0] virt_addr = ic_addr;
-      wire     immu_spr_bus_stb;
-      wire     immu_enable;
+      wire [OPTION_OPERAND_WIDTH-1:0] virt_addr = ic_addr;
+      wire                            immu_spr_bus_stb;
+      wire                            immu_enable;
       // small hack to delay immu spr reads by one cycle
       // ideally the spr accesses should work so that the address is presented
       // in execute stage and the delayed data should be available in control

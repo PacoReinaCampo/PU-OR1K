@@ -328,10 +328,141 @@ module pu_or1k_pfpu32_muldiv (
   // Support Goldshmidt iteration
   // initial estimation of reciprocal
   wire [8:0] itr_recip9b;
-  arecip_lut u_arlut (
-    .b_i(s1o_fract24b[22:16]),
-    .r_o(itr_recip9b)
-  );
+
+  // initial reciprocal approximation
+  always @(s1o_fract24b[22:16]) begin
+    case(s1o_fract24b[22:16]) // synopsys full_case parallel_case
+      7'd0   : itr_recip9b = 9'd508;
+      7'd1   : itr_recip9b = 9'd500;
+      7'd2   : itr_recip9b = 9'd492;
+      7'd3   : itr_recip9b = 9'd485;
+      7'd4   : itr_recip9b = 9'd477;
+      7'd5   : itr_recip9b = 9'd470;
+      7'd6   : itr_recip9b = 9'd463;
+      7'd7   : itr_recip9b = 9'd455;
+      7'd8   : itr_recip9b = 9'd448;
+      7'd9   : itr_recip9b = 9'd441;
+      7'd10  : itr_recip9b = 9'd434;
+      7'd11  : itr_recip9b = 9'd428;
+      7'd12  : itr_recip9b = 9'd421;
+      7'd13  : itr_recip9b = 9'd414;
+      7'd14  : itr_recip9b = 9'd408;
+      7'd15  : itr_recip9b = 9'd401;
+      7'd16  : itr_recip9b = 9'd395;
+      7'd17  : itr_recip9b = 9'd389;
+      7'd18  : itr_recip9b = 9'd383;
+      7'd19  : itr_recip9b = 9'd377;
+      7'd20  : itr_recip9b = 9'd371;
+      7'd21  : itr_recip9b = 9'd365;
+      7'd22  : itr_recip9b = 9'd359;
+      7'd23  : itr_recip9b = 9'd353;
+      7'd24  : itr_recip9b = 9'd347;
+      7'd25  : itr_recip9b = 9'd342;
+      7'd26  : itr_recip9b = 9'd336;
+      7'd27  : itr_recip9b = 9'd331;
+      7'd28  : itr_recip9b = 9'd326;
+      7'd29  : itr_recip9b = 9'd320;
+      7'd30  : itr_recip9b = 9'd315;
+      7'd31  : itr_recip9b = 9'd310;
+      7'd32  : itr_recip9b = 9'd305;
+      7'd33  : itr_recip9b = 9'd300;
+      7'd34  : itr_recip9b = 9'd295;
+      7'd35  : itr_recip9b = 9'd290;
+      7'd36  : itr_recip9b = 9'd285;
+      7'd37  : itr_recip9b = 9'd280;
+      7'd38  : itr_recip9b = 9'd275;
+      7'd39  : itr_recip9b = 9'd271;
+      7'd40  : itr_recip9b = 9'd266;
+      7'd41  : itr_recip9b = 9'd261;
+      7'd42  : itr_recip9b = 9'd257;
+      7'd43  : itr_recip9b = 9'd252;
+      7'd44  : itr_recip9b = 9'd248;
+      7'd45  : itr_recip9b = 9'd243;
+      7'd46  : itr_recip9b = 9'd239;
+      7'd47  : itr_recip9b = 9'd235;
+      7'd48  : itr_recip9b = 9'd231;
+      7'd49  : itr_recip9b = 9'd226;
+      7'd50  : itr_recip9b = 9'd222;
+      7'd51  : itr_recip9b = 9'd218;
+      7'd52  : itr_recip9b = 9'd214;
+      7'd53  : itr_recip9b = 9'd210;
+      7'd54  : itr_recip9b = 9'd206;
+      7'd55  : itr_recip9b = 9'd202;
+      7'd56  : itr_recip9b = 9'd198;
+      7'd57  : itr_recip9b = 9'd195;
+      7'd58  : itr_recip9b = 9'd191;
+      7'd59  : itr_recip9b = 9'd187;
+      7'd60  : itr_recip9b = 9'd183;
+      7'd61  : itr_recip9b = 9'd180;
+      7'd62  : itr_recip9b = 9'd176;
+      7'd63  : itr_recip9b = 9'd172;
+      7'd64  : itr_recip9b = 9'd169;
+      7'd65  : itr_recip9b = 9'd165;
+      7'd66  : itr_recip9b = 9'd162;
+      7'd67  : itr_recip9b = 9'd158;
+      7'd68  : itr_recip9b = 9'd155;
+      7'd69  : itr_recip9b = 9'd152;
+      7'd70  : itr_recip9b = 9'd148;
+      7'd71  : itr_recip9b = 9'd145;
+      7'd72  : itr_recip9b = 9'd142;
+      7'd73  : itr_recip9b = 9'd138;
+      7'd74  : itr_recip9b = 9'd135;
+      7'd75  : itr_recip9b = 9'd132;
+      7'd76  : itr_recip9b = 9'd129;
+      7'd77  : itr_recip9b = 9'd126;
+      7'd78  : itr_recip9b = 9'd123;
+      7'd79  : itr_recip9b = 9'd120;
+      7'd80  : itr_recip9b = 9'd117;
+      7'd81  : itr_recip9b = 9'd114;
+      7'd82  : itr_recip9b = 9'd111;
+      7'd83  : itr_recip9b = 9'd108;
+      7'd84  : itr_recip9b = 9'd105;
+      7'd85  : itr_recip9b = 9'd102;
+      7'd86  : itr_recip9b = 9'd99;
+      7'd87  : itr_recip9b = 9'd96;
+      7'd88  : itr_recip9b = 9'd93;
+      7'd89  : itr_recip9b = 9'd91;
+      7'd90  : itr_recip9b = 9'd88;
+      7'd91  : itr_recip9b = 9'd85;
+      7'd92  : itr_recip9b = 9'd82;
+      7'd93  : itr_recip9b = 9'd80;
+      7'd94  : itr_recip9b = 9'd77;
+      7'd95  : itr_recip9b = 9'd74;
+      7'd96  : itr_recip9b = 9'd72;
+      7'd97  : itr_recip9b = 9'd69;
+      7'd98  : itr_recip9b = 9'd67;
+      7'd99  : itr_recip9b = 9'd64;
+      7'd100 : itr_recip9b = 9'd62;
+      7'd101 : itr_recip9b = 9'd59;
+      7'd102 : itr_recip9b = 9'd57;
+      7'd103 : itr_recip9b = 9'd54;
+      7'd104 : itr_recip9b = 9'd52;
+      7'd105 : itr_recip9b = 9'd49;
+      7'd106 : itr_recip9b = 9'd47;
+      7'd107 : itr_recip9b = 9'd45;
+      7'd108 : itr_recip9b = 9'd42;
+      7'd109 : itr_recip9b = 9'd40;
+      7'd110 : itr_recip9b = 9'd38;
+      7'd111 : itr_recip9b = 9'd35;
+      7'd112 : itr_recip9b = 9'd33;
+      7'd113 : itr_recip9b = 9'd31;
+      7'd114 : itr_recip9b = 9'd29;
+      7'd115 : itr_recip9b = 9'd26;
+      7'd116 : itr_recip9b = 9'd24;
+      7'd117 : itr_recip9b = 9'd22;
+      7'd118 : itr_recip9b = 9'd20;
+      7'd119 : itr_recip9b = 9'd18;
+      7'd120 : itr_recip9b = 9'd15;
+      7'd121 : itr_recip9b = 9'd13;
+      7'd122 : itr_recip9b = 9'd11;
+      7'd123 : itr_recip9b = 9'd9;
+      7'd124 : itr_recip9b = 9'd7;
+      7'd125 : itr_recip9b = 9'd5;
+      7'd126 : itr_recip9b = 9'd3;
+      default: itr_recip9b = 9'd1;
+    endcase
+  end
+
   // support case: b==1
   wire b_eq_1 = s1o_fract24b[23] & (~(|s1o_fract24b[22:0]));
   // reciprocal with restored leading 01
@@ -639,144 +770,5 @@ module pu_or1k_pfpu32_muldiv (
     end else if(adv_i) begin
       muldiv_rdy_o <= s2o_mul_ready | s3o_div_ready;
     end
-  end
-endmodule
-
-// initial reciprocal approximation
-module arecip_lut (
-  input      [6:0] b_i,
-  output reg [8:0] r_o
-);
-  always @(b_i) begin
-    case(b_i) // synopsys full_case parallel_case
-      7'd0   : r_o = 9'd508;
-      7'd1   : r_o = 9'd500;
-      7'd2   : r_o = 9'd492;
-      7'd3   : r_o = 9'd485;
-      7'd4   : r_o = 9'd477;
-      7'd5   : r_o = 9'd470;
-      7'd6   : r_o = 9'd463;
-      7'd7   : r_o = 9'd455;
-      7'd8   : r_o = 9'd448;
-      7'd9   : r_o = 9'd441;
-      7'd10  : r_o = 9'd434;
-      7'd11  : r_o = 9'd428;
-      7'd12  : r_o = 9'd421;
-      7'd13  : r_o = 9'd414;
-      7'd14  : r_o = 9'd408;
-      7'd15  : r_o = 9'd401;
-      7'd16  : r_o = 9'd395;
-      7'd17  : r_o = 9'd389;
-      7'd18  : r_o = 9'd383;
-      7'd19  : r_o = 9'd377;
-      7'd20  : r_o = 9'd371;
-      7'd21  : r_o = 9'd365;
-      7'd22  : r_o = 9'd359;
-      7'd23  : r_o = 9'd353;
-      7'd24  : r_o = 9'd347;
-      7'd25  : r_o = 9'd342;
-      7'd26  : r_o = 9'd336;
-      7'd27  : r_o = 9'd331;
-      7'd28  : r_o = 9'd326;
-      7'd29  : r_o = 9'd320;
-      7'd30  : r_o = 9'd315;
-      7'd31  : r_o = 9'd310;
-      7'd32  : r_o = 9'd305;
-      7'd33  : r_o = 9'd300;
-      7'd34  : r_o = 9'd295;
-      7'd35  : r_o = 9'd290;
-      7'd36  : r_o = 9'd285;
-      7'd37  : r_o = 9'd280;
-      7'd38  : r_o = 9'd275;
-      7'd39  : r_o = 9'd271;
-      7'd40  : r_o = 9'd266;
-      7'd41  : r_o = 9'd261;
-      7'd42  : r_o = 9'd257;
-      7'd43  : r_o = 9'd252;
-      7'd44  : r_o = 9'd248;
-      7'd45  : r_o = 9'd243;
-      7'd46  : r_o = 9'd239;
-      7'd47  : r_o = 9'd235;
-      7'd48  : r_o = 9'd231;
-      7'd49  : r_o = 9'd226;
-      7'd50  : r_o = 9'd222;
-      7'd51  : r_o = 9'd218;
-      7'd52  : r_o = 9'd214;
-      7'd53  : r_o = 9'd210;
-      7'd54  : r_o = 9'd206;
-      7'd55  : r_o = 9'd202;
-      7'd56  : r_o = 9'd198;
-      7'd57  : r_o = 9'd195;
-      7'd58  : r_o = 9'd191;
-      7'd59  : r_o = 9'd187;
-      7'd60  : r_o = 9'd183;
-      7'd61  : r_o = 9'd180;
-      7'd62  : r_o = 9'd176;
-      7'd63  : r_o = 9'd172;
-      7'd64  : r_o = 9'd169;
-      7'd65  : r_o = 9'd165;
-      7'd66  : r_o = 9'd162;
-      7'd67  : r_o = 9'd158;
-      7'd68  : r_o = 9'd155;
-      7'd69  : r_o = 9'd152;
-      7'd70  : r_o = 9'd148;
-      7'd71  : r_o = 9'd145;
-      7'd72  : r_o = 9'd142;
-      7'd73  : r_o = 9'd138;
-      7'd74  : r_o = 9'd135;
-      7'd75  : r_o = 9'd132;
-      7'd76  : r_o = 9'd129;
-      7'd77  : r_o = 9'd126;
-      7'd78  : r_o = 9'd123;
-      7'd79  : r_o = 9'd120;
-      7'd80  : r_o = 9'd117;
-      7'd81  : r_o = 9'd114;
-      7'd82  : r_o = 9'd111;
-      7'd83  : r_o = 9'd108;
-      7'd84  : r_o = 9'd105;
-      7'd85  : r_o = 9'd102;
-      7'd86  : r_o = 9'd99;
-      7'd87  : r_o = 9'd96;
-      7'd88  : r_o = 9'd93;
-      7'd89  : r_o = 9'd91;
-      7'd90  : r_o = 9'd88;
-      7'd91  : r_o = 9'd85;
-      7'd92  : r_o = 9'd82;
-      7'd93  : r_o = 9'd80;
-      7'd94  : r_o = 9'd77;
-      7'd95  : r_o = 9'd74;
-      7'd96  : r_o = 9'd72;
-      7'd97  : r_o = 9'd69;
-      7'd98  : r_o = 9'd67;
-      7'd99  : r_o = 9'd64;
-      7'd100 : r_o = 9'd62;
-      7'd101 : r_o = 9'd59;
-      7'd102 : r_o = 9'd57;
-      7'd103 : r_o = 9'd54;
-      7'd104 : r_o = 9'd52;
-      7'd105 : r_o = 9'd49;
-      7'd106 : r_o = 9'd47;
-      7'd107 : r_o = 9'd45;
-      7'd108 : r_o = 9'd42;
-      7'd109 : r_o = 9'd40;
-      7'd110 : r_o = 9'd38;
-      7'd111 : r_o = 9'd35;
-      7'd112 : r_o = 9'd33;
-      7'd113 : r_o = 9'd31;
-      7'd114 : r_o = 9'd29;
-      7'd115 : r_o = 9'd26;
-      7'd116 : r_o = 9'd24;
-      7'd117 : r_o = 9'd22;
-      7'd118 : r_o = 9'd20;
-      7'd119 : r_o = 9'd18;
-      7'd120 : r_o = 9'd15;
-      7'd121 : r_o = 9'd13;
-      7'd122 : r_o = 9'd11;
-      7'd123 : r_o = 9'd9;
-      7'd124 : r_o = 9'd7;
-      7'd125 : r_o = 9'd5;
-      7'd126 : r_o = 9'd3;
-      default: r_o = 9'd1;
-    endcase
   end
 endmodule
