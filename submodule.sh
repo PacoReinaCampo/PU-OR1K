@@ -43,16 +43,16 @@
 ###################################################################################
 
 # Remove Submodule
-git rm -rf dbg
-git rm -rf msi
-git rm -rf spram
-git rm -rf uart
+git rm -rf peripheral/dbg
+git rm -rf peripheral/msi
+git rm -rf peripheral/spram
+git rm -rf peripheral/uart
 
 # Update Submodule
 git submodule update --init --recursive --remote
 
 # Add Submodule
-git submodule add --force https://github.com/PacoReinaCampo/MPSoC-DBG.git dbg
-git submodule add --force https://github.com/PacoReinaCampo/MPSoC-MSI.git msi
-git submodule add --force https://github.com/PacoReinaCampo/MPSoC-SPRAM.git spram
-git submodule add --force https://github.com/PacoReinaCampo/MPSoC-UART.git uart
+git submodule add --force https://github.com/PacoReinaCampo/MPSoC-DBG.git peripheral/dbg
+git submodule add --force https://github.com/PacoReinaCampo/MPSoC-MSI.git peripheral/msi
+git submodule add --force https://github.com/PacoReinaCampo/MPSoC-SPRAM.git peripheral/spram
+git submodule add --force https://github.com/PacoReinaCampo/MPSoC-UART.git peripheral/uart

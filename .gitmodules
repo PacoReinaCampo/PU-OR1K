@@ -1,12 +1,12 @@
-[submodule "dbg"]
-	path = dbg
+[submodule "peripheral/dbg"]
+	path = peripheral/dbg
 	url = https://github.com/PacoReinaCampo/MPSoC-DBG.git
-[submodule "msi"]
-	path = msi
+[submodule "peripheral/msi"]
+	path = peripheral/msi
 	url = https://github.com/PacoReinaCampo/MPSoC-MSI.git
-[submodule "spram"]
-	path = spram
+[submodule "peripheral/spram"]
+	path = peripheral/spram
 	url = https://github.com/PacoReinaCampo/MPSoC-SPRAM.git
-[submodule "uart"]
-	path = uart
+[submodule "peripheral/uart"]
+	path = peripheral/uart
 	url = https://github.com/PacoReinaCampo/MPSoC-UART.git

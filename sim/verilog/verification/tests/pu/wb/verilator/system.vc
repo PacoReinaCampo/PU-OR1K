@@ -50,51 +50,51 @@
 +incdir+../../../../../../../bench/cpp
 -CFLAGS -I../../../../../../../bench/cpp
 
-+incdir+../../../../../../../dbg/rtl/pu/or1k/verilog/code/pkg/wb
--CFLAGS -I../../../../../../../dbg/rtl/pu/or1k/verilog/code/pkg/wb
++incdir+../../../../../../../peripheral/dbg/rtl/pu/or1k/verilog/code/pkg/wb
+-CFLAGS -I../../../../../../../peripheral/dbg/rtl/pu/or1k/verilog/code/pkg/wb
 
 +incdir+../../../../../../../rtl/verilog/pkg
 -CFLAGS -I../../../../../../../rtl/verilog/pkg
 
-../../../../../../../uart/rtl/verilog/code/pkg/core/peripheral_uart_pkg.sv
+../../../../../../../peripheral/uart/rtl/verilog/code/pkg/core/peripheral_uart_pkg.sv
 
 ../../../../../../../rtl/verilog/pkg/peripheral_wb_pkg.sv
 
-../../../../../../../dbg/bench/pu/or1k/verilog/code/tests/wb/debug/jtag_tap/tap_top.sv
-../../../../../../../dbg/rtl/pu/or1k/verilog/code/peripheral/wb/peripheral_dbg_pu_or1k_biu.sv
-../../../../../../../dbg/rtl/pu/or1k/verilog/code/peripheral/wb/peripheral_dbg_pu_or1k_biu_wb.sv
-../../../../../../../dbg/rtl/pu/or1k/verilog/code/peripheral/wb/peripheral_dbg_pu_or1k_bytefifo.sv
-../../../../../../../dbg/rtl/pu/or1k/verilog/code/peripheral/wb/peripheral_dbg_pu_or1k_crc32.sv
-../../../../../../../dbg/rtl/pu/or1k/verilog/code/peripheral/wb/peripheral_dbg_pu_or1k_jsp_biu.sv
-../../../../../../../dbg/rtl/pu/or1k/verilog/code/peripheral/wb/peripheral_dbg_pu_or1k_jsp_module.sv
-../../../../../../../dbg/rtl/pu/or1k/verilog/code/peripheral/wb/peripheral_dbg_pu_or1k_module.sv
-../../../../../../../dbg/rtl/pu/or1k/verilog/code/peripheral/wb/peripheral_dbg_pu_or1k_module_wb.sv
-../../../../../../../dbg/rtl/pu/or1k/verilog/code/peripheral/wb/peripheral_dbg_pu_or1k_status_reg.sv
-../../../../../../../dbg/rtl/pu/or1k/verilog/code/peripheral/wb/peripheral_dbg_pu_or1k_syncflop.sv
-../../../../../../../dbg/rtl/pu/or1k/verilog/code/peripheral/wb/peripheral_dbg_pu_or1k_syncreg.sv
-../../../../../../../dbg/rtl/pu/or1k/verilog/code/peripheral/wb/peripheral_dbg_pu_or1k_top.sv
+../../../../../../../peripheral/dbg/bench/pu/or1k/verilog/code/tests/wb/debug/jtag_tap/tap_top.sv
+../../../../../../../peripheral/dbg/rtl/pu/or1k/verilog/code/peripheral/wb/peripheral_dbg_pu_or1k_biu.sv
+../../../../../../../peripheral/dbg/rtl/pu/or1k/verilog/code/peripheral/wb/peripheral_dbg_pu_or1k_biu_wb.sv
+../../../../../../../peripheral/dbg/rtl/pu/or1k/verilog/code/peripheral/wb/peripheral_dbg_pu_or1k_bytefifo.sv
+../../../../../../../peripheral/dbg/rtl/pu/or1k/verilog/code/peripheral/wb/peripheral_dbg_pu_or1k_crc32.sv
+../../../../../../../peripheral/dbg/rtl/pu/or1k/verilog/code/peripheral/wb/peripheral_dbg_pu_or1k_jsp_biu.sv
+../../../../../../../peripheral/dbg/rtl/pu/or1k/verilog/code/peripheral/wb/peripheral_dbg_pu_or1k_jsp_module.sv
+../../../../../../../peripheral/dbg/rtl/pu/or1k/verilog/code/peripheral/wb/peripheral_dbg_pu_or1k_module.sv
+../../../../../../../peripheral/dbg/rtl/pu/or1k/verilog/code/peripheral/wb/peripheral_dbg_pu_or1k_module_wb.sv
+../../../../../../../peripheral/dbg/rtl/pu/or1k/verilog/code/peripheral/wb/peripheral_dbg_pu_or1k_status_reg.sv
+../../../../../../../peripheral/dbg/rtl/pu/or1k/verilog/code/peripheral/wb/peripheral_dbg_pu_or1k_syncflop.sv
+../../../../../../../peripheral/dbg/rtl/pu/or1k/verilog/code/peripheral/wb/peripheral_dbg_pu_or1k_syncreg.sv
+../../../../../../../peripheral/dbg/rtl/pu/or1k/verilog/code/peripheral/wb/peripheral_dbg_pu_or1k_top.sv
 
-../../../../../../../msi/rtl/verilog/code/peripheral/wb/arbiter/peripheral_msi_arbiter.sv
-../../../../../../../msi/rtl/verilog/code/peripheral/wb/cdc/peripheral_msi_cc561_wb.sv
-../../../../../../../msi/rtl/verilog/code/peripheral/wb/cdc/peripheral_msi_cdc_wb.sv
-../../../../../../../msi/rtl/verilog/code/peripheral/wb/cdc/peripheral_msi_sync2_pgen_wb.sv
-../../../../../../../msi/rtl/verilog/code/peripheral/wb/main/peripheral_msi_arbiter_wb.sv
-../../../../../../../msi/rtl/verilog/code/peripheral/wb/main/peripheral_msi_data_resize_wb.sv
-../../../../../../../msi/rtl/verilog/code/peripheral/wb/main/peripheral_msi_interface_wb.sv
-../../../../../../../msi/rtl/verilog/code/peripheral/wb/main/peripheral_msi_mux_wb.sv
+../../../../../../../peripheral/msi/rtl/verilog/code/peripheral/wb/arbiter/peripheral_msi_arbiter.sv
+../../../../../../../peripheral/msi/rtl/verilog/code/peripheral/wb/cdc/peripheral_msi_cc561_wb.sv
+../../../../../../../peripheral/msi/rtl/verilog/code/peripheral/wb/cdc/peripheral_msi_cdc_wb.sv
+../../../../../../../peripheral/msi/rtl/verilog/code/peripheral/wb/cdc/peripheral_msi_sync2_pgen_wb.sv
+../../../../../../../peripheral/msi/rtl/verilog/code/peripheral/wb/main/peripheral_msi_arbiter_wb.sv
+../../../../../../../peripheral/msi/rtl/verilog/code/peripheral/wb/main/peripheral_msi_data_resize_wb.sv
+../../../../../../../peripheral/msi/rtl/verilog/code/peripheral/wb/main/peripheral_msi_interface_wb.sv
+../../../../../../../peripheral/msi/rtl/verilog/code/peripheral/wb/main/peripheral_msi_mux_wb.sv
 
-../../../../../../../spram/rtl/verilog/code/peripheral/wb/peripheral_spram_generic_wb.sv
-../../../../../../../spram/rtl/verilog/code/peripheral/wb/peripheral_spram_wb.sv
+../../../../../../../peripheral/spram/rtl/verilog/code/peripheral/wb/peripheral_spram_generic_wb.sv
+../../../../../../../peripheral/spram/rtl/verilog/code/peripheral/wb/peripheral_spram_wb.sv
 
-../../../../../../../uart/rtl/verilog/code/peripheral/wb/peripheral_raminfr_wb.sv
-../../../../../../../uart/rtl/verilog/code/peripheral/wb/peripheral_uart_bridge_wb.sv
-../../../../../../../uart/rtl/verilog/code/peripheral/wb/peripheral_uart_receiver_wb.sv
-../../../../../../../uart/rtl/verilog/code/peripheral/wb/peripheral_uart_regs_wb.sv
-../../../../../../../uart/rtl/verilog/code/peripheral/wb/peripheral_uart_rfifo_wb.sv
-../../../../../../../uart/rtl/verilog/code/peripheral/wb/peripheral_uart_sync_flops_wb.sv
-../../../../../../../uart/rtl/verilog/code/peripheral/wb/peripheral_uart_tfifo_wb.sv
-../../../../../../../uart/rtl/verilog/code/peripheral/wb/peripheral_uart_transmitter_wb.sv
-../../../../../../../uart/rtl/verilog/code/peripheral/wb/peripheral_uart_wb.sv
+../../../../../../../peripheral/uart/rtl/verilog/code/peripheral/wb/peripheral_raminfr_wb.sv
+../../../../../../../peripheral/uart/rtl/verilog/code/peripheral/wb/peripheral_uart_bridge_wb.sv
+../../../../../../../peripheral/uart/rtl/verilog/code/peripheral/wb/peripheral_uart_receiver_wb.sv
+../../../../../../../peripheral/uart/rtl/verilog/code/peripheral/wb/peripheral_uart_regs_wb.sv
+../../../../../../../peripheral/uart/rtl/verilog/code/peripheral/wb/peripheral_uart_rfifo_wb.sv
+../../../../../../../peripheral/uart/rtl/verilog/code/peripheral/wb/peripheral_uart_sync_flops_wb.sv
+../../../../../../../peripheral/uart/rtl/verilog/code/peripheral/wb/peripheral_uart_tfifo_wb.sv
+../../../../../../../peripheral/uart/rtl/verilog/code/peripheral/wb/peripheral_uart_transmitter_wb.sv
+../../../../../../../peripheral/uart/rtl/verilog/code/peripheral/wb/peripheral_uart_wb.sv
 
 ../../../../../../../rtl/verilog/core/control/pu_or1k_cfgrs.sv
 ../../../../../../../rtl/verilog/core/control/pu_or1k_ctrl_cappuccino.sv

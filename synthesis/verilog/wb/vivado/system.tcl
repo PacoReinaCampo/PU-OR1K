@@ -42,28 +42,28 @@
 ##                                                                               ##
 ###################################################################################
 
-read_verilog -sv ../../../../dbg/bench/pu/or1k/verilog/tests/wb/debug/jtag_tap/tap_top.sv
-read_verilog -sv ../../../../dbg/rtl/pu/or1k/verilog/wb/pkg/adbg_or1k_defines.sv
-read_verilog -sv ../../../../dbg/rtl/pu/or1k/verilog/wb/core/adbg_bytefifo.sv
-read_verilog -sv ../../../../dbg/rtl/pu/or1k/verilog/wb/core/adbg_crc32.sv
-read_verilog -sv ../../../../dbg/rtl/pu/or1k/verilog/wb/core/adbg_jsp_biu.sv
-read_verilog -sv ../../../../dbg/rtl/pu/or1k/verilog/wb/core/adbg_jsp_module.sv
-read_verilog -sv ../../../../dbg/rtl/pu/or1k/verilog/wb/core/adbg_or1k_biu.sv
-read_verilog -sv ../../../../dbg/rtl/pu/or1k/verilog/wb/core/adbg_or1k_module.sv
-read_verilog -sv ../../../../dbg/rtl/pu/or1k/verilog/wb/core/adbg_or1k_status_reg.sv
-read_verilog -sv ../../../../dbg/rtl/pu/or1k/verilog/wb/core/adbg_syncflop.sv
-read_verilog -sv ../../../../dbg/rtl/pu/or1k/verilog/wb/core/adbg_syncreg.sv
-read_verilog -sv ../../../../dbg/rtl/pu/or1k/verilog/wb/core/adbg_top.sv
-read_verilog -sv ../../../../dbg/rtl/pu/or1k/verilog/wb/core/adbg_wb_biu.sv
-read_verilog -sv ../../../../dbg/rtl/pu/or1k/verilog/wb/core/adbg_wb_module.sv
-read_verilog -sv ../../../../msi/rtl/verilog/wb/arbiter/mpsoc_msi_arbiter.sv
-read_verilog -sv ../../../../msi/rtl/verilog/wb/cdc/mpsoc_msi_wb_cc561.sv
-read_verilog -sv ../../../../msi/rtl/verilog/wb/cdc/mpsoc_msi_wb_cdc.sv
-read_verilog -sv ../../../../msi/rtl/verilog/wb/cdc/mpsoc_msi_wb_sync2_pgen.sv
-read_verilog -sv ../../../../msi/rtl/verilog/wb/core/mpsoc_msi_wb_arbiter.sv
-read_verilog -sv ../../../../msi/rtl/verilog/wb/core/mpsoc_msi_wb_data_resize.sv
-read_verilog -sv ../../../../msi/rtl/verilog/wb/core/mpsoc_msi_wb_interface.sv
-read_verilog -sv ../../../../msi/rtl/verilog/wb/core/mpsoc_msi_wb_mux.sv
+read_verilog -sv ../../../../peripheral/dbg/bench/pu/or1k/verilog/tests/wb/debug/jtag_tap/tap_top.sv
+read_verilog -sv ../../../../peripheral/dbg/rtl/pu/or1k/verilog/wb/pkg/adbg_or1k_defines.sv
+read_verilog -sv ../../../../peripheral/dbg/rtl/pu/or1k/verilog/wb/core/adbg_bytefifo.sv
+read_verilog -sv ../../../../peripheral/dbg/rtl/pu/or1k/verilog/wb/core/adbg_crc32.sv
+read_verilog -sv ../../../../peripheral/dbg/rtl/pu/or1k/verilog/wb/core/adbg_jsp_biu.sv
+read_verilog -sv ../../../../peripheral/dbg/rtl/pu/or1k/verilog/wb/core/adbg_jsp_module.sv
+read_verilog -sv ../../../../peripheral/dbg/rtl/pu/or1k/verilog/wb/core/adbg_or1k_biu.sv
+read_verilog -sv ../../../../peripheral/dbg/rtl/pu/or1k/verilog/wb/core/adbg_or1k_module.sv
+read_verilog -sv ../../../../peripheral/dbg/rtl/pu/or1k/verilog/wb/core/adbg_or1k_status_reg.sv
+read_verilog -sv ../../../../peripheral/dbg/rtl/pu/or1k/verilog/wb/core/adbg_syncflop.sv
+read_verilog -sv ../../../../peripheral/dbg/rtl/pu/or1k/verilog/wb/core/adbg_syncreg.sv
+read_verilog -sv ../../../../peripheral/dbg/rtl/pu/or1k/verilog/wb/core/adbg_top.sv
+read_verilog -sv ../../../../peripheral/dbg/rtl/pu/or1k/verilog/wb/core/adbg_wb_biu.sv
+read_verilog -sv ../../../../peripheral/dbg/rtl/pu/or1k/verilog/wb/core/adbg_wb_module.sv
+read_verilog -sv ../../../../peripheral/msi/rtl/verilog/wb/arbiter/mpsoc_msi_arbiter.sv
+read_verilog -sv ../../../../peripheral/msi/rtl/verilog/wb/cdc/mpsoc_msi_wb_cc561.sv
+read_verilog -sv ../../../../peripheral/msi/rtl/verilog/wb/cdc/mpsoc_msi_wb_cdc.sv
+read_verilog -sv ../../../../peripheral/msi/rtl/verilog/wb/cdc/mpsoc_msi_wb_sync2_pgen.sv
+read_verilog -sv ../../../../peripheral/msi/rtl/verilog/wb/core/mpsoc_msi_wb_arbiter.sv
+read_verilog -sv ../../../../peripheral/msi/rtl/verilog/wb/core/mpsoc_msi_wb_data_resize.sv
+read_verilog -sv ../../../../peripheral/msi/rtl/verilog/wb/core/mpsoc_msi_wb_interface.sv
+read_verilog -sv ../../../../peripheral/msi/rtl/verilog/wb/core/mpsoc_msi_wb_mux.sv
 read_verilog -sv ../../../../rtl/verilog/core/control/or1k_cfgrs.sv
 read_verilog -sv ../../../../rtl/verilog/core/control/or1k_ctrl_cappuccino.sv
 read_verilog -sv ../../../../rtl/verilog/core/control/or1k_pcu.sv
@@ -100,15 +100,15 @@ read_verilog -sv ../../../../rtl/verilog/core/or1k_cpu.sv
 read_verilog -sv ../../../../rtl/verilog/core/or1k_decode_execute_cappuccino.sv
 read_verilog -sv ../../../../rtl/verilog/memory/or1k_simple_dpram_sclk.sv
 read_verilog -sv ../../../../rtl/verilog/memory/or1k_true_dpram_sclk.sv
-read_verilog -sv ../../../../uart/rtl/verilog/wb/core/mpsoc_wb_raminfr.sv
-read_verilog -sv ../../../../uart/rtl/verilog/wb/core/mpsoc_wb_uart_peripheral_bridge.sv
-read_verilog -sv ../../../../uart/rtl/verilog/wb/core/mpsoc_wb_uart_receiver.sv
-read_verilog -sv ../../../../uart/rtl/verilog/wb/core/mpsoc_wb_uart_regs.sv
-read_verilog -sv ../../../../uart/rtl/verilog/wb/core/mpsoc_wb_uart_rfifo.sv
-read_verilog -sv ../../../../uart/rtl/verilog/wb/core/mpsoc_wb_uart_sync_flops.sv
-read_verilog -sv ../../../../uart/rtl/verilog/wb/core/mpsoc_wb_uart_tfifo.sv
-read_verilog -sv ../../../../uart/rtl/verilog/wb/core/mpsoc_wb_uart_transmitter.sv
-read_verilog -sv ../../../../uart/rtl/verilog/wb/core/mpsoc_wb_uart.sv
+read_verilog -sv ../../../../peripheral/uart/rtl/verilog/wb/core/mpsoc_wb_raminfr.sv
+read_verilog -sv ../../../../peripheral/uart/rtl/verilog/wb/core/mpsoc_wb_uart_peripheral_bridge.sv
+read_verilog -sv ../../../../peripheral/uart/rtl/verilog/wb/core/mpsoc_wb_uart_receiver.sv
+read_verilog -sv ../../../../peripheral/uart/rtl/verilog/wb/core/mpsoc_wb_uart_regs.sv
+read_verilog -sv ../../../../peripheral/uart/rtl/verilog/wb/core/mpsoc_wb_uart_rfifo.sv
+read_verilog -sv ../../../../peripheral/uart/rtl/verilog/wb/core/mpsoc_wb_uart_sync_flops.sv
+read_verilog -sv ../../../../peripheral/uart/rtl/verilog/wb/core/mpsoc_wb_uart_tfifo.sv
+read_verilog -sv ../../../../peripheral/uart/rtl/verilog/wb/core/mpsoc_wb_uart_transmitter.sv
+read_verilog -sv ../../../../peripheral/uart/rtl/verilog/wb/core/mpsoc_wb_uart.sv
 
 read_verilog -sv spram/core/peripheral_ram_generic_wb.sv
 read_verilog -sv spram/core/peripheral_spram_wb.sv
@@ -119,12 +119,12 @@ read_xdc system.xdc
 
 synth_design -part xc7z020-clg484-1 -top or1k_synthesis \
 -include_dirs ../../../../bench/verilog \
--include_dirs ../../../../dbg/bench/pu/or1k/verilog/tests/wb/debug/jtag_vpi \
--include_dirs ../../../../dbg/rtl/pu/or1k/verilog/wb/pkg \
--include_dirs ../../../../msi/rtl/verilog/wb/core \
--include_dirs ../../../../msi/rtl/verilog/wb/pkg \
+-include_dirs ../../../../peripheral/dbg/bench/pu/or1k/verilog/tests/wb/debug/jtag_vpi \
+-include_dirs ../../../../peripheral/dbg/rtl/pu/or1k/verilog/wb/pkg \
+-include_dirs ../../../../peripheral/msi/rtl/verilog/wb/core \
+-include_dirs ../../../../peripheral/msi/rtl/verilog/wb/pkg \
 -include_dirs ../../../../rtl/verilog/pkg \
--include_dirs ../../../../uart/rtl/verilog/wb/pkg
+-include_dirs ../../../../peripheral/uart/rtl/verilog/wb/pkg
 
 opt_design
 place_design
