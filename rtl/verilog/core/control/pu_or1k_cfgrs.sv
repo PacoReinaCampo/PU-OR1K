@@ -132,7 +132,7 @@ module pu_or1k_cfgrs #(
 
   // Version register 2
   // Implementation ID as per:
-  //  http:// opencores.org/or1k/OR1K_CPU_Cores#CPU_ID_Table
+  //  http://opencores.org/or1k/OR1K_CPU_Cores#CPU_ID_Table
   //  or1k breaks up the VR2[23:0] to be 3 8-bit fields
   //  23:16 - Major version number
   //  15:8  - Minor version number
