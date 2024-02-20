@@ -42,17 +42,17 @@
 ##                                                                               ##
 ###################################################################################
 
-+incdir+../../../../../../../bench/verilog
++incdir+../../../../../../../verification/tasks/library/verilog
 
 +incdir+../../../../../../../peripheral/dbg/rtl/pu/or1k/verilog/code/pkg/wb
 
 +incdir+../../../../../../../rtl/verilog/pkg
 
-../../../../../../../bench/verilog/pu_or1k_functions.sv
-../../../../../../../bench/verilog/pu_or1k_monitor.sv
-../../../../../../../bench/verilog/pu_or1k_tap_generator.sv
-../../../../../../../bench/verilog/pu_or1k_testbench_utils.sv
-../../../../../../../bench/verilog/pu_or1k_testbench_wb.sv
+../../../../../../../verification/tasks/library/verilog/pu_or1k_functions.sv
+../../../../../../../verification/tasks/library/verilog/pu_or1k_monitor.sv
+../../../../../../../verification/tasks/library/verilog/pu_or1k_tap_generator.sv
+../../../../../../../verification/tasks/library/verilog/pu_or1k_testbench_utils.sv
+../../../../../../../verification/tasks/library/verilog/pu_or1k_testbench_wb.sv
 
 ../../../../../../../peripheral/uart/rtl/verilog/code/pkg/core/peripheral_uart_pkg.sv
 
