@@ -19,22 +19,28 @@ application
 │       ├── peripheral_osvvm_design_pkg.vhd
 │       └── peripheral_osvvm_design.vhd
 ├── core
-│   ├── ahb3
+│   ├── control
 │   │   ├── peripheral_osvvm_design_pkg.vhd
 │   │   └── peripheral_osvvm_design.vhd
-│   ├── apb4
+│   ├── decode
 │   │   ├── peripheral_osvvm_design_pkg.vhd
 │   │   └── peripheral_osvvm_design.vhd
-│   ├── axi4
+│   ├── execute
 │   │   ├── peripheral_osvvm_design_pkg.vhd
 │   │   └── peripheral_osvvm_design.vhd
-│   ├── bb
+│   ├── fetch
 │   │   ├── peripheral_osvvm_design_pkg.vhd
 │   │   └── peripheral_osvvm_design.vhd
-│   ├── biu
+│   ├── main
 │   │   ├── peripheral_osvvm_design_pkg.vhd
 │   │   └── peripheral_osvvm_design.vhd
-│   └── wb
+│   ├── memory
+│   │   ├── peripheral_osvvm_design_pkg.vhd
+│   │   └── peripheral_osvvm_design.vhd
+│   ├── pfpu32
+│   │   ├── peripheral_osvvm_design_pkg.vhd
+│   │   └── peripheral_osvvm_design.vhd
+│   └── pfpu64
 │       ├── peripheral_osvvm_design_pkg.vhd
 │       └── peripheral_osvvm_design.vhd
 └── pu
@@ -57,4 +63,4 @@ application
         ├── peripheral_osvvm_design_pkg.vhd
         └── peripheral_osvvm_design.vhd
 
-21 directories, 36 files
+23 directories, 40 files

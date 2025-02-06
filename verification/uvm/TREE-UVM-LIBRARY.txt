@@ -85,7 +85,7 @@ library
 │       ├── peripheral_uvm_test.sv
 │       └── peripheral_uvm_transaction.sv
 ├── core
-│   ├── ahb3
+│   ├── control
 │   │   ├── peripheral_uvm_agent.sv
 │   │   ├── peripheral_uvm_coverage.sv
 │   │   ├── peripheral_uvm_driver.sv
@@ -99,7 +99,7 @@ library
 │   │   ├── peripheral_uvm_testbench.sv
 │   │   ├── peripheral_uvm_test.sv
 │   │   └── peripheral_uvm_transaction.sv
-│   ├── apb4
+│   ├── decode
 │   │   ├── peripheral_uvm_agent.sv
 │   │   ├── peripheral_uvm_coverage.sv
 │   │   ├── peripheral_uvm_driver.sv
@@ -113,7 +113,7 @@ library
 │   │   ├── peripheral_uvm_testbench.sv
 │   │   ├── peripheral_uvm_test.sv
 │   │   └── peripheral_uvm_transaction.sv
-│   ├── axi4
+│   ├── execute
 │   │   ├── peripheral_uvm_agent.sv
 │   │   ├── peripheral_uvm_coverage.sv
 │   │   ├── peripheral_uvm_driver.sv
@@ -127,7 +127,7 @@ library
 │   │   ├── peripheral_uvm_testbench.sv
 │   │   ├── peripheral_uvm_test.sv
 │   │   └── peripheral_uvm_transaction.sv
-│   ├── bb
+│   ├── fetch
 │   │   ├── peripheral_uvm_agent.sv
 │   │   ├── peripheral_uvm_coverage.sv
 │   │   ├── peripheral_uvm_driver.sv
@@ -141,7 +141,7 @@ library
 │   │   ├── peripheral_uvm_testbench.sv
 │   │   ├── peripheral_uvm_test.sv
 │   │   └── peripheral_uvm_transaction.sv
-│   ├── biu
+│   ├── main
 │   │   ├── peripheral_uvm_agent.sv
 │   │   ├── peripheral_uvm_coverage.sv
 │   │   ├── peripheral_uvm_driver.sv
@@ -155,7 +155,35 @@ library
 │   │   ├── peripheral_uvm_testbench.sv
 │   │   ├── peripheral_uvm_test.sv
 │   │   └── peripheral_uvm_transaction.sv
-│   └── wb
+│   ├── memory
+│   │   ├── peripheral_uvm_agent.sv
+│   │   ├── peripheral_uvm_coverage.sv
+│   │   ├── peripheral_uvm_driver.sv
+│   │   ├── peripheral_uvm_environment.sv
+│   │   ├── peripheral_uvm_interface.sv
+│   │   ├── peripheral_uvm_monitor.sv
+│   │   ├── peripheral_uvm_reference_model.sv
+│   │   ├── peripheral_uvm_scoreboard.sv
+│   │   ├── peripheral_uvm_sequencer.sv
+│   │   ├── peripheral_uvm_sequence.sv
+│   │   ├── peripheral_uvm_testbench.sv
+│   │   ├── peripheral_uvm_test.sv
+│   │   └── peripheral_uvm_transaction.sv
+│   ├── pfpu32
+│   │   ├── peripheral_uvm_agent.sv
+│   │   ├── peripheral_uvm_coverage.sv
+│   │   ├── peripheral_uvm_driver.sv
+│   │   ├── peripheral_uvm_environment.sv
+│   │   ├── peripheral_uvm_interface.sv
+│   │   ├── peripheral_uvm_monitor.sv
+│   │   ├── peripheral_uvm_reference_model.sv
+│   │   ├── peripheral_uvm_scoreboard.sv
+│   │   ├── peripheral_uvm_sequencer.sv
+│   │   ├── peripheral_uvm_sequence.sv
+│   │   ├── peripheral_uvm_testbench.sv
+│   │   ├── peripheral_uvm_test.sv
+│   │   └── peripheral_uvm_transaction.sv
+│   └── pfpu64
 │       ├── peripheral_uvm_agent.sv
 │       ├── peripheral_uvm_coverage.sv
 │       ├── peripheral_uvm_driver.sv
@@ -249,4 +277,4 @@ library
         ├── peripheral_uvm_testbench.sv
         └── peripheral_uvm_test.sv
 
-21 directories, 228 files
+23 directories, 254 files
