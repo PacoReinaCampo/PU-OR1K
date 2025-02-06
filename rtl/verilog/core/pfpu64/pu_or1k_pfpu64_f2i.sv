@@ -40,21 +40,24 @@
 
 `include "pu_or1k_defines.sv"
 
-module pu_or1k_pfpu32_i2f (
+module pu_or1k_pfpu64_f2i (
   input             clk,
   input             rst,
   input             flush_i,  // flush pipe
   input             adv_i,    // advance pipe
   input             start_i,  // start conversion
-  input      [31:0] opa_i,
-  output reg        i2f_rdy_o,       // i2f is ready
-  output reg        i2f_sign_o,      // i2f signum
-  output reg [ 3:0] i2f_shr_o,
-  output reg [ 7:0] i2f_exp8shr_o,
-  output reg [ 4:0] i2f_shl_o,
-  output reg [ 7:0] i2f_exp8shl_o,
-  output reg [ 7:0] i2f_exp8sh0_o,
-  output reg [31:0] i2f_fract32_o
+  input             signa_i,  // input 'a' related values
+  input      [ 9:0] exp10a_i,
+  input      [23:0] fract24a_i,
+  input             snan_i,   // 'a'/'b' related
+  input             qnan_i,
+  output reg        f2i_rdy_o,       // f2i is ready
+  output reg        f2i_sign_o,      // f2i signum
+  output reg [23:0] f2i_int24_o,     // f2i fractional
+  output reg [ 4:0] f2i_shr_o,       // f2i required shift right value
+  output reg [ 3:0] f2i_shl_o,       // f2i required shift left value   
+  output reg        f2i_ovf_o,       // f2i overflow flag
+  output reg        f2i_snan_o       // f2i signaling NaN output reg
 );
 
   // Any stage's output is registered.
@@ -62,89 +65,48 @@ module pu_or1k_pfpu32_i2f (
   //  s??o_name - "S"tage number "??", "O"utput
   //  s??t_name - "S"tage number "??", "T"emporary (internally)
  
-  // signum of input
-  wire s1t_signa = opa_i[31];
+  // exponent after moving binary point at the end of mantissa
+  // bias is also removed
+  wire [9:0] s1t_exp10m = exp10a_i - 10'd150; // (- 127 - 23)
 
-  // magnitude (tow's complement for negative input)
-  wire [31:0] s1t_fract32 = (opa_i ^ {32{s1t_signa}}) + {31'd0,s1t_signa};
+  // detect if now shift right is required
+  wire [9:0] s1t_shr_t = {10{s1t_exp10m[9]}} & (10'd150 - exp10a_i);
 
-  // normalization shifts
-  reg [3:0] s1t_shrx;
-  reg [4:0] s1t_shlx;
+  // limit right shift by 31
+  wire [4:0] s1t_shr = s1t_shr_t[4:0] | {5{|s1t_shr_t[9:5]}};
 
-  // shift goal:
-  // 23 22                    0
-  // |  |                     |
-  // h  fffffffffffffffffffffff
+  // detect if left shift required for mantissa
+  // (limited by 15)
+  wire [3:0] s1t_shl = {4{~s1t_exp10m[9]}} & (s1t_exp10m[3:0] | {4{|s1t_exp10m[9:4]}});
 
-  // right shift
-  always @(s1t_fract32[31:24]) begin
-    casez(s1t_fract32[31:24])  // synopsys full_case parallel_case
-      8'b1??????? : s1t_shrx = 4'd8;
-      8'b01?????? : s1t_shrx = 4'd7;
-      8'b001????? : s1t_shrx = 4'd6;
-      8'b0001???? : s1t_shrx = 4'd5;
-      8'b00001??? : s1t_shrx = 4'd4;
-      8'b000001?? : s1t_shrx = 4'd3;
-      8'b0000001? : s1t_shrx = 4'd2;
-      8'b00000001 : s1t_shrx = 4'd1;
-      8'b00000000 : s1t_shrx = 4'd0;
-    endcase
-  end
-
-  // left shift
-  always @(s1t_fract32[23:0]) begin
-    casez(s1t_fract32[23:0])  // synopsys full_case parallel_case
-      24'b1??????????????????????? : s1t_shlx = 5'd0; // hidden '1' is in its plase
-      24'b01?????????????????????? : s1t_shlx = 5'd1;
-      24'b001????????????????????? : s1t_shlx = 5'd2;
-      24'b0001???????????????????? : s1t_shlx = 5'd3;
-      24'b00001??????????????????? : s1t_shlx = 5'd4;
-      24'b000001?????????????????? : s1t_shlx = 5'd5;
-      24'b0000001????????????????? : s1t_shlx = 5'd6;
-      24'b00000001???????????????? : s1t_shlx = 5'd7;
-      24'b000000001??????????????? : s1t_shlx = 5'd8;
-      24'b0000000001?????????????? : s1t_shlx = 5'd9;
-      24'b00000000001????????????? : s1t_shlx = 5'd10;
-      24'b000000000001???????????? : s1t_shlx = 5'd11;
-      24'b0000000000001??????????? : s1t_shlx = 5'd12;
-      24'b00000000000001?????????? : s1t_shlx = 5'd13;
-      24'b000000000000001????????? : s1t_shlx = 5'd14;
-      24'b0000000000000001???????? : s1t_shlx = 5'd15;
-      24'b00000000000000001??????? : s1t_shlx = 5'd16;
-      24'b000000000000000001?????? : s1t_shlx = 5'd17;
-      24'b0000000000000000001????? : s1t_shlx = 5'd18;
-      24'b00000000000000000001???? : s1t_shlx = 5'd19;
-      24'b000000000000000000001??? : s1t_shlx = 5'd20;
-      24'b0000000000000000000001?? : s1t_shlx = 5'd21;
-      24'b00000000000000000000001? : s1t_shlx = 5'd22;
-      24'b000000000000000000000001 : s1t_shlx = 5'd23;
-      24'b000000000000000000000000 : s1t_shlx = 5'd0;
-    endcase
-  end
+  // check overflow
+  wire s1t_is_shl_gt8 = s1t_shl[3] & (|s1t_shl[2:0]);
+  wire s1t_is_shl_eq8 = s1t_shl[3] & (~(|s1t_shl[2:0]));
+  wire s1t_is_shl_ovf = s1t_is_shl_gt8 | (s1t_is_shl_eq8 & (~signa_i)) | (s1t_is_shl_eq8 & signa_i & (|fract24a_i[22:0]));
 
   // registering output
   always @(posedge clk) begin
     if(adv_i) begin
+      // input related
+      f2i_snan_o  <= snan_i;
+
       // computation related
-      i2f_sign_o    <= s1t_signa;
-      i2f_shr_o     <= s1t_shrx;
-      i2f_exp8shr_o <= 8'd150 + {4'd0,s1t_shrx};      // 150=127+23
-      i2f_shl_o     <= s1t_shlx;
-      i2f_exp8shl_o <= 8'd150 - {3'd0,s1t_shlx};
-      i2f_exp8sh0_o <= {8{s1t_fract32[23]}} & 8'd150; // "1" is in [23] / zero
-      i2f_fract32_o <= s1t_fract32;
+      f2i_sign_o  <= signa_i & (!(qnan_i | snan_i)); // if 'a' is a NaN than ouput is max. positive
+      f2i_int24_o <= fract24a_i;
+      f2i_shr_o   <= s1t_shr;
+      f2i_shl_o   <= s1t_shl;
+      f2i_ovf_o   <= s1t_is_shl_ovf;
     end
   end
 
   // ready is special case
   always @(posedge clk or posedge rst) begin
     if (rst) begin
-      i2f_rdy_o <= 1'b0;
+      f2i_rdy_o <= 1'b0;
     end else if(flush_i) begin
-      i2f_rdy_o <= 1'b0;
+      f2i_rdy_o <= 1'b0;
     end else if(adv_i) begin
-      i2f_rdy_o <= start_i;
+      f2i_rdy_o <= start_i;
     end
   end
 endmodule

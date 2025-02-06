@@ -40,8 +40,8 @@
 
 `include "pu_or1k_defines.sv"
 
-module pu_or1k_pfpu32_top #(
-  parameter OPTION_OPERAND_WIDTH = 32,
+module pu_or1k_pfpu64_top #(
+  parameter OPTION_OPERAND_WIDTH = 64,
   parameter OPTION_FTOI_ROUNDING = "CPP" // "CPP" / "IEEE"
 )
   (
@@ -150,7 +150,7 @@ module pu_or1k_pfpu32_top #(
   cmp_inv, cmp_inf;
 
   //   module istance
-  pfpu32_fcmp u_f32_cmp (
+  pfpu64_fcmp u_f64_cmp (
     .fpu_op_is_comp_i(op_cmp),
     .generic_cmp_opc_i(op_fpu[`OR1K_FPUOP_GENERIC_CMP_SELECT]),
     .unordered_cmp_bit_i(op_fpu[`OR1K_FPUOP_UNORDERED_CMP_BIT]),
@@ -203,7 +203,7 @@ module pu_or1k_pfpu32_top #(
   wire        add_anan_sign_o; // add/sub signum for output nan
 
   //   module istance
-  pu_or1k_pfpu32_addsub u_f32_addsub (
+  pu_or1k_pfpu64_addsub u_f64_addsub (
     .clk           (clk),
     .rst           (rst),
     .flush_i       (flush_i),        // flushe pipe
@@ -272,7 +272,7 @@ module pu_or1k_pfpu32_top #(
   wire        div_dbz_o;       // division by zero flag
 
   //   module istance
-  pu_or1k_pfpu32_muldiv u_f32_muldiv (
+  pu_or1k_pfpu64_muldiv u_f64_muldiv (
     .clk         (clk),
     .rst         (rst),
     .flush_i     (flush_i),        // flushe pipe
@@ -331,10 +331,10 @@ module pu_or1k_pfpu32_top #(
   wire [ 4:0] i2f_shl_o;
   wire [ 7:0] i2f_exp8shl_o;
   wire [ 7:0] i2f_exp8sh0_o;
-  wire [31:0] i2f_fract32_o;
+  wire [31:0] i2f_fract64_o;
 
   //   i2f module instance
-  pu_or1k_pfpu32_i2f u_i2f_cnv (
+  pu_or1k_pfpu64_i2f u_i2f_cnv (
     .clk           (clk),
     .rst           (rst),
     .flush_i       (flush_i),        // flush pipe
@@ -348,7 +348,7 @@ module pu_or1k_pfpu32_top #(
     .i2f_shl_o     (i2f_shl_o),
     .i2f_exp8shl_o (i2f_exp8shl_o),
     .i2f_exp8sh0_o (i2f_exp8sh0_o),
-    .i2f_fract32_o (i2f_fract32_o)
+    .i2f_fract64_o (i2f_fract64_o)
   );
 
   //   f2i signals
@@ -363,7 +363,7 @@ module pu_or1k_pfpu32_top #(
   wire        f2i_snan_o;      // f2i signaling NaN output reg
 
   //    f2i module instance
-  pu_or1k_pfpu32_f2i u_f2i_cnv (
+  pu_or1k_pfpu64_f2i u_f2i_cnv (
     .clk         (clk),
     .rst         (rst),
     .flush_i     (flush_i),         // flush pipe
@@ -384,10 +384,10 @@ module pu_or1k_pfpu32_top #(
   );
 
   // multiplexing and rounding
-  pu_or1k_pfpu32_rnd #(
+  pu_or1k_pfpu64_rnd #(
     .OPTION_FTOI_ROUNDING (OPTION_FTOI_ROUNDING) // rounding instance
   )
-  u_f32_rnd (
+  u_f64_rnd (
     // clocks, resets and other controls
     .clk             (clk),
     .rst             (rst),
@@ -435,7 +435,7 @@ module pu_or1k_pfpu32_top #(
     .i2f_shl_i       (i2f_shl_o),
     .i2f_exp8shl_i   (i2f_exp8shl_o),
     .i2f_exp8sh0_i   (i2f_exp8sh0_o),
-    .i2f_fract32_i   (i2f_fract32_o),
+    .i2f_fract64_i   (i2f_fract64_o),
 
     // from f2i
     .f2i_rdy_i       (f2i_rdy_o),       // f2i is ready

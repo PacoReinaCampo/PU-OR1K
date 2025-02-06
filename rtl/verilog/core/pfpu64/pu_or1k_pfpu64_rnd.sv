@@ -40,7 +40,7 @@
 
 `include "pu_or1k_defines.sv"
 
-module pu_or1k_pfpu32_rnd #(
+module pu_or1k_pfpu64_rnd #(
   parameter OPTION_FTOI_ROUNDING = "CPP" // "CPP" / "IEEE"
 )
   (
@@ -93,7 +93,7 @@ module pu_or1k_pfpu32_rnd #(
     input [ 4:0] i2f_shl_i,
     input [ 7:0] i2f_exp8shl_i,
     input [ 7:0] i2f_exp8sh0_i,
-    input [31:0] i2f_fract32_i,   
+    input [31:0] i2f_fract64_i,   
 
     // input from f2i
     input        f2i_rdy_i,       // f2i is ready
@@ -164,7 +164,7 @@ module pu_or1k_pfpu32_rnd #(
          ({35{add_rdy_i}} & {7'd0, add_fract28_i}) |
          ({35{mul_rdy_i}} & {7'd0, mul_fract28_i}) |
          ({35{f2i_rdy_i}} & {8'd0, f2i_int24_i, 3'd0}) |
-         ({35{i2f_rdy_i}} & {i2f_fract32_i,3'd0});
+         ({35{i2f_rdy_i}} & {i2f_fract64_i,3'd0});
 
   // overflow bit for add/mul
   wire s1t_addmul_carry = (add_rdy_i & add_fract28_i[27]) |
@@ -252,7 +252,7 @@ module pu_or1k_pfpu32_rnd #(
   // output of align stage 
   reg        s1o_sign;
   reg [ 9:0] s1o_exp10;
-  reg [31:0] s1o_fract32;
+  reg [31:0] s1o_fract64;
   reg [ 1:0] s1o_rs;
   reg        s1o_inv;
   reg        s1o_inf;
@@ -267,7 +267,7 @@ module pu_or1k_pfpu32_rnd #(
     if(adv_i) begin
       s1o_sign    <= s1t_sign;
       s1o_exp10   <= s1t_exp10;
-      s1o_fract32 <= s1t_fract35sh[34:3];
+      s1o_fract64 <= s1t_fract35sh[34:3];
       s1o_rs      <= {s1t_fract35sh[2],s1t_sticky};
 
       // various flags:
@@ -303,7 +303,7 @@ module pu_or1k_pfpu32_rnd #(
   // Stage #2: rounding
   wire s2t_dbz  = s1o_div_dbz;
 
-  wire s2t_g    = s1o_fract32[0];
+  wire s2t_g    = s1o_fract64[0];
   wire s2t_r    = s1o_rs[1];
   wire s2t_s    = s1o_rs[0];
   wire s2t_lost = s2t_r | s2t_s;
@@ -326,59 +326,59 @@ module pu_or1k_pfpu32_rnd #(
   // set resulting direction of rounding
   //  a) normalized quotient is rounded by quotient related rules
   //  b) de-normalized quotient is rounded by common rules
-  wire s2t_rnd_n_qtnt = s1o_div_op & s1o_fract32[23]; // normalized quotient
+  wire s2t_rnd_n_qtnt = s1o_div_op & s1o_fract64[23]; // normalized quotient
   wire s2t_set_rnd_up = s2t_rnd_n_qtnt ? s2t_div_rnd_up : s2t_rnd_up;
   wire s2t_set_rnd_dn = s2t_rnd_n_qtnt ? s2t_div_rnd_dn : 1'b0;
 
   // define value for rounding adder
-  wire [31:0] s2t_rnd_v32 =
-              s2t_set_rnd_up ? 32'd1        : // +1
-              s2t_set_rnd_dn ? 32'hFFFFFFFF : // -1
-                               32'd0;         // no rounding
+  wire [31:0] s2t_rnd_v64 =
+              s2t_set_rnd_up ? 64'd1        : // +1
+              s2t_set_rnd_dn ? 64'hFFFFFFFF : // -1
+                               64'd0;         // no rounding
                                               // rounded fractional
-  wire [31:0] s2t_fract32_rnd = s1o_fract32 + s2t_rnd_v32;
+  wire [31:0] s2t_fract64_rnd = s1o_fract64 + s2t_rnd_v64;
 
   // floating point output
-  wire s2t_f32_shr = s2t_fract32_rnd[24];
+  wire s2t_f64_shr = s2t_fract64_rnd[24];
 
   // update exponent and fraction
-  wire [9:0]  s2t_f32_exp10   = s1o_exp10 + {9'd0,s2t_f32_shr};
-  wire [23:0] s2t_f32_fract24 = s2t_f32_shr ? s2t_fract32_rnd[24:1] :
-                                              s2t_fract32_rnd[23:0];
+  wire [9:0]  s2t_f64_exp10   = s1o_exp10 + {9'd0,s2t_f64_shr};
+  wire [23:0] s2t_f64_fract24 = s2t_f64_shr ? s2t_fract64_rnd[24:1] :
+                                              s2t_fract64_rnd[23:0];
 
   // denormalized or zero
-  wire s2t_f32_fract24_dn = ~s2t_f32_fract24[23];
+  wire s2t_f64_fract24_dn = ~s2t_f64_fract24[23];
 
   // integer output (f2i)
-  wire        s2t_i32_carry_rnd;
-  wire        s2t_i32_inv;
-  wire [31:0] s2t_i32_int32;
+  wire        s2t_i64_carry_rnd;
+  wire        s2t_i64_inv;
+  wire [31:0] s2t_i64_int64;
 
   generate
     /* verilator lint_on WIDTH */
     if (OPTION_FTOI_ROUNDING == "CPP") begin : ftoi_cpp_truncate
       /* verilator lint_off WIDTH */
-      assign s2t_i32_carry_rnd = s1o_fract32[31];
-      assign s2t_i32_inv = ((~s1o_sign) & s2t_i32_carry_rnd) | s1o_f2i_ovf;
+      assign s2t_i64_carry_rnd = s1o_fract64[31];
+      assign s2t_i64_inv = ((~s1o_sign) & s2t_i64_carry_rnd) | s1o_f2i_ovf;
 
       // two's complement for negative number
-      assign s2t_i32_int32 = (s1o_fract32 ^ {32{s1o_sign}}) + {31'd0,s1o_sign};
+      assign s2t_i64_int64 = (s1o_fract64 ^ {64{s1o_sign}}) + {31'd0,s1o_sign};
     end else begin : ftoi_ieee_rounding
-      assign s2t_i32_carry_rnd = s2t_fract32_rnd[31];
-      assign s2t_i32_inv = ((~s1o_sign) & s2t_i32_carry_rnd) | s1o_f2i_ovf;
+      assign s2t_i64_carry_rnd = s2t_fract64_rnd[31];
+      assign s2t_i64_inv = ((~s1o_sign) & s2t_i64_carry_rnd) | s1o_f2i_ovf;
 
       // two's complement for negative number
-      assign s2t_i32_int32 = (s2t_fract32_rnd ^ {32{s1o_sign}}) + {31'd0,s1o_sign};
+      assign s2t_i64_int64 = (s2t_fract64_rnd ^ {64{s1o_sign}}) + {31'd0,s1o_sign};
     end
   endgenerate
 
   // zero
-  wire s2t_i32_int32_00 = (~s2t_i32_inv) & (~(|s2t_i32_int32));
+  wire s2t_i64_int64_00 = (~s2t_i64_inv) & (~(|s2t_i64_int64));
 
-  // int32 output
-  wire [31:0] s2t_i32_opc;
+  // int64 output
+  wire [31:0] s2t_i64_opc;
 
-  assign s2t_i32_opc = s2t_i32_inv ? (32'h7fffffff ^ {32{s1o_sign}}) : s2t_i32_int32;
+  assign s2t_i64_opc = s2t_i64_inv ? (64'h7fffffff ^ {64{s1o_sign}}) : s2t_i64_int64;
 
   // Generate result and flags
   wire s2t_ine, s2t_ovf, s2t_inf, s2t_unf, s2t_zer;
@@ -387,7 +387,7 @@ module pu_or1k_pfpu32_rnd #(
   assign {s2t_opc,s2t_ine,s2t_ovf,s2t_inf,s2t_unf,s2t_zer} =
          // f2i
          s1o_f2i ?       //  ine  ovf  inf  unf              zer
-         {s2t_i32_opc,s2t_lost,1'b0,1'b0,1'b0,s2t_i32_int32_00} :
+         {s2t_i64_opc,s2t_lost,1'b0,1'b0,1'b0,s2t_i64_int64_00} :
 
          // qnan output
          (s1o_snan_i | s1o_qnan_i) ? // ine  ovf  inf  unf  zer
@@ -398,24 +398,24 @@ module pu_or1k_pfpu32_rnd #(
          {{s1o_sign,SNAN},1'b0,1'b0,1'b0,1'b0,1'b0} :
 
          // overflow and infinity
-         ((s2t_f32_exp10 > 10'd254) | s1o_inf | s2t_dbz) ? // ine                       ovf  inf  unf  zer
+         ((s2t_f64_exp10 > 10'd254) | s1o_inf | s2t_dbz) ? // ine                       ovf  inf  unf  zer
          {{s1o_sign,INF},((s2t_lost | (~s1o_inf)) & (~s2t_dbz)),((~s1o_inf) & (~s2t_dbz)),1'b1,1'b0,1'b0} :
 
          // denormalized or zero
-         (s2t_f32_fract24_dn) ?                     // ine  ovf  inf 
-         {{s1o_sign,8'd0,s2t_f32_fract24[22:0]},s2t_lost,1'b0,1'b0,
+         (s2t_f64_fract24_dn) ?                     // ine  ovf  inf 
+         {{s1o_sign,8'd0,s2t_f64_fract24[22:0]},s2t_lost,1'b0,1'b0,
 
          // unf        zer
-         (s2t_lost & s2t_f32_fract24_dn),~(|s2t_f32_fract24)} :
+         (s2t_lost & s2t_f64_fract24_dn),~(|s2t_f64_fract24)} :
 
          // normal result                                          ine  ovf  inf  unf  zer
-         {{s1o_sign,s2t_f32_exp10[7:0],s2t_f32_fract24[22:0]},s2t_lost,1'b0,1'b0,1'b0,1'b0};
+         {{s1o_sign,s2t_f64_exp10[7:0],s2t_f64_fract24[22:0]},s2t_lost,1'b0,1'b0,1'b0,1'b0};
 
   // Output Register
   always @(posedge clk or posedge rst) begin
     if (rst) begin
       // arithmetic results
-      fpu_result_o      <= 32'd0;
+      fpu_result_o      <= 64'd0;
       fpu_arith_valid_o <=  1'b0;
 
       // comparison specials
@@ -426,7 +426,7 @@ module pu_or1k_pfpu32_rnd #(
       fpcsr_o         <= {`OR1K_FPCSR_WIDTH{1'b0}};
     end else if(flush_i) begin
       // arithmetic results
-      fpu_result_o      <= 32'd0;
+      fpu_result_o      <= 64'd0;
       fpu_arith_valid_o <=  1'b0;
 
       // comparison specials
@@ -451,7 +451,7 @@ module pu_or1k_pfpu32_rnd #(
       fpcsr_o[`OR1K_FPCSR_QNF] <= s1o_qnan_i;
       fpcsr_o[`OR1K_FPCSR_ZF]  <= s2t_zer;
       fpcsr_o[`OR1K_FPCSR_IXF] <= s2t_ine;
-      fpcsr_o[`OR1K_FPCSR_IVF] <= (s1o_inv | (s2t_i32_inv & s1o_f2i) | s1o_snan_i) |
+      fpcsr_o[`OR1K_FPCSR_IVF] <= (s1o_inv | (s2t_i64_inv & s1o_f2i) | s1o_snan_i) |
       (cmp_inv_i & cmp_rdy_i);
       fpcsr_o[`OR1K_FPCSR_INF] <= s2t_inf |
       (cmp_inf_i & cmp_rdy_i);

@@ -40,7 +40,7 @@
 
 `include "pu_or1k_defines.sv"
 
-module pu_or1k_pfpu32_i2f (
+module pu_or1k_pfpu64_i2f (
   input             clk,
   input             rst,
   input             flush_i,  // flush pipe
@@ -54,7 +54,7 @@ module pu_or1k_pfpu32_i2f (
   output reg [ 4:0] i2f_shl_o,
   output reg [ 7:0] i2f_exp8shl_o,
   output reg [ 7:0] i2f_exp8sh0_o,
-  output reg [31:0] i2f_fract32_o
+  output reg [31:0] i2f_fract64_o
 );
 
   // Any stage's output is registered.
@@ -66,7 +66,7 @@ module pu_or1k_pfpu32_i2f (
   wire s1t_signa = opa_i[31];
 
   // magnitude (tow's complement for negative input)
-  wire [31:0] s1t_fract32 = (opa_i ^ {32{s1t_signa}}) + {31'd0,s1t_signa};
+  wire [31:0] s1t_fract64 = (opa_i ^ {64{s1t_signa}}) + {31'd0,s1t_signa};
 
   // normalization shifts
   reg [3:0] s1t_shrx;
@@ -78,8 +78,8 @@ module pu_or1k_pfpu32_i2f (
   // h  fffffffffffffffffffffff
 
   // right shift
-  always @(s1t_fract32[31:24]) begin
-    casez(s1t_fract32[31:24])  // synopsys full_case parallel_case
+  always @(s1t_fract64[31:24]) begin
+    casez(s1t_fract64[31:24])  // synopsys full_case parallel_case
       8'b1??????? : s1t_shrx = 4'd8;
       8'b01?????? : s1t_shrx = 4'd7;
       8'b001????? : s1t_shrx = 4'd6;
@@ -93,8 +93,8 @@ module pu_or1k_pfpu32_i2f (
   end
 
   // left shift
-  always @(s1t_fract32[23:0]) begin
-    casez(s1t_fract32[23:0])  // synopsys full_case parallel_case
+  always @(s1t_fract64[23:0]) begin
+    casez(s1t_fract64[23:0])  // synopsys full_case parallel_case
       24'b1??????????????????????? : s1t_shlx = 5'd0; // hidden '1' is in its plase
       24'b01?????????????????????? : s1t_shlx = 5'd1;
       24'b001????????????????????? : s1t_shlx = 5'd2;
@@ -132,8 +132,8 @@ module pu_or1k_pfpu32_i2f (
       i2f_exp8shr_o <= 8'd150 + {4'd0,s1t_shrx};      // 150=127+23
       i2f_shl_o     <= s1t_shlx;
       i2f_exp8shl_o <= 8'd150 - {3'd0,s1t_shlx};
-      i2f_exp8sh0_o <= {8{s1t_fract32[23]}} & 8'd150; // "1" is in [23] / zero
-      i2f_fract32_o <= s1t_fract32;
+      i2f_exp8sh0_o <= {8{s1t_fract64[23]}} & 8'd150; // "1" is in [23] / zero
+      i2f_fract64_o <= s1t_fract64;
     end
   end
 

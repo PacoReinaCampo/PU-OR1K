@@ -42,7 +42,7 @@
 
 // completely combinatorial module
 
-module pfpu32_fcmp (
+module pfpu64_fcmp (
   input                                      fpu_op_is_comp_i,
   input  [`OR1K_FPUOP_GENERIC_CMP_WIDTH-1:0] generic_cmp_opc_i,    // ordered/unordered
   input                                      unordered_cmp_bit_i,  // is unorderd

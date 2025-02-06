@@ -40,7 +40,7 @@
 
 `include "pu_or1k_defines.sv"
 
-module pu_or1k_pfpu32_muldiv (
+module pu_or1k_pfpu64_muldiv (
   input             clk,
   input             rst,
   input             flush_i,  // flushe pipe
@@ -488,7 +488,7 @@ module pu_or1k_pfpu32_muldiv (
   // reciprocal with restored leading 01
   wire [10:0] itr_recip11b = b_eq_1 ?  11'b10000000000 : {2'b01,itr_recip9b};
 
-  // the subsequent two stages multiplier operates with 32-bit inputs
+  // the subsequent two stages multiplier operates with 64-bit inputs
   // 25-bits: fractionals (quotient is in range 0.5 to 1)
   //  1-bit : rounding bit
   //  6-bits: guard (due to truncations of intermediate results)
@@ -504,10 +504,10 @@ module pu_or1k_pfpu32_muldiv (
   //   align resulting quotient to support subsequent IEEE-compliant rounding
   wire [25:0] itr_res_qtnt26; // rounded quotient
   //   Updated quotient or divisor
-  wire [32:0] itr_qtnt33;
+  wire [64:0] itr_qtnt33;
 
   //   'F' (2-D) or 'Reminder'
-  wire [32:0] itr_rmnd33;
+  wire [64:0] itr_rmnd33;
 
   // control for multiplier's input 'A'
   //   the register also contains quotient to output
@@ -516,7 +516,7 @@ module pu_or1k_pfpu32_muldiv (
        itr_state[6] | itr_rndQ;
 
   // multiplexer for multiplier's input 'A'
-  wire [31:0] itr_mul32a =
+  wire [31:0] itr_mul64a =
               s1t_is_mul   ? {s1t_fract24a,8'd0}   :
               itr_state[0] ? {itr_recip11b,21'd0}  :
               itr_rndQ     ? {itr_res_qtnt26,6'd0} : // truncate by 2^(-n-1)
@@ -529,8 +529,8 @@ module pu_or1k_pfpu32_muldiv (
   // registering
   always @(posedge clk) begin
     if(adv_i & itr_uinA) begin
-      s1o_mul16_al <= itr_mul32a[15: 0];
-      s1o_mul16_ah <= itr_mul32a[31:16];
+      s1o_mul16_al <= itr_mul64a[15: 0];
+      s1o_mul16_ah <= itr_mul64a[31:16];
     end
   end
 
@@ -542,7 +542,7 @@ module pu_or1k_pfpu32_muldiv (
        itr_rndQ;
 
   // multiplexer for multiplier's input 'B'
-  wire [31:0] itr_mul32b =
+  wire [31:0] itr_mul64b =
               s1t_is_mul               ? {s1t_fract24b,8'd0} :
              (itr_state[0] | itr_rndQ) ? {s1o_fract24b,8'd0} :
               itr_state[1]             ? {s1o_fract24a,8'd0} :
@@ -554,8 +554,8 @@ module pu_or1k_pfpu32_muldiv (
 
   always @(posedge clk) begin
     if(adv_i & itr_uinB) begin
-      s1o_mul16_bl <= itr_mul32b[15: 0];
-      s1o_mul16_bh <= itr_mul32b[31:16];
+      s1o_mul16_bl <= itr_mul64b[15: 0];
+      s1o_mul16_bh <= itr_mul64b[31:16];
     end
   end
 
@@ -576,10 +576,10 @@ module pu_or1k_pfpu32_muldiv (
   reg  [9:0] s2o_exp10rx;
 
   //   multipliers
-  reg [31:0] s2o_fract32_albl;
-  reg [31:0] s2o_fract32_albh;
-  reg [31:0] s2o_fract32_ahbl;
-  reg [31:0] s2o_fract32_ahbh;
+  reg [31:0] s2o_fract64_albl;
+  reg [31:0] s2o_fract64_albh;
+  reg [31:0] s2o_fract64_ahbl;
+  reg [31:0] s2o_fract64_ahbh;
 
   //   registering
   always @(posedge clk) begin
@@ -604,10 +604,10 @@ module pu_or1k_pfpu32_muldiv (
       s2o_exp10rx <= s2t_exp10rx;
 
       // multipliers
-      s2o_fract32_albl <= s1o_mul16_al * s1o_mul16_bl;
-      s2o_fract32_albh <= s1o_mul16_al * s1o_mul16_bh;
-      s2o_fract32_ahbl <= s1o_mul16_ah * s1o_mul16_bl;
-      s2o_fract32_ahbh <= s1o_mul16_ah * s1o_mul16_bh;
+      s2o_fract64_albl <= s1o_mul16_al * s1o_mul16_bl;
+      s2o_fract64_albh <= s1o_mul16_al * s1o_mul16_bh;
+      s2o_fract64_ahbl <= s1o_mul16_ah * s1o_mul16_bl;
+      s2o_fract64_ahbh <= s1o_mul16_ah * s1o_mul16_bh;
     end
   end
 
@@ -633,21 +633,21 @@ module pu_or1k_pfpu32_muldiv (
   // 2nd stage of multiplier
   wire [47:0] s3t_fract48;
 
-  assign s3t_fract48 = {s2o_fract32_ahbh,  16'd0} +
-                       {16'd0, s2o_fract32_ahbl} +
-                       {16'd0, s2o_fract32_albh} +
-                       {32'd0, s2o_fract32_albl[31:16]};
+  assign s3t_fract48 = {s2o_fract64_ahbh,  16'd0} +
+                       {16'd0, s2o_fract64_ahbl} +
+                       {16'd0, s2o_fract64_albh} +
+                       {64'd0, s2o_fract64_albl[31:16]};
 
   // stage #3 outputs (for division support)
 
   // full product
-  reg [32:0] s3o_mul33o; // output
+  reg [64:0] s3o_mul33o; // output
   reg        s3o_mul33s; // sticky
   //   registering
   always @(posedge clk) begin
     if(adv_i) begin
       s3o_mul33o <= s3t_fract48[47:15];
-      s3o_mul33s <= (|s3t_fract48[14:0]) | (|s2o_fract32_albl[15:0]);
+      s3o_mul33s <= (|s3t_fract48[14:0]) | (|s2o_fract64_albl[15:0]);
     end
   end
 
@@ -707,7 +707,7 @@ module pu_or1k_pfpu32_muldiv (
   wire itr_rndQ01x = (~s3o_mul33o[31]);
 
   //   rounding mask:
-  wire [32:0] itr_rndM33 = // bits [6],[5] ... [0]
+  wire [64:0] itr_rndM33 = // bits [6],[5] ... [0]
               { 26'd0,(itr_rndQ & itr_rndQ1xx),(itr_rndQ & itr_rndQ01x), // round resulting quotient
                  4'd0,(itr_rndD & s3o_mul33s) };                         // round intermediate divisor
                                                                          // rounding
@@ -715,9 +715,9 @@ module pu_or1k_pfpu32_muldiv (
 
   // compute 2's complement or reminder (for sticky bit detection)
   // binary point position is located just after bit [30]
-  wire [32:0] itr_AorT33 =
+  wire [64:0] itr_AorT33 =
               s3o_div_ready ? {1'b0,s3o_fract24a,8'd0} : // for reminder
-                              {32'h80000000,1'b0};       // for two's complement
+                              {64'h80000000,1'b0};       // for two's complement
 
   // 'Reminder' / Two's complement
   assign itr_rmnd33 = itr_AorT33 - itr_qtnt33;
@@ -730,7 +730,7 @@ module pu_or1k_pfpu32_muldiv (
   wire s4t_qtnt_exact = ~(s4t_rmnd33_n0 | s3o_mul33s);
 
   //  - signum of final reminder
-  wire s4t_sign_rmnd  = itr_rmnd33[32] | ((~s4t_rmnd33_n0) & s3o_mul33s);
+  wire s4t_sign_rmnd  = itr_rmnd33[64] | ((~s4t_rmnd33_n0) & s3o_mul33s);
 
   // Additionally store 26-bit of non-rounded (_raw_) and rounded (_res_) quotients.
   // It is used for rounding in cases of denormalized result.

@@ -40,7 +40,7 @@
 
 `include "pu_or1k_defines.sv"
 
-module pu_or1k_pfpu32_addsub (
+module pu_or1k_pfpu64_addsub (
   input             clk,
   input             rst,
   input             flush_i,  // flushe pipe
