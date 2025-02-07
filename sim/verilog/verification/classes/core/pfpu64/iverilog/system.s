@@ -42,6 +42,12 @@
 ##                                                                               ##
 ###################################################################################
 
-../../../../../../../verification/classes/application/core/apb4/peripheral_design.sv
+../../../../../../../rtl/verilog/core/pfpu64/pu_or1k_pfpu64_addsub.sv
+../../../../../../../rtl/verilog/core/pfpu64/pu_or1k_pfpu64_cmp.sv
+../../../../../../../rtl/verilog/core/pfpu64/pu_or1k_pfpu64_f2i.sv
+../../../../../../../rtl/verilog/core/pfpu64/pu_or1k_pfpu64_i2f.sv
+../../../../../../../rtl/verilog/core/pfpu64/pu_or1k_pfpu64_muldiv.sv
+../../../../../../../rtl/verilog/core/pfpu64/pu_or1k_pfpu64_rnd.sv
+../../../../../../../rtl/verilog/core/pfpu64/pu_or1k_pfpu64_top.sv
 
-../../../../../../../verification/classes/library/core/apb4/peripheral_testbench.sv
+../../../../../../../verification/classes/library/core/pfpu64/peripheral_testbench.sv

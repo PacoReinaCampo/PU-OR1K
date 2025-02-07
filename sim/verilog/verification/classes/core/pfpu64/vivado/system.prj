@@ -42,6 +42,12 @@
 //                                                                               //
 ///////////////////////////////////////////////////////////////////////////////////
 
-sv work ../../../../../../../verification/classes/application/core/apb4/peripheral_design.sv
+sv work ../../../../../../../rtl/verilog/core/pfpu64/pu_or1k_pfpu64_addsub.sv
+sv work ../../../../../../../rtl/verilog/core/pfpu64/pu_or1k_pfpu64_cmp.sv
+sv work ../../../../../../../rtl/verilog/core/pfpu64/pu_or1k_pfpu64_f2i.sv
+sv work ../../../../../../../rtl/verilog/core/pfpu64/pu_or1k_pfpu64_i2f.sv
+sv work ../../../../../../../rtl/verilog/core/pfpu64/pu_or1k_pfpu64_muldiv.sv
+sv work ../../../../../../../rtl/verilog/core/pfpu64/pu_or1k_pfpu64_rnd.sv
+sv work ../../../../../../../rtl/verilog/core/pfpu64/pu_or1k_pfpu64_top.sv
 
-sv work ../../../../../../../verification/classes/library/core/apb4/peripheral_testbench.sv
+sv work ../../../../../../../verification/classes/library/core/pfpu64/peripheral_testbench.sv

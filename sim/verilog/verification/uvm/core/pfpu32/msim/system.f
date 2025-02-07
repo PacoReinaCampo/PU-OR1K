@@ -44,6 +44,12 @@
 
 +incdir+../../../../../../../verification/uvm/src
 
-../../../../../../../verification/uvm/library/core/apb4/peripheral_uvm_testbench.sv
+../../../../../../../rtl/verilog/core/pfpu32/pu_or1k_pfpu32_addsub.sv
+../../../../../../../rtl/verilog/core/pfpu32/pu_or1k_pfpu32_cmp.sv
+../../../../../../../rtl/verilog/core/pfpu32/pu_or1k_pfpu32_f2i.sv
+../../../../../../../rtl/verilog/core/pfpu32/pu_or1k_pfpu32_i2f.sv
+../../../../../../../rtl/verilog/core/pfpu32/pu_or1k_pfpu32_muldiv.sv
+../../../../../../../rtl/verilog/core/pfpu32/pu_or1k_pfpu32_rnd.sv
+../../../../../../../rtl/verilog/core/pfpu32/pu_or1k_pfpu32_top.sv
 
-../../../../../../../verification/uvm/application/core/apb4/peripheral_design.sv
+../../../../../../../verification/uvm/library/core/pfpu32/peripheral_uvm_testbench.sv
