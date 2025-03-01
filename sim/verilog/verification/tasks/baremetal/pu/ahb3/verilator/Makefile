@@ -49,8 +49,8 @@ hardware:
 	make -f Vpu_or1k_wb.mk
 
 software:
-	./Vpu_or1k_wb --elf-load=../../../../../../../software/baremetal/hello/c/hello_c.elf
-	./Vpu_or1k_wb --elf-load=../../../../../../../software/baremetal/hello/cpp/hello_cpp.elf
+	./Vpu_or1k_wb --elf-load=../../../../../../../../software/baremetal/hello/c/hello_c.elf
+	./Vpu_or1k_wb --elf-load=../../../../../../../../software/baremetal/hello/cpp/hello_cpp.elf
 
 clean:
 	rm -rf *.a *.cpp *.d *.dat *.h *.o *.mk Vpu_or1k_* stdout.*

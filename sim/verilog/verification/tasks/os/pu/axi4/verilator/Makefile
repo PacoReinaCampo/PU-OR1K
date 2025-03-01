@@ -49,7 +49,7 @@ hardware:
 	make -f Vpu_or1k_wb.mk
 
 software:
-	./Vpu_or1k_wb --elf-load=../../../../../../../software/os/linux/vmlinux
+	./Vpu_or1k_wb --elf-load=../../../../../../../../software/os/linux/vmlinux
 
 clean:
 	rm -rf *.a *.cpp *.d *.dat *.h *.o *.mk Vpu_or1k_* stdout.*
