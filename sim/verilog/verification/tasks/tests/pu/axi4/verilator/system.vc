@@ -47,8 +47,8 @@
 -LDFLAGS -lelf
 +incdir=+../../../../../../../../software/elf-loader
 -CFLAGS -I../../../../../../../software/elf-loader
-+incdir=+../../../../../../../../verification/tasks/library/cpp
--CFLAGS -I../../../../../../../verification/tasks/library/cpp
++incdir=+../../../../../../../../verification/tasks/tests/baremetal/library/cpp
+-CFLAGS -I../../../../../../../verification/tasks/tests/baremetal/library/cpp
 
 +incdir=+../../../../../../../../peripheral/dbg/rtl/pu/or1k/verilog/code/pkg/wb
 -CFLAGS -I../../../../../../../peripheral/dbg/rtl/pu/or1k/verilog/code/pkg/wb
@@ -137,6 +137,6 @@
 --top-module pu_or1k_axi4
 --exe
 ../../../../../../../../software/elf-loader/elf-loader.c
-../../../../../../../../verification/tasks/library/cpp/verilator_tb_utils.cpp
-../../../../../../../../verification/tasks/library/cpp/jtagServer.cpp
-../../../../../../../../verification/tasks/library/cpp/or1k_testbench.cpp
+../../../../../../../../verification/tasks/tests/baremetal/library/cpp/verilator_tb_utils.cpp
+../../../../../../../../verification/tasks/tests/baremetal/library/cpp/jtagServer.cpp
+../../../../../../../../verification/tasks/tests/baremetal/library/cpp/or1k_testbench.cpp
