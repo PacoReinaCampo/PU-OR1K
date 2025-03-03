@@ -42,11 +42,11 @@
 ##                                                                               ##
 ###################################################################################
 
-+incdir=+../../../../../../../../verification/tasks/library/verilog
++incdir+../../../../../../../../verification/tasks/library/verilog
 
-+incdir=+../../../../../../../../peripheral/dbg/rtl/pu/or1k/verilog/code/pkg/wb
++incdir+../../../../../../../../peripheral/dbg/rtl/pu/or1k/verilog/code/pkg/wb
 
-+incdir=+../../../../../../../../rtl/verilog/pkg
++incdir+../../../../../../../../rtl/verilog/pkg
 
 ../../../../../../../../verification/tasks/library/verilog/pu_or1k_functions.sv
 ../../../../../../../../verification/tasks/library/verilog/pu_or1k_monitor.sv
