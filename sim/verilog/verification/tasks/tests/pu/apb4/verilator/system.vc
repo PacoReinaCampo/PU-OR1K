@@ -45,8 +45,8 @@
 --Mdir .
 --cc
 -LDFLAGS -lelf
-+incdir+../../../../../../../../software/elf-loader
--CFLAGS -I../../../../../../../../software/elf-loader
++incdir+../../../../../../../../software/tool/elf-loader
+-CFLAGS -I../../../../../../../../software/tool/elf-loader
 +incdir+../../../../../../../../verification/tasks/library/cpp
 -CFLAGS -I../../../../../../../../verification/tasks/library/cpp
 
@@ -136,7 +136,7 @@
 
 --top-module pu_or1k_apb4
 --exe
-../../../../../../../../software/elf-loader/elf-loader.c
+../../../../../../../../software/tool/elf-loader/elf-loader.c
 ../../../../../../../../verification/tasks/library/cpp/verilator_tb_utils.cpp
 ../../../../../../../../verification/tasks/library/cpp/jtagServer.cpp
 ../../../../../../../../verification/tasks/library/cpp/or1k_testbench.cpp

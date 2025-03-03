@@ -58,9 +58,9 @@ run-linux: $(VPI_MODULES) $(TARGET)
 	vvp -n -M. -l log/or1k-linux.log $(patsubst %.vpi,-m%,$(VPI_MODULES)) $(TARGET) $(LINUX)
 
 elf-loader_LIBS := -lelf
-elf-loader_INCS := -I../../../../../../../software/elf-loader/
-elf-loader_SRCS := ../../../../../../../software/elf-loader/elf-loader.c \
-                   ../../../../../../../software/elf-loader/vpi_wrapper.c
+elf-loader_INCS := -I../../../../../../../software/tool/elf-loader/
+elf-loader_SRCS := ../../../../../../../software/tool/elf-loader/elf-loader.c \
+                   ../../../../../../../software/tool/elf-loader/vpi_wrapper.c
 
 elf-loader.vpi: $(elf-loader_SRCS)
 	iverilog-vpi --name=elf-loader $(elf-loader_LIBS) $(elf-loader_INCS) $?
