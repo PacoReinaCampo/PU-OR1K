@@ -46,15 +46,15 @@
 --cc
 -LDFLAGS -lelf
 +incdir=+../../../../../../../../software/elf-loader
--CFLAGS -I../../../../../../../software/elf-loader
+-CFLAGS -I../../../../../../../../software/elf-loader
 +incdir=+../../../../../../../../verification/tasks/library/cpp
--CFLAGS -I../../../../../../../verification/tasks/library/cpp
+-CFLAGS -I../../../../../../../../verification/tasks/library/cpp
 
 +incdir=+../../../../../../../../peripheral/dbg/rtl/pu/or1k/verilog/code/pkg/wb
--CFLAGS -I../../../../../../../peripheral/dbg/rtl/pu/or1k/verilog/code/pkg/wb
+-CFLAGS -I../../../../../../../../peripheral/dbg/rtl/pu/or1k/verilog/code/pkg/wb
 
 +incdir=+../../../../../../../../rtl/verilog/pkg
--CFLAGS -I../../../../../../../rtl/verilog/pkg
+-CFLAGS -I../../../../../../../../rtl/verilog/pkg
 
 ../../../../../../../../peripheral/uart/rtl/verilog/code/pkg/core/peripheral_uart_pkg.sv
 
