@@ -42,17 +42,17 @@
 ##                                                                               ##
 ###################################################################################
 
-+incdir=+../../../../../../../../verification/tasks/tests/baremetal/library/verilog
++incdir=+../../../../../../../../verification/tasks/library/verilog
 
 +incdir=+../../../../../../../../peripheral/dbg/rtl/pu/or1k/verilog/code/pkg/wb
 
 +incdir=+../../../../../../../../rtl/verilog/pkg
 
-../../../../../../../../verification/tasks/tests/baremetal/library/verilog/pu_or1k_functions.sv
-../../../../../../../../verification/tasks/tests/baremetal/library/verilog/pu_or1k_monitor.sv
-../../../../../../../../verification/tasks/tests/baremetal/library/verilog/pu_or1k_tap_generator.sv
-../../../../../../../../verification/tasks/tests/baremetal/library/verilog/pu_or1k_testbench_utils.sv
-../../../../../../../../verification/tasks/tests/baremetal/library/verilog/pu_or1k_testbench_biu.sv
+../../../../../../../../verification/tasks/library/verilog/pu_or1k_functions.sv
+../../../../../../../../verification/tasks/library/verilog/pu_or1k_monitor.sv
+../../../../../../../../verification/tasks/library/verilog/pu_or1k_tap_generator.sv
+../../../../../../../../verification/tasks/library/verilog/pu_or1k_testbench_utils.sv
+../../../../../../../../verification/tasks/library/verilog/pu_or1k_testbench_biu.sv
 
 ../../../../../../../../peripheral/uart/rtl/verilog/code/pkg/core/peripheral_uart_pkg.sv
 
