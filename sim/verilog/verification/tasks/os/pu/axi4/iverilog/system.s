@@ -58,8 +58,8 @@
 
 ../../../../../../../../rtl/verilog/pkg/peripheral_axi4_pkg.sv
 
-../../../../../../../../peripheral/dbg/bench/pu/or1k/verilog/code/tests/axi4/debug/jtag_tap/tap_top.sv
-../../../../../../../../peripheral/dbg/bench/pu/or1k/verilog/code/tests/axi4/debug/jtag_vpi/jtag_vpi.sv
+../../../../../../../../peripheral/dbg/verification/tasks/pu/or1k/verilog/code/tests/axi4/debug/jtag_tap/tap_top.sv
+../../../../../../../../peripheral/dbg/verification/tasks/pu/or1k/verilog/code/tests/axi4/debug/jtag_vpi/jtag_vpi.sv
 ../../../../../../../../peripheral/dbg/rtl/pu/or1k/verilog/code/peripheral/axi4/peripheral_dbg_pu_or1k_axi4.sv
 ../../../../../../../../peripheral/dbg/rtl/pu/or1k/verilog/code/peripheral/axi4/peripheral_dbg_pu_or1k_axi4_axi4.sv
 ../../../../../../../../peripheral/dbg/rtl/pu/or1k/verilog/code/peripheral/axi4/peripheral_dbg_pu_or1k_bytefifo.sv

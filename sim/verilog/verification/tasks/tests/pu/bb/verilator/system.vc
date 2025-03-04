@@ -60,7 +60,7 @@
 
 ../../../../../../../../rtl/verilog/pkg/peripheral_bb_pkg.sv
 
-../../../../../../../../peripheral/dbg/bench/pu/or1k/verilog/code/tests/bb/debug/jtag_tap/tap_top.sv
+../../../../../../../../peripheral/dbg/verification/tasks/pu/or1k/verilog/code/tests/bb/debug/jtag_tap/tap_top.sv
 ../../../../../../../../peripheral/dbg/rtl/pu/or1k/verilog/code/peripheral/bb/peripheral_dbg_pu_or1k_bb.sv
 ../../../../../../../../peripheral/dbg/rtl/pu/or1k/verilog/code/peripheral/bb/peripheral_dbg_pu_or1k_bb_bb.sv
 ../../../../../../../../peripheral/dbg/rtl/pu/or1k/verilog/code/peripheral/bb/peripheral_dbg_pu_or1k_bytefifo.sv

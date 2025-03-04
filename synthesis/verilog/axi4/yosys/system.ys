@@ -44,14 +44,14 @@
 
 # read design
 verilog_defaults -add -I ../../../../bench/verilog
-verilog_defaults -add -I ../../../../peripheral/dbg/bench/pu/or1k/verilog/tests/axi4/debug/jtag_vpi
+verilog_defaults -add -I ../../../../peripheral/dbg/verification/tasks/pu/or1k/verilog/tests/axi4/debug/jtag_vpi
 verilog_defaults -add -I ../../../../peripheral/dbg/rtl/pu/or1k/verilog/axi4/pkg
 verilog_defaults -add -I ../../../../peripheral/msi/rtl/verilog/axi4/core
 verilog_defaults -add -I ../../../../peripheral/msi/rtl/verilog/axi4/pkg
 verilog_defaults -add -I ../../../../rtl/verilog/pkg
 verilog_defaults -add -I ../../../../peripheral/uart/rtl/verilog/axi4/pkg
 
-read_verilog -sv ../../../../peripheral/dbg/bench/pu/or1k/verilog/tests/axi4/debug/jtag_tap/tap_top.sv
+read_verilog -sv ../../../../peripheral/dbg/verification/tasks/pu/or1k/verilog/tests/axi4/debug/jtag_tap/tap_top.sv
 read_verilog -sv ../../../../peripheral/dbg/rtl/pu/or1k/verilog/axi4/pkg/adbg_or1k_defines.sv
 read_verilog -sv ../../../../peripheral/dbg/rtl/pu/or1k/verilog/axi4/core/adbg_bytefifo.sv
 read_verilog -sv ../../../../peripheral/dbg/rtl/pu/or1k/verilog/axi4/core/adbg_crc32.sv

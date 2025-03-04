@@ -58,8 +58,8 @@
 
 ../../../../../../../../rtl/verilog/pkg/peripheral_wb_pkg.sv
 
-../../../../../../../../peripheral/dbg/bench/pu/or1k/verilog/code/tests/wb/debug/jtag_tap/tap_top.sv
-../../../../../../../../peripheral/dbg/bench/pu/or1k/verilog/code/tests/wb/debug/jtag_vpi/jtag_vpi.sv
+../../../../../../../../peripheral/dbg/verification/tasks/pu/or1k/verilog/code/tests/wb/debug/jtag_tap/tap_top.sv
+../../../../../../../../peripheral/dbg/verification/tasks/pu/or1k/verilog/code/tests/wb/debug/jtag_vpi/jtag_vpi.sv
 ../../../../../../../../peripheral/dbg/rtl/pu/or1k/verilog/code/peripheral/wb/peripheral_dbg_pu_or1k_wb.sv
 ../../../../../../../../peripheral/dbg/rtl/pu/or1k/verilog/code/peripheral/wb/peripheral_dbg_pu_or1k_wb_wb.sv
 ../../../../../../../../peripheral/dbg/rtl/pu/or1k/verilog/code/peripheral/wb/peripheral_dbg_pu_or1k_bytefifo.sv

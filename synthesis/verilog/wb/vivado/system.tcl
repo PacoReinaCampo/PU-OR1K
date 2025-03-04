@@ -42,7 +42,7 @@
 ##                                                                               ##
 ###################################################################################
 
-read_verilog -sv ../../../../peripheral/dbg/bench/pu/or1k/verilog/tests/wb/debug/jtag_tap/tap_top.sv
+read_verilog -sv ../../../../peripheral/dbg/verification/tasks/pu/or1k/verilog/tests/wb/debug/jtag_tap/tap_top.sv
 read_verilog -sv ../../../../peripheral/dbg/rtl/pu/or1k/verilog/wb/pkg/adbg_or1k_defines.sv
 read_verilog -sv ../../../../peripheral/dbg/rtl/pu/or1k/verilog/wb/core/adbg_bytefifo.sv
 read_verilog -sv ../../../../peripheral/dbg/rtl/pu/or1k/verilog/wb/core/adbg_crc32.sv
@@ -119,7 +119,7 @@ read_xdc system.xdc
 
 synth_design -part xc7z020-clg484-1 -top or1k_synthesis \
 -include_dirs ../../../../bench/verilog \
--include_dirs ../../../../peripheral/dbg/bench/pu/or1k/verilog/tests/wb/debug/jtag_vpi \
+-include_dirs ../../../../peripheral/dbg/verification/tasks/pu/or1k/verilog/tests/wb/debug/jtag_vpi \
 -include_dirs ../../../../peripheral/dbg/rtl/pu/or1k/verilog/wb/pkg \
 -include_dirs ../../../../peripheral/msi/rtl/verilog/wb/core \
 -include_dirs ../../../../peripheral/msi/rtl/verilog/wb/pkg \

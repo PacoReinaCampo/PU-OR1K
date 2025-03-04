@@ -58,8 +58,8 @@
 
 ../../../../../../../../rtl/verilog/pkg/peripheral_biu_pkg.sv
 
-../../../../../../../../peripheral/dbg/bench/pu/or1k/verilog/code/tests/biu/debug/jtag_tap/tap_top.sv
-../../../../../../../../peripheral/dbg/bench/pu/or1k/verilog/code/tests/biu/debug/jtag_vpi/jtag_vpi.sv
+../../../../../../../../peripheral/dbg/verification/tasks/pu/or1k/verilog/code/tests/biu/debug/jtag_tap/tap_top.sv
+../../../../../../../../peripheral/dbg/verification/tasks/pu/or1k/verilog/code/tests/biu/debug/jtag_vpi/jtag_vpi.sv
 ../../../../../../../../peripheral/dbg/rtl/pu/or1k/verilog/code/peripheral/biu/peripheral_dbg_pu_or1k_biu.sv
 ../../../../../../../../peripheral/dbg/rtl/pu/or1k/verilog/code/peripheral/biu/peripheral_dbg_pu_or1k_biu_biu.sv
 ../../../../../../../../peripheral/dbg/rtl/pu/or1k/verilog/code/peripheral/biu/peripheral_dbg_pu_or1k_bytefifo.sv
