@@ -46,6 +46,8 @@
 
 +incdir+../../../../../../../../peripheral/dbg/rtl/pu/or1k/verilog/code/pkg/wb
 
++incdir+../../../../../../../../peripheral/uart/rtl/verilog/code/pkg/core
+
 +incdir+../../../../../../../../rtl/verilog/pkg
 
 ../../../../../../../../verification/tasks/library/verilog/pu_or1k_functions.sv

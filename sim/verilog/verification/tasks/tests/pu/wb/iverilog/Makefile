@@ -45,7 +45,7 @@
 TARGET               := pu_or1k_wb
 VPI_MODULES          := elf-loader.vpi jtag_vpi.vpi
 TOPLEVEL             := pu_or1k_testbench_wb
-IVERILOG_OPTIONS     := -DSIM -g2012
+IVERILOG_OPTIONS     := -DSIM
 ALIGNILLEGALINSN     ?= +elf_load=../../../../../../../../software/tests/elf/or1k-alignillegalinsn
 BACKTOBACK_JMP       ?= +elf_load=../../../../../../../../software/tests/elf/or1k-backtoback_jmp
 BASIC                ?= +elf_load=../../../../../../../../software/tests/elf/or1k-basic
