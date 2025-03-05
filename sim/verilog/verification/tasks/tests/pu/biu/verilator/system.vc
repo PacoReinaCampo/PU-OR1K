@@ -56,9 +56,8 @@
 +incdir+../../../../../../../../rtl/verilog/pkg
 -CFLAGS -I../../../../../../../../rtl/verilog/pkg
 
-../../../../../../../../peripheral/uart/rtl/verilog/code/pkg/core/peripheral_uart_pkg.sv
-
-../../../../../../../../rtl/verilog/pkg/peripheral_biu_pkg.sv
++incdir+../../../../../../../../peripheral/uart/rtl/verilog/code/pkg/core
+-CFLAGS -I../../../../../../../../peripheral/uart/rtl/verilog/code/pkg/core
 
 ../../../../../../../../peripheral/dbg/verification/tasks/pu/or1k/verilog/code/tests/biu/debug/jtag_tap/tap_top.sv
 ../../../../../../../../peripheral/dbg/rtl/pu/or1k/verilog/code/peripheral/biu/peripheral_dbg_pu_or1k_biu.sv
