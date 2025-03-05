@@ -56,10 +56,6 @@
 ../../../../../../../../verification/tasks/library/verilog/pu_or1k_testbench_utils.sv
 ../../../../../../../../verification/tasks/library/verilog/pu_or1k_testbench_ahb3.sv
 
-../../../../../../../../peripheral/uart/rtl/verilog/code/pkg/core/peripheral_uart_pkg.sv
-
-../../../../../../../../rtl/verilog/pkg/peripheral_ahb3_pkg.sv
-
 ../../../../../../../../peripheral/dbg/verification/tasks/pu/or1k/verilog/code/tests/ahb3/debug/jtag_tap/tap_top.sv
 ../../../../../../../../peripheral/dbg/verification/tasks/pu/or1k/verilog/code/tests/ahb3/debug/jtag_vpi/jtag_vpi.sv
 ../../../../../../../../peripheral/dbg/rtl/pu/or1k/verilog/code/peripheral/ahb3/peripheral_dbg_pu_or1k_ahb3.sv
