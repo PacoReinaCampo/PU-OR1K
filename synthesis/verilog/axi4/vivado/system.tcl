@@ -118,7 +118,7 @@ read_verilog -sv or1k_synthesis.sv
 read_xdc system.xdc
 
 synth_design -part xc7z020-clg484-1 -top or1k_synthesis \
--include_dirs ../../../../bench/verilog \
+-include_dirs ../../../../verification/tasks/library/verilog \
 -include_dirs ../../../../peripheral/dbg/verification/tasks/pu/or1k/verilog/tests/axi4/debug/jtag_vpi \
 -include_dirs ../../../../peripheral/dbg/rtl/pu/or1k/verilog/axi4/pkg \
 -include_dirs ../../../../peripheral/msi/rtl/verilog/axi4/core \

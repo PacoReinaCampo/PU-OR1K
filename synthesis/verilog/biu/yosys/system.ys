@@ -43,7 +43,7 @@
 ###################################################################################
 
 # read design
-verilog_defaults -add -I ../../../../bench/verilog
+verilog_defaults -add -I ../../../../verification/tasks/library/verilog
 verilog_defaults -add -I ../../../../peripheral/dbg/verification/tasks/pu/or1k/verilog/tests/biu/debug/jtag_vpi
 verilog_defaults -add -I ../../../../peripheral/dbg/rtl/pu/or1k/verilog/biu/pkg
 verilog_defaults -add -I ../../../../peripheral/msi/rtl/verilog/biu/core
