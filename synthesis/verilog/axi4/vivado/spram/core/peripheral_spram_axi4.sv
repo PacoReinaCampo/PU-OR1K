@@ -39,7 +39,7 @@
 //   Olof Kindgren <olof.kindgren@gmail.com>
 //   Paco Reina Campo <pacoreinacampo@queenfield.tech>
 
-module peripheral_spram_axi4 #(
+module peripheral_design #(
   // Memory parameters
   parameter DEPTH   = 256,
   parameter MEMFILE = "",

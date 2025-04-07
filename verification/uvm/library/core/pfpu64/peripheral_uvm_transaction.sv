@@ -1,5 +1,5 @@
 class peripheral_uvm_transaction extends uvm_sequence_item;
-  // Declaration of peripheral_adder transaction fields
+  // Declaration of peripheral_design transaction fields
   bit                             rst_ni;  // Asynchronous reset active low
 
   bit      [AXI_ID_WIDTH    -1:0] axi_aw_id;
