@@ -42,6 +42,8 @@
 ##                                                                               ##
 ###################################################################################
 
+../../../../../../../rtl/verilog/pkg/peripheral/axi4/peripheral_axi4_pkg.sv
+
 +incdir+../../../../../../../verification/uvm/src
 
 ../../../../../../../rtl/verilog/core/pfpu32/pu_or1k_pfpu32_addsub.sv
