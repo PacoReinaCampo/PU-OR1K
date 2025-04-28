@@ -223,7 +223,7 @@ module pu_or1k_execute_ctrl_cappuccino #(
       if (op_jal_i) begin
         ctrl_alu_result_o <= execute_jal_result_i;
       end else begin
-      ctrl_alu_result_o <= alu_result_i;
+        ctrl_alu_result_o <= alu_result_i;
       end
     end
   end
