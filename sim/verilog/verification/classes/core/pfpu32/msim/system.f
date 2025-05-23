@@ -44,12 +44,12 @@
 
 ../../../../../../../rtl/verilog/pkg/peripheral/axi4/peripheral_axi4_pkg.sv
 
-../../../../../../../rtl/verilog/core/pfpu32/pu_or1k_pfpu32_addsub.sv
-../../../../../../../rtl/verilog/core/pfpu32/pu_or1k_pfpu32_cmp.sv
-../../../../../../../rtl/verilog/core/pfpu32/pu_or1k_pfpu32_f2i.sv
-../../../../../../../rtl/verilog/core/pfpu32/pu_or1k_pfpu32_i2f.sv
-../../../../../../../rtl/verilog/core/pfpu32/pu_or1k_pfpu32_muldiv.sv
-../../../../../../../rtl/verilog/core/pfpu32/pu_or1k_pfpu32_rnd.sv
-../../../../../../../rtl/verilog/core/pfpu32/pu_or1k_pfpu32_top.sv
+../../../../../../../rtl/verilog/peripheral/pfpu32/pu_or1k_pfpu32_addsub.sv
+../../../../../../../rtl/verilog/peripheral/pfpu32/pu_or1k_pfpu32_cmp.sv
+../../../../../../../rtl/verilog/peripheral/pfpu32/pu_or1k_pfpu32_f2i.sv
+../../../../../../../rtl/verilog/peripheral/pfpu32/pu_or1k_pfpu32_i2f.sv
+../../../../../../../rtl/verilog/peripheral/pfpu32/pu_or1k_pfpu32_muldiv.sv
+../../../../../../../rtl/verilog/peripheral/pfpu32/pu_or1k_pfpu32_rnd.sv
+../../../../../../../rtl/verilog/peripheral/pfpu32/pu_or1k_pfpu32_top.sv
 
 ../../../../../../../verification/classes/library/core/pfpu32/peripheral_testbench.sv
